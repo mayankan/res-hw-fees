@@ -34,16 +34,8 @@
             if (is_null($PDO)) {
                 die("Can't connect to database");
             }
-            if (preg_match("/[a-z]/", $_POST['username'])) {
-                $teacherData = checkTeacher($_POST['username'], $_POST['password'], $PDO);
-                if ($teacherData === NULL) {
-                    $error = "Invalid username or password";
-                    echo $error;
-                } else {
-                    print_r($teacherData);
-                }
-            }
-            else {
+            $teacherData = checkTeacher($_POST['username'], $_POST['password'], $PDO);
+            if ($teacherData === NULL) {
                 $studentData = checkStudent($_POST['username'], $_POST['password'], $PDO);
                 if ($studentData === NULL) {
                     $error = "Invalid username or password";
@@ -51,7 +43,10 @@
                 } else {
                     print_r($studentData);
                 }
+            } else {
+                print_r($teacherData);
             }
+            
         }
 
     }

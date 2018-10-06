@@ -1,10 +1,10 @@
 <?php
 
     function getConnection() {
-        $username = 'root';
-        $password = '';
-        $host = 'localhost';
-        $db_name = 'homework';
+        $username = 'u281853335_hw';
+        $password = 'ViKHubGJ7L1O';
+        $host = 'sql7.main-hosting.eu';
+        $db_name = 'u281853335_home';
         $dsn = "mysql:host=$host;dbname=$db_name";
         $options = [
         	PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
