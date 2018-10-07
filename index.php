@@ -1,7 +1,12 @@
 <?php
 
+    session_start();
+    if (isset($_SESSION['role'])) {
+        header("Location: " . $_SESSION['role'] . "/");
+    }
+
     function checkTeacher($username, $password, $PDO) {
-        $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `name` = :username AND `password` = :password");
+        $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `username` = :username AND `password` = :password");
         $stmt->execute([':username' => $username, ':password' => $password]);
         if ($stmt->rowCount() === 0) {
             return NULL;
@@ -28,28 +33,43 @@
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST)) {
+
+            // check admin before to make things faster and secure
+            if ($_POST['username'] === "admin" && $_POST['password'] === "rainbow@12345") {
+                $_SESSION['role'] = 'admin';
+                header('Location: admin/');
+            }
+
             require(__DIR__ . '/db/db.connection.php');
             $PDO = getConnection();
             if (is_null($PDO)) {
                 die("Can't connect to database");
             }
+
+
             $teacherData = checkTeacher($_POST['username'], $_POST['password'], $PDO);
-            if($_POST['username']==="admin" && $_POST['password']==="rainbow@12345")
-            {
-                print_r("Admin Panel");
-            } elseif($teacherData != NULL) {
-                print_r($teacherData);
-            } else
-            {
+            if ($teacherData != NULL) {
+                $_SESSION['role'] = 'teacher';
+                $_SESSION['id'] = $teacherData['id'];
+                $_SESSION['data'] = $teacherData;
+                $PDO = null;
+                header('Location: teacher/');
+            }
+            else {
+
                 $studentData = checkStudent($_POST['username'], $_POST['password'], $PDO);
-                if($studentData!=NULL)
-                {
-                    print_r($studentData);
-                } else
-                {
+                if ($studentData != NULL) {
+                    $_SESSION['role'] = 'student';
+                    $_SESSION['id'] = $studentData['id'];
+                    $_SESSION['data'] = $studentData;
+                    $PDO = null;
+                    header('Location: student/');
+                } 
+                else {
                     $error = "Invalid username or password";
                     echo $error;
                 }
+
             }
         }
     }
@@ -60,46 +80,50 @@
 
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-    <title>Login</title>
-    <style>
-        .container, .row {
-            height: 100vh;
-        }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-        <div class="row justify-content-center align-items-center">
-            <div class="col-md-6">
-            <h3 class="text-center">Enter your Login Credentials</h3>
-                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
-                    <div class="form-group">
-                        <label for="username" class="col-form-label">Username/Admission number</label>
-                        <input type="text" name="username" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="password" class="col-form-label">Password</label>
-                        <input type="password" name="password" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-success">Login</button>
-                    </div>
-                </form>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">     
+        <link rel="stylesheet" href="static/main.css" type="text/css">
+        <title>Login</title>
+        <style>
+            .container, .row {
+                height: 100vh;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-md-6">
+                <h3 class="text-center">Enter your Login Credentials</h3>
+                    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+                        <div class="input-field">
+                            <input type="text" name="username" id="username" class="activate">
+                            <label for="username">Username/Admission number</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="col-form-label">Password</label>
+                            <input type="password" name="password" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">Login</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  </body>
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>        
+        <script src="static/script.js"></script>
+    </body>
 </html>
