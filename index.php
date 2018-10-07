@@ -12,8 +12,8 @@
 
     function checkStudent($username, $password, $PDO) {
         $pass = str_split($password);
-        $admission_no = implode(array_slice($pass, 10));
-        $mobile_no = implode(array_slice($pass, 0, 10));
+        $admission_no = implode(array_slice($pass, 0, count($pass)-10));
+        $mobile_no = implode(array_slice($pass, -10));
         if ($admission_no !== $username) {
             return NULL;
         }
@@ -27,7 +27,6 @@
     }
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
         if (isset($_POST)) {
             require(__DIR__ . '/db/db.connection.php');
             $PDO = getConnection();
@@ -35,22 +34,26 @@
                 die("Can't connect to database");
             }
             $teacherData = checkTeacher($_POST['username'], $_POST['password'], $PDO);
-            if ($teacherData === NULL) {
+            if($_POST['username']==="admin" && $_POST['password']==="rainbow@12345")
+            {
+                print_r("Admin Panel");
+            } elseif($teacherData != NULL) {
+                print_r($teacherData);
+            } else
+            {
                 $studentData = checkStudent($_POST['username'], $_POST['password'], $PDO);
-                if ($studentData === NULL) {
+                if($studentData!=NULL)
+                {
+                    print_r($studentData);
+                } else
+                {
                     $error = "Invalid username or password";
                     echo $error;
-                } else {
-                    print_r($studentData);
                 }
-            } else {
-                print_r($teacherData);
             }
-            
         }
-
     }
-
+    
 ?>
 
 
