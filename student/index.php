@@ -5,6 +5,13 @@
         header('Location: ../');
     }
 
+    if (isset($_GET['logout'])) {
+        if ($_GET['logout'] === 'true') {
+            session_destroy();
+            header('Location: ../');
+        }
+    }
+
 ?>
 
 <!doctype html>
@@ -23,6 +30,57 @@
     </head>
     <body>
         
+    <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <!-- or idk name of student? like hello, something -->
+                    <h1 class="display-4">Student Panel</h1>
+                </div>
+                <div class="col-md-6">
+                    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" class="pt-4" method="GET">
+                        <input type="hidden" value="true" name="logout">
+                        <button class="right waves-effect waves-light btn deep-purple lighten-1">Logout</button>
+                    </form>
+                </div>
+            </div>
+            <hr>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <ul class="tabs">
+                    <li class="tab col-md-6">
+                        <a href="#homeworks" class="active black-text">Homeworks</a>
+                    </li>
+                    <li class="tab col-md-6">
+                        <a href="#profile" class="black-text">Profile</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div id="homeworks">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="higlight responsive-table">
+                            <thead>
+                                <th>Message</th>
+                                <th>Date of Message</th>
+                                <th>Sent By</th>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="profile">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Profile</h4>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -30,5 +88,10 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>        
         <script src="../static/script.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('ul.tabs').tabs();
+            });
+        </script>
     </body>
 </html>

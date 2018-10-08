@@ -29,52 +29,78 @@
         <title>Teacher panel</title>
     </head>
     <body>
-        <ul id="slide-out" class="sidenav">
-            <li>
-                <div class="user-view">
-                    <div class="background">
-                        <img src="../static/images/background.jpg">
-                    </div>
-                    <a href=""><span class="white-text name"><?php echo $_SESSION['data']['name'] ?></span></a>
-                    <?php if ($_SESSION['data']['email_address'] != NULL)  { ?>
-                        <a href=""><span class="white-text email"><?php echo $_SESSION['data']['email_address'] ?></span></a>
-                    <?php } else { ?>
-                        <a href=""><span class="white-text email"> </span></a>
-                    <?php } ?>
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <!-- or idk name of teacher? like hello, something -->
+                    <h1 class="display-4">Teacher Panel</h1>
                 </div>
-            </li>
-            <li>
-                <a href="#!">
-                    <i class="material-icons">assignment</i>Homeworks Given
-                </a>
-            </li>
-            <li>
-                <a href="#!">
-                    <i class="material-icons">add_circle</i>Compose Homework
-                </a>
-            </li>
-            <li>
-                <a href="#!">
-                    <i class="material-icons">account_circle</i>Profile
-                </a>
-            </li>
-        </ul>
-        <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <div class="col-md-6">
+                    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" class="pt-4" method="GET">
+                        <input type="hidden" value="true" name="logout">
+                        <button class="right waves-effect waves-light btn deep-purple lighten-1">Logout</button>
+                    </form>
+                </div>
+            </div>
+            <hr>
+        </div>
 
-        <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="GET">
-            <input type="hidden" value="true" name="logout">
-            <button class="waves-effect waves-light btn">Logout</button>
-        </form>
+        <div class="container">
+            <div class="row">
+                <ul class="tabs">
+                    <li class="tab col-md-4">
+                        <a href="#homeworks" class="active black-text">Homeworks</a>
+                    </li>
+                    <li class="tab col-md-4">
+                        <a href="#compose" class="black-text">Compose</a>
+                    </li>
+                    <li class="tab col-md-4">
+                        <a href="#profile" class="black-text">Profile</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div id="homeworks">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="higlight responsive-table">
+                            <thead>
+                                <th>Message</th>
+                                <th>Date of Message</th>
+                                <th>Sent By</th>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="compose">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Compose Homework</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div id="profile">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Profile</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>        
         <script src="../static/script.js"></script>
         <script>
-            $(document).ready(function(){
-                $('.sidenav').sidenav();
+            $(document).ready(function() {
+                $('ul.tabs').tabs();
             });
         </script>
     </body>

@@ -1,0 +1,20 @@
+ul.tabs {
+    overflow-x: hidden;
+}
+
+.tabs .indicator {
+    background-color:#5e35b1;
+}
+
+.tabs .tab a:focus, .tabs .tab a:focus.active {
+    background-color: #d1c4e9;
+    outline: none;
+}
+
+.tabs .indicator { 
+    display: none; 
+}
+
+.tabs .tab a.active { 
+    border-bottom: 2px solid #5e35b1;
+}
