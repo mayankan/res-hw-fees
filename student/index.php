@@ -1,7 +1,7 @@
 <?php 
     
     session_start();
-    if (!(isset($_SESSION['role'])) && !(isset($_SESSION['id'])) ) {
+    if ((($_SESSION['role'])!='student') && !(isset($_SESSION['id'])) ) {
         header('Location: ../');
     }
 
