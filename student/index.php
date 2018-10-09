@@ -75,15 +75,69 @@
             <div id="profile">
                 <div class="row">
                     <div class="col-md-12">
-                        <h4>Profile</h4>
-                        
+                        <!-- Student image -->
+                        <div class="row justify-content-center">
+                            <div class="col-md-12">
+                                <img src="../static/images/background.jpg" class="circle d-flex mx-auto" width="100px" height="100px">
+                                <p class="text-center pt-4">Profile</p>
+                            </div>
+                        </div>
+                        <!-- Student data -->
+                        <div class="row justify-content-center">
+                            <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST" class="col-md-6">
+                                <div class="input-field pb-4">
+                                    <input type="text" id="name" name="teacherName" class="validate" value="lol">
+                                    <label for="name">Name</label>
+                                </div>
+                                <div class="input-field pb-4">
+                                    <input type="text" id="fathername" name="fatherName" class="validate" value="lol">
+                                    <label for="fatherName">Fathers Name</label>
+                                </div>
+                                <div class="input-field pb-4">
+                                    <input type="text" id="mothername" name="motherName" class="validate" value="lol">
+                                    <label for="motherName">Mothers Name</label>
+                                </div>
+                                <div class="input-field pb-4">
+                                    <input type="text" id="dob" name="dob" class="datepicker">
+                                    <label for="dob">Date of Birth</label>
+                                </div>
+                                <div class="input-field">
+                                    <p>Gender</p>
+                                    <div class="row">
+                                        <p class="col-md-6 pl-0">
+                                            <label>
+                                                <input name="gender" type="radio">
+                                                <span>Male</span>
+                                            </label>
+                                        </p>
+                                        <p class="col-md-6">
+                                            <label>
+                                                <input name="gender" type="radio">
+                                                <span>Female</span>
+                                            </label>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="input-field pb-4">
+                                    <input type="text" id="address" name="address" class="validate" value="lol">
+                                    <label for="address">Address</label>
+                                </div>
+                                <div class="input-field pb-4">
+                                    <input type="tel" id="phone" name="phone" class="validate" value="4949848941">
+                                    <label for="phone">Mobile Number</label>
+                                </div>
+                                <div class="input-field pb-4">
+                                    <button type="submit" class="btn waves-effect deep-purple lighten-1">Update</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>        
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>        
@@ -91,6 +145,11 @@
         <script>
             $(document).ready(function() {
                 $('ul.tabs').tabs();
+                const dateOptions = {
+                    format: 'yyyy-dd-mm'
+                };
+                var dateEl = document.querySelectorAll('.datepicker');
+                var dateInstance = M.Datepicker.init(dateEl, dateOptions);
             });
         </script>
     </body>

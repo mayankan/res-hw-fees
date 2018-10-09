@@ -18,3 +18,22 @@ ul.tabs {
 .tabs .tab a.active { 
     border-bottom: 2px solid #5e35b1;
 }
+
+/* label focus color */
+.input-field input:focus + label {
+    color: #5e35b1 !important;
+}
+
+.input-field input:focus {
+    border-bottom: 1px solid #5e35b1 !important;
+    box-shadow: 0 1.2px 0 0 #5e35b1 !important;
+}
+
+.input-field input {
+    border-bottom: 1px solid #5e35b1 !important;
+    box-shadow: 0 1px 0 0 #d5cbe7 !important;    
+}
+
+.modal.datepicker-modal.open {
+    height: 24rem;
+}
