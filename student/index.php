@@ -1,7 +1,10 @@
 <?php 
     
     session_start();
-    if (($_SESSION['role']!='student') && !(isset($_SESSION['id'])) ) {
+    echo $_SESSION['role'];
+    echo $_SESSION['id'];
+    if ($_SESSION['role'] !== 'student') {
+        session_destroy();
         header('Location: ../');
     }
 
@@ -63,9 +66,9 @@
                     <div class="col-md-12">
                         <table class="higlight responsive-table">
                             <thead>
-                                <th>Date</th>
-                                <th>Homework</th>
-                                <th>Given By</th>
+                                <th class="text-center">Date</th>
+                                <th class="text-center">Homework</th>
+                                <th class="text-center">Given By</th>
                             </thead>
                         </table>
                     </div>

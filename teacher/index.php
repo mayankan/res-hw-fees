@@ -1,7 +1,26 @@
 <?php 
 
     session_start();
-    if (!($_SESSION['role'] === 'teacher') && !(isset($_SESSION['id'])) ) {
+    function getTeacherData() {
+        require_once(__DIR__ . '/../db/db.connection.php');
+        $PDO = getConnection();
+        if (is_null($PDO)) {
+            die("Can't connect to database");
+        }
+
+        $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `id` = :teacherid");
+        $stmt->execute([':teacherid' => $_SESSION['id']]);
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetch();
+        }
+        return NULL;
+    }
+
+    getTeacherData();
+
+    echo $_SESSION['role'];
+    echo $_SESSION['id'];
+    if ($_SESSION['role'] !== 'teacher') {
         session_destroy();
         header('Location: ../');
     }
@@ -12,6 +31,7 @@
             header('Location: ../');
         }
     }
+
 ?>
 
 <!doctype html>
@@ -66,10 +86,222 @@
                     <div class="col-md-12">
                         <table class="higlight responsive-table">
                             <thead>
-                                <th>Date</th>
-                                <th>Homework</th>
-                                <th>Given By</th>
+                                <th class="text-center">Date</th>
+                                <th class="text-center">Homework</th>
+                                <th class="text-center">Given By</th>
                             </thead>
+                            <tbody>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                                <tr>
+                                    <td>lorem lorem lorem</td>
+                                    <td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore, fugit quisquam suscipit commodi recusandae consequatur ea officiis labore, modi dicta earum velit ipsa id iste, illum molestiae facilis mollitia ut.
+                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repellat consequuntur minus asperiores ratione est adipisci id laudantium quasi sunt officiis rem eaque numquam at, provident, fugit quisquam! Voluptates, at quas.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis aliquid, odit alias eaque hic magnam commodi incidunt voluptatum obcaecati corrupti autem odio temporibus, maxime error sunt iure adipisci. Non, nesciunt!</td>
+                                    <td>lorem lorem lorem lorem</td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -83,6 +315,10 @@
                 </div>
             </div>
 
+            <!-- Profile data fetching -->
+            <?php 
+                $profileData = getTeacherData();
+            ?>
             <div id="profile">
                 <div class="row">
                     <div class="col-md-12">
@@ -99,7 +335,7 @@
                             <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST" id="profileForm" class="col-md-6">
                                 <input type="hidden" name="teacherDataUpdate" value="true">
                                 <div class="input-field pb-4">
-                                    <input type="text" id="name" name="teacherName" class="validate" value="lol">
+                                    <input type="text" id="name" name="teacherName" class="validate" value="<?php echo $profileData['name'] ?>">
                                     <label for="name">Name</label>
                                 </div>
                                 <div class="input-field pb-4">
