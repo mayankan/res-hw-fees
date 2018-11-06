@@ -1,5 +1,5 @@
 <?php 
-    $base_url = '/homework/';
+    require(__DIR__.'/../config.php');
     session_start();
 
     function getTeacherData() {
