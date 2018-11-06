@@ -1,8 +1,7 @@
 <?php 
-    
+    $base_url = '/homework/';
     session_start();
-    echo $_SESSION['role'];
-    echo $_SESSION['id'];
+
     if ($_SESSION['role'] !== 'student') {
         session_destroy();
         header('Location: ../');
@@ -17,143 +16,64 @@
 
 ?>
 
-<!doctype html>
-<html lang="en">
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">        
-        <link rel="stylesheet" href="../static/main.css" type="text/css">
-        <title>Student panel</title>
+<?php require_once(__DIR__.'/../header.html'); ?>
+        <title>Student panel | Home</title>
     </head>
     <body>
-        
-    <div class="container-fluid">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <!-- or idk name of student? like hello, something -->
-                    <h1 class="display-4">Student Panel</h1>
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+                <div class="container">
+                    <a href="#" class="navbar-brand">Student Panel</a>
+                    <button class="navbar-toggler" data-toggle="collapse" data-target="#student-nav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="student-nav">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a href="<?php echo $base_url ?>student/" class="nav-link">
+                                    <i class="fa fa-envelope" aria-hidden="true"></i> Homeworks
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="<?php echo $base_url ?>student/profile.php" class="nav-link">
+                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> Profile
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
+                                    <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
+                                </a>
+                                <form action="<? echo $_SERVER['PHP_SELF'] ?>" id="logout">
+                                    <input type="hidden" name="logout" value="true">
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" class="pt-4" method="GET">
-                        <input type="hidden" value="true" name="logout">
-                        <button class="right waves-effect waves-light btn deep-purple lighten-1">Logout</button>
-                    </form>
-                </div>
-            </div>
-            <hr>
-        </div>
+            </nav>
+        </header>   
 
-        <div class="container">
-            <div class="row">
-                <ul class="tabs">
-                    <li class="tab col-md-6">
-                        <a href="#homeworks" class="active black-text">Homeworks</a>
-                    </li>
-                    <li class="tab col-md-6">
-                        <a href="#profile" class="black-text">Profile</a>
-                    </li>
-                </ul>
+        
+
+        <section id="homeworks">
+            <div class="container-fluid">
+                <div id="homeworks">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table responsive-table">
+                                <thead>
+                                    <th class="text-center">Date</th>
+                                    <th class="text-center">Homework</th>
+                                    <th class="text-center">Given By</th>
+                                </thead>
+                                <tbody>
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </section>
             
-            <div id="homeworks">
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class="higlight responsive-table">
-                            <thead>
-                                <th class="text-center">Date</th>
-                                <th class="text-center">Homework</th>
-                                <th class="text-center">Given By</th>
-                            </thead>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div id="profile">
-                <div class="row">
-                    <div class="col-md-12">
-                        <!-- Student image -->
-                        <div class="row justify-content-center">
-                            <div class="col-md-12">
-                                <img src="../static/images/background.jpg" class="circle d-flex mx-auto" width="100px" height="100px">
-                                <p class="text-center pt-4">Profile</p>
-                            </div>
-                        </div>
-                        <!-- Student data -->
-                        <div class="row justify-content-center">
-                            <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST" class="col-md-6">
-                                <div class="input-field pb-4">
-                                    <input type="text" id="name" name="teacherName" class="validate" value="lol">
-                                    <label for="name">Name</label>
-                                </div>
-                                <div class="input-field pb-4">
-                                    <input type="text" id="fathername" name="fatherName" class="validate" value="lol">
-                                    <label for="fatherName">Fathers Name</label>
-                                </div>
-                                <div class="input-field pb-4">
-                                    <input type="text" id="mothername" name="motherName" class="validate" value="lol">
-                                    <label for="motherName">Mothers Name</label>
-                                </div>
-                                <div class="input-field pb-4">
-                                    <input type="text" id="dob" name="dob" class="datepicker">
-                                    <label for="dob">Date of Birth</label>
-                                </div>
-                                <div class="input-field">
-                                    <p>Gender</p>
-                                    <div class="row">
-                                        <p class="col-md-6 pl-0">
-                                            <label>
-                                                <input name="gender" type="radio">
-                                                <span>Male</span>
-                                            </label>
-                                        </p>
-                                        <p class="col-md-6">
-                                            <label>
-                                                <input name="gender" type="radio">
-                                                <span>Female</span>
-                                            </label>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="input-field pb-4">
-                                    <input type="text" id="address" name="address" class="validate" value="lol">
-                                    <label for="address">Address</label>
-                                </div>
-                                <div class="input-field pb-4">
-                                    <input type="tel" id="phone" name="phone" class="validate" value="4949848941">
-                                    <label for="phone">Mobile Number</label>
-                                </div>
-                                <div class="input-field pb-4">
-                                    <button type="submit" class="btn waves-effect deep-purple lighten-1">Update</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>        
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>        
-        <script src="../static/script.js"></script>
-        <script>
-            $(document).ready(function() {
-                $('ul.tabs').tabs();
-                const dateOptions = {
-                    format: 'yyyy-dd-mm'
-                };
-                var dateEl = document.querySelectorAll('.datepicker');
-                var dateInstance = M.Datepicker.init(dateEl, dateOptions);
-            });
-        </script>
-    </body>
-</html>
+<?php require_once(__DIR__.'/../footer.html');
