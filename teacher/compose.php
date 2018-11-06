@@ -79,17 +79,9 @@
                                 <label for="student" class="col-form-label">Student</label>
                                 <input type="text" class="form-control" name="student_id" list="students" oninput="console.log(this.value);">
                                 <datalist id="students">
-                                    <option value="all" selected>All</option>
-                                    <option value="student_id">student_admission_no - student_name</option>
+                                    <option id="all" selected>All</option>
+                                    <option id="student_all">student_admission_no - student_name</option>
                                 </datalist>
-                                <script type="text/javascript">
-    $(function() {
-        $('input[name=student_id]').on('input',function() {
-            var selectedOption = $('option[value="'+$(this).val()+'"]');
-            console.log(selectedOption.length ? selectedOption.attr('id') : 'This opiton is not in the list!');
-        });
-    });
-</script>
                             </div>
                         </div>
                     </div>
