@@ -2,6 +2,7 @@
     require(__DIR__.'/../config.php');
     session_start();
 
+
     if ($_SESSION['role'] !== 'teacher') {
         session_destroy();
         header('Location: ../');
@@ -66,8 +67,9 @@
                             <table class="table responsive-table">
                                 <thead>
                                     <th class="text-center">Date</th>
+                                    <th class="text-center">Class</th>
+                                    <th class="text-center">Student</th>
                                     <th class="text-center">Homework</th>
-                                    <th class="text-center">Given By</th>
                                 </thead>
                                 <tbody>
                                 
@@ -78,5 +80,4 @@
                 </div>
             </div>
         </section>
-            
 <?php require_once(__DIR__.'/../footer.html');
