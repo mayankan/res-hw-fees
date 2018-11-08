@@ -17,6 +17,7 @@
 ?>
 
 <?php require_once(__DIR__.'/../header.html'); ?>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <title>Teacher panel | Compose</title>
     </head>
     <body>
@@ -63,6 +64,11 @@
         <section id="compose" class="m-4">
             <div class="container-fluid">
                 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
+                    <div class="form-group row">
+                        <label for="date_of_homework" class="col-form-label">Date of Homework</label>
+                        <br>
+                        <input type="text" name="date_of_homework" class="form-control w-25" id="datetime">
+                    </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -80,7 +86,7 @@
                                 <input type="text" class="form-control" name="student_id" list="students" oninput="console.log(this.value);">
                                 <datalist id="students">
                                     <option id="all" selected>All</option>
-                                    <option id="student_all">student_admission_no - student_name</option>
+                                    <option id="all">student_admission_no - student_name</option>
                                 </datalist>
                             </div>
                         </div>
@@ -94,6 +100,10 @@
                     </div>
                 </form>
             </div>
-            
+            <script>
+                $(document).ready(function() {
+                    $('#datetime').datepicker();
+                });
+            </script>
 <?php require_once(__DIR__.'/../footer.html'); ?>
 
