@@ -1,6 +1,7 @@
 <?php 
 
     require(__DIR__.'/../config.php');
+    require(__DIR__.'/../logging.php');
     session_start();
 
     if ($_SESSION['role'] !== 'teacher') {
@@ -37,7 +38,7 @@
     }
 
     function checkTeacherId($PDO, $teacherId) {
-        
+
     }
 
     function submitHomework($PDO, $data, $student_id=false) {
@@ -55,8 +56,9 @@
                             ':student_id' => NULL, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['id'],
                             ':date_created' => CURRENT_TIMESTAMP, ':date_modified' => CURRENT_TIMESTAMP
                         ]);
-            echo 'done sent the message';
-            $stmt->rowCount();
+            echo 'done sent the message without student id';
+            addToLog($PDO, 'added homework', $_SESSION['id']);
+            echo $stmt->rowCount();
         } else {
             $stmt = $PDO->prepare("
                                     INSERT INTO `message` 
@@ -68,8 +70,9 @@
                             ':student_id' => $data['student_id'], ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['id'],
                             ':date_created' => CURRENT_TIMESTAMP, ':date_modified' => CURRENT_TIMESTAMP
                         ]);
-            echo 'done sent the message';
-            $stmt->rowCount();
+            echo 'done sent the message with student id';
+            addToLog($PDO, 'added homework', $_SESSION['id']);
+            echo $stmt->rowCount();
         }
     }
 
