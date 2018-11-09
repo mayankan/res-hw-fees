@@ -1,10 +1,17 @@
 <?php 
+
     require(__DIR__.'/../config.php');
     session_start();
 
     if ($_SESSION['role'] !== 'teacher') {
         session_destroy();
         header('Location: ../');
+    }
+
+    require(__DIR__.'/../db/db.connection.php');
+    $PDO = getConnection();
+    if (is_null($PDO)) {
+        die("Can't connect to database");
     }
 
     if (isset($_GET['logout'])) {
@@ -14,6 +21,79 @@
         }
     }
 
+    function getClasses($PDO) {
+        $stmt = $PDO->prepare("
+                                SELECT `id`, `class_name`, `section` FROM class
+                            ");
+        $stmt->execute();
+        if ($stmt->rowCount() === 0) {
+            return NULL;
+        }
+        return $stmt->fetchAll();
+    }
+
+    function checkStudentId($PDO, $studentId) {
+
+    }
+
+    function checkTeacherId($PDO, $teacherId) {
+        
+    }
+
+    function submitHomework($PDO, $data, $student_id=false) {
+        $date = $data['date_of_message'];
+        $date = strtotime($date);
+        $date = (string) date('Y-m-d', $date);
+        if (!$student_id) {
+            $stmt = $PDO->prepare("
+                                    INSERT INTO `message` 
+                                    (`message`, `date_of_message`, `student_id`, `class_id`, `teacher_id`)
+                                    VALUES (:message, :date_of_message, :student_id, :class_id, :teacher_id)
+                                ");
+            $stmt->execute([
+                            ':message' => $data['message'], ':date_of_message' => $date, 
+                            ':student_id' => NULL, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['id']
+                        ]);
+            echo 'done sent the message';
+            $stmt->rowCount();
+        } else {
+            $stmt = $PDO->prepare("
+                                    INSERT INTO `message` 
+                                    (`message`, `date_of_message`, `student_id`, `class_id`, `teacher_id`, `date_created`, `date_modified`)
+                                    VALUES (:message, $date, :student_id, :class_id, :teacher_id, :date_created, :date_modified)
+                                ");
+            $stmt->execute([
+                            ':message' => $data['message'], 
+                            ':student_id' => $data['student_id'], ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['id'],
+                            ':date_created' => CURRENT_TIMESTAMP, ':date_modified' => CURRENT_TIMESTAMP
+                        ]);
+            echo 'done sent the message';
+            $stmt->rowCount();
+        }
+    }
+
+    // for loading the data with the class data
+    $classes = getClasses($PDO);
+
+    // for submiting a homework to the database 
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if (isset($_POST)) {
+            $dateSubmitted = $_POST['date_of_homework'];
+            $class_id = filter_var($_POST['class'], FILTER_SANITIZE_NUMBER_INT);
+            $student_id = $_POST['student'];
+            $homework = filter_var($_POST['homework'], FILTER_SANITIZE_STRING);
+            try {
+                $date = new DateTime($dateSubmitted);
+            } catch (Exception $e) {
+                $error = 'Date is wrong.. Please Enter a Valid Date!';
+            }
+            if (empty($student_id)) {
+                $data = ['message' => $homework, 'date_of_message' => $dateSubmitted, 'class_id' => $class_id];
+                submitHomework($PDO, $data);
+                $success = 'Homework successfully submitted';
+            }
+        }
+    }
 ?>
 
 <?php require_once(__DIR__.'/../header.html'); ?>
@@ -59,41 +139,57 @@
             </nav>
         </header>   
 
-        
+        <section id="error" class="mt-4">
+            <div class="container">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <?php if (isset($error)): ?>
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <strong><?php echo $error ?></strong>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                        <?php endif ?> 
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <?php if (isset($success)): ?>
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <strong><?php echo $success ?></strong>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                        <?php endif ?> 
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <section id="compose" class="m-4">
             <div class="container-fluid">
                 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
                     <div class="form-group row">
-                        <label for="date_of_homework" class="col-form-label">Date of Homework</label>
-                        <br>
-                        <input type="text" name="date_of_homework" class="form-control w-25" id="datetime">
+                        <label for="date_of_homework" class="col-form-label col-md-2">Date of Homework*</label>
+                        <input type="text" name="date_of_homework" class="form-control col-md-4" id="datetime" required>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="class" class="col-form-label">Class</label>
-                                <select name="class" class="form-control">
-                                    <option value="class_id">class_name - section</option>
-                                </select>
-                            </div>
-                        </div>
+                    <div class="form-group row">
+                        <label for="class" class="col-form-label col-md-2">Class*</label>
+                        <select name="class" class="form-control col-md-4" required>
+                            <option value="" selected>--</option>
+                            <?php while ($class = array_shift($classes)): ?>
+                                <option value="<?php echo $class['id'] ?>"><?php echo $class['class_name'] ?> - <?php echo $class['section'] ?></option>
+                            <? endwhile ?>
+                        </select>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="student" class="col-form-label">Student</label>
-                                <input type="text" class="form-control" name="student_id" list="students" oninput="console.log(this.value);">
-                                <datalist id="students">
-                                    <option id="all" selected>All</option>
-                                    <option id="all">student_admission_no - student_name</option>
-                                </datalist>
-                            </div>
-                        </div>
+                    <div class="form-group row">
+                        <label for="student" class="col-form-label col-md-2">Student</label>
+                        <select name="student" class="form-control col-md-4">
+                            <option value="" selected>All</option>
+                            <option value="student_id">student_admission_no - student_name</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="homework" class="col-form-label">Homework</label>
-                        <textarea name="homework" cols="30" rows="10" class="form-control"></textarea>
+                        <label for="homework" class="col-form-label">Homework*</label>
+                        <textarea name="homework" cols="30" rows="10" class="form-control" required></textarea>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-success">Submit</button>

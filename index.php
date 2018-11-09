@@ -11,7 +11,7 @@
         if ($stmt->rowCount() === 0) {
             return NULL;
         } else {
-            return $stmt->fetch();
+            return $stmt->fetchAll();
         }
     }
 
