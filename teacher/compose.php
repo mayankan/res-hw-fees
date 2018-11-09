@@ -48,11 +48,12 @@
             $stmt = $PDO->prepare("
                                     INSERT INTO `message` 
                                     (`message`, `date_of_message`, `student_id`, `class_id`, `teacher_id`)
-                                    VALUES (:message, :date_of_message, :student_id, :class_id, :teacher_id)
+                                    VALUES (:message, :date_of_message, :student_id, :class_id, :teacher_id, :date_created, :date_modified)
                                 ");
             $stmt->execute([
                             ':message' => $data['message'], ':date_of_message' => $date, 
-                            ':student_id' => NULL, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['id']
+                            ':student_id' => NULL, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['id'],
+                            ':date_created' => CURRENT_TIMESTAMP, ':date_modified' => CURRENT_TIMESTAMP
                         ]);
             echo 'done sent the message';
             $stmt->rowCount();
