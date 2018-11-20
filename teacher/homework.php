@@ -1,4 +1,19 @@
-<?php ?>
+<?php
+    require(__DIR__.'/../config.php');
+    session_start();
+
+    if ($_SESSION['role'] !== 'teacher') {
+        session_destroy();
+        header('Location: ../');
+    }
+
+    if (isset($_GET['logout'])) {
+        if ($_GET['logout'] === 'true') {
+            session_destroy();
+            header('Location: ../');
+        }
+    }
+?>
 
 <?php require_once(__DIR__.'/../header.html'); ?>
         <title>Homework</title>

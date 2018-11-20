@@ -27,6 +27,7 @@
             header('Location: ../');
         }
     }
+
     if (isset($_SESSION['data'][0]['id'])) {
         require(__DIR__ . '/../db/db.connection.php');
         $PDO = getConnection();
@@ -107,7 +108,7 @@
                                     <td>
                                         <form action="<?php echo $base_url ?>teacher/homework.php" method="GET">
                                             <input type="hidden" name="homeworkId" value="<?php echo $homework['id'] ?>">
-                                            <button type="submit" class="btn btn-block btn-outline-info">View</button>
+                                            <button type="submit" class="btn btn-block btn-outline-warning">Edit</button>
                                         </form>
                                     </td>
                                 </tr>

@@ -22,12 +22,39 @@
         }
     }
 
+    if (isset($_GET['class_id'])) {
+        echo $_GET['class_id'];
+    }
+
     function getClasses($PDO) {
         try {
             $stmt = $PDO->prepare("
                                     SELECT `id`, `class_name`, `section` FROM class
                                 ");
             $stmt->execute();
+            if ($stmt->rowCount() === 0) {
+                return NULL;
+            }
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
+
+    // function getStudents($PDO, $
+) {
+    //     try {
+    //         $stmt = $PDO->prepare("SELECT `id`, ``")
+    //     } catch (Exception $e) {
+
+    //    }
+    // }
+
+    function getStudentsByClass($PDO, $class_id) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `student` WHERE `class_id` = :class_id AND `date_deleted` IS NULL");
+            $stmt->execute([':class_id' => $class_id]);
             if ($stmt->rowCount() === 0) {
                 return NULL;
             }
@@ -196,7 +223,7 @@
                     </div>
                     <div class="form-group row">
                         <label for="class" class="col-form-label col-md-2">Class*</label>
-                        <select name="class" class="form-control col-md-4" required>
+                        <select name="class" id="class" class="form-control col-md-4" required>
                             <option value="" selected>--</option>
                             <?php while ($class = array_shift($classes)): ?>
                                 <option value="<?php echo $class['id'] ?>"><?php echo $class['class_name'] ?> - <?php echo $class['section'] ?></option>
@@ -205,9 +232,8 @@
                     </div>
                     <div class="form-group row">
                         <label for="student" class="col-form-label col-md-2">Student</label>
-                        <select name="student" class="form-control col-md-4">
+                        <select name="student" id="students" class="form-control col-md-4">
                             <option value="" selected>All</option>
-                            <option value="student_id">student_admission_no - student_name</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -223,6 +249,27 @@
                 $(document).ready(function() {
                     $('#datetime').datepicker();
                 });
+
+                // $('#class').on('change', function(e) {
+                //     $.ajax({
+                //         url: "<?php echo $base_url ?>teacher/get_class.php",
+                //         type: "POST",
+                //         data: {
+                //             'class_id': e.target.value
+                //         },
+                //         success: function(results) {
+                //             let html = ``;
+                //             return new Promise(function() {
+                //                 results.forEach(function(result)) {
+                //                     html += `<option value=${result.id}>${result.name} - ${result.admission_no}</option>`;
+                //                 });  
+                //                 Promise.resolve();
+                //             }).then(function(html) {
+                //                 $('#students').append(html);
+                //             });
+                //         }
+                //     })
+                // });
             </script>
 <?php require_once(__DIR__.'/../footer.html'); ?>
 
