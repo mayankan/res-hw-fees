@@ -1,5 +1,5 @@
 <?php 
-
+    // echo parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../logging.php');
     session_start();
@@ -18,19 +18,24 @@
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
             session_destroy();
-            header('Location: ../');
+            header('Location: ../');    
         }
     }
 
     function getClasses($PDO) {
-        $stmt = $PDO->prepare("
-                                SELECT `id`, `class_name`, `section` FROM class
-                            ");
-        $stmt->execute();
-        if ($stmt->rowCount() === 0) {
+        try {
+            $stmt = $PDO->prepare("
+                                    SELECT `id`, `class_name`, `section` FROM class
+                                ");
+            $stmt->execute();
+            if ($stmt->rowCount() === 0) {
+                return NULL;
+            }
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            print($e);
             return NULL;
         }
-        return $stmt->fetchAll();
     }
 
     function checkStudentId($PDO, $studentId) {
@@ -46,33 +51,43 @@
         $date = strtotime($date);
         $date = (string) date('Y-m-d', $date);
         if (!$student_id) {
-            $stmt = $PDO->prepare("
+            try {
+                $stmt = $PDO->prepare("
                                     INSERT INTO `message` 
                                     (`message`, `date_of_message`, `student_id`, `class_id`, `teacher_id`)
                                     VALUES (:message, :date_of_message, :student_id, :class_id, :teacher_id, :date_created, :date_modified)
                                 ");
-            $stmt->execute([
-                            ':message' => $data['message'], ':date_of_message' => $date, 
-                            ':student_id' => NULL, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['id'],
-                            ':date_created' => CURRENT_TIMESTAMP, ':date_modified' => CURRENT_TIMESTAMP
-                        ]);
-            echo 'done sent the message without student id';
-            addToLog($PDO, 'added homework', $_SESSION['id']);
-            echo $stmt->rowCount();
+                $stmt->execute([
+                                ':message' => $data['message'], ':date_of_message' => $date, 
+                                ':student_id' => NULL, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['id'],
+                                ':date_created' => CURRENT_TIMESTAMP, ':date_modified' => CURRENT_TIMESTAMP
+                            ]);
+                echo 'done sent the message without student id';
+                addToLog($PDO, 'added homework', $_SESSION['id']);
+                return $stmt->rowCount();
+            } catch (Exception $e) {
+                print($e);
+                return NULL;
+            }
         } else {
-            $stmt = $PDO->prepare("
+            try {
+                $stmt = $PDO->prepare("
                                     INSERT INTO `message` 
                                     (`message`, `date_of_message`, `student_id`, `class_id`, `teacher_id`, `date_created`, `date_modified`)
                                     VALUES (:message, $date, :student_id, :class_id, :teacher_id, :date_created, :date_modified)
                                 ");
-            $stmt->execute([
-                            ':message' => $data['message'], 
-                            ':student_id' => $data['student_id'], ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['id'],
-                            ':date_created' => CURRENT_TIMESTAMP, ':date_modified' => CURRENT_TIMESTAMP
-                        ]);
-            echo 'done sent the message with student id';
-            addToLog($PDO, 'added homework', $_SESSION['id']);
-            echo $stmt->rowCount();
+                $stmt->execute([
+                                ':message' => $data['message'], 
+                                ':student_id' => $data['student_id'], ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['id'],
+                                ':date_created' => CURRENT_TIMESTAMP, ':date_modified' => CURRENT_TIMESTAMP
+                            ]);
+                echo 'done sent the message with student id';
+                addToLog($PDO, 'added homework', $_SESSION['id']);
+                return $stmt->rowCount();
+            } catch (Exception $e) {
+                print($e);
+                return NULL;
+            }
         }
     }
 
@@ -93,8 +108,12 @@
             }
             if (empty($student_id)) {
                 $data = ['message' => $homework, 'date_of_message' => $dateSubmitted, 'class_id' => $class_id];
-                submitHomework($PDO, $data);
-                $success = 'Homework successfully submitted';
+                if (!is_null(submitHomework($PDO, $data))) {
+                    $success = 'Homework successfully submitted';
+                } else {
+                    $error = 'Something went wrong.. Try again';
+                }
+
             }
         }
     }

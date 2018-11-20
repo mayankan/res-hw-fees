@@ -2,6 +2,19 @@
     require(__DIR__.'/../config.php');
     session_start();
 
+    function getHomeworks($PDO, $teacherId) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `message` WHERE teacher_id = :teacher_id AND date_deleted IS NULL");
+            $stmt->execute([':teacher_id' => $teacherId]);
+            if ($stmt->rowCount() === 0) {
+                return NULL;
+            }
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
 
     if ($_SESSION['role'] !== 'teacher') {
         session_destroy();
@@ -13,6 +26,14 @@
             session_destroy();
             header('Location: ../');
         }
+    }
+    if (isset($_SESSION['data'][0]['id'])) {
+        require(__DIR__ . '/../db/db.connection.php');
+        $PDO = getConnection();
+        if (is_null($PDO)) {
+            die("Can't connect to database");
+        }
+        $homeworks = getHomeworks($PDO, $_SESSION['data'][0]['id']);
     }
 
 ?>
@@ -66,13 +87,23 @@
                         <div class="col-md-12">
                             <table class="table responsive-table">
                                 <thead>
-                                    <th class="text-center">Date</th>
-                                    <th class="text-center">Class</th>
-                                    <th class="text-center">Student</th>
-                                    <th class="text-center">Homework</th>
+                                    <tr>
+                                        <th class="text-center">Date</th>
+                                        <th class="text-center">Homework</th>
+                                        <th class="text-center">Class</th>
+                                        <th class="text-center">Student</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                
+                                <?php while ($homework = array_shift($homeworks)): ?>
+                                <tr>
+                                    <?php $date = date_create($homework['date_created']) ?>
+                                    <td class="text-center"><?php print(date_format($date, 'Y-m-d')) ?></td>
+                                    <td class="text-justify"><?php echo substr($homework['message'], 0, 50) ?></td>
+                                    <td class="text-center"><?php echo $homework['class_id'] ?></td>
+                                    <td class="text-center"><?php echo $homework['student_id'] ?></td>
+                                </tr>
+                                <?php endwhile ?>
                                 </tbody>
                             </table>
                         </div>

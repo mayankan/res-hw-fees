@@ -6,28 +6,38 @@
     }
 
     function checkTeacher($username, $password, $PDO) {
-        $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `username` = :username AND `password` = :password");
-        $stmt->execute([':username' => $username, ':password' => $password]);
-        if ($stmt->rowCount() === 0) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `username` = :username AND `password` = :password AND `date_deleted` IS NULL");
+            $stmt->execute([':username' => $username, ':password' => $password]);
+            if ($stmt->rowCount() === 0) {
+                return NULL;
+            } else {
+                return $stmt->fetchAll();
+            }
+        } catch (Exception $e) {
+            print($e);
             return NULL;
-        } else {
-            return $stmt->fetchAll();
         }
     }
 
     function checkStudent($username, $password, $PDO) {
-        $pass = str_split($password);
-        $admission_no = implode(array_slice($pass, 0, count($pass)-10));
-        $mobile_no = implode(array_slice($pass, -10));
-        if ($admission_no !== $username) {
+        try {
+            $pass = str_split($password);
+            $admission_no = implode(array_slice($pass, 0, count($pass)-10));
+            $mobile_no = implode(array_slice($pass, -10));
+            if ($admission_no !== $username) {
+                return NULL;
+            }
+            $stmt = $PDO->prepare("SELECT * FROM `student` WHERE `admission_no` = :username AND `mobile_number` = :mobile AND `date_deleted` IS NULL");
+            $stmt->execute([':username' => $username, ':mobile' => $mobile_no]);
+            if ($stmt->rowCount() === 0) {
+                return NULL;
+            } else {
+                return $stmt->fetch();
+            }
+        } catch (Exception $e) {
+            print($e);
             return NULL;
-        }
-        $stmt = $PDO->prepare("SELECT * FROM `student` WHERE `admission_no` = :username AND `mobile_number` = :mobile");
-        $stmt->execute([':username' => $username, ':mobile' => $mobile_no]);
-        if ($stmt->rowCount() === 0) {
-            return NULL;
-        } else {
-            return $stmt->fetch();
         }
     }
 
@@ -50,7 +60,6 @@
             $teacherData = checkTeacher($_POST['username'], $_POST['password'], $PDO);
             if ($teacherData != NULL) {
                 $_SESSION['role'] = 'teacher';
-                $_SESSION['id'] = $teacherData['id'];
                 $_SESSION['data'] = $teacherData;
                 $PDO = null;
                 header('Location: teacher/');
@@ -60,8 +69,7 @@
                 $studentData = checkStudent($_POST['username'], $_POST['password'], $PDO);
                 if ($studentData != NULL) {
                     $_SESSION['role'] = 'student';
-                    $_SESSION['id'] = $studentData['id'];
-                    $_SESSION['data'] = $studentData;
+                    $_SESSION['data'] = $studentData[0];
                     $PDO = null;
                     header('Location: student/');
                 } 
