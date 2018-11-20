@@ -85,16 +85,18 @@
                 <div id="homeworks">
                     <div class="row">
                         <div class="col-md-12">
-                            <table class="table responsive-table">
+                            <table class="table table-hover responsive-table">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Date</th>
                                         <th class="text-center">Homework</th>
                                         <th class="text-center">Class</th>
                                         <th class="text-center">Student</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                <?php if (!is_null($homeworks)): ?> 
                                 <?php while ($homework = array_shift($homeworks)): ?>
                                 <tr>
                                     <?php $date = date_create($homework['date_created']) ?>
@@ -102,8 +104,15 @@
                                     <td class="text-justify"><?php echo substr($homework['message'], 0, 50) ?></td>
                                     <td class="text-center"><?php echo $homework['class_id'] ?></td>
                                     <td class="text-center"><?php echo $homework['student_id'] ?></td>
+                                    <td>
+                                        <form action="<?php echo $base_url ?>teacher/homework.php" method="GET">
+                                            <input type="hidden" name="homeworkId" value="<?php echo $homework['id'] ?>">
+                                            <button type="submit" class="btn btn-block btn-outline-info">View</button>
+                                        </form>
+                                    </td>
                                 </tr>
                                 <?php endwhile ?>
+                                <?php endif ?>
                                 </tbody>
                             </table>
                         </div>
