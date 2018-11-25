@@ -17,7 +17,7 @@
         }
     }
 
-    function getClassesById($PDO, $classId) {
+    function getClassById($PDO, $classId) {
         try {
             $stmt = $PDO->prepare("SELECT * FROM `class` WHERE `id` = :id");
             $stmt->execute([':id' => $classId]);
@@ -138,7 +138,7 @@
                                     <?php $date = date_create($homework['date_of_message']) ?>
                                     <td class="text-center"><?php print(date_format($date, 'Y-m-d')) ?></td>
                                     <td class="text-center"><?php echo substr($homework['message'], 0, 50) ?></td>
-                                    <?php $classData = getClassesById($PDO, $homework['class_id']); ?>
+                                    <?php $classData = getClassById($PDO, $homework['class_id']); ?>
                                     <?php if ($classData != false) :?>
                                     <td class="text-center"><?php echo $classData['class_name'] . ' - ' . $classData['section']; ?></td>
                                     <?php endif ?>
