@@ -142,7 +142,14 @@
                                     <?php if ($classData != false) :?>
                                     <td class="text-center"><?php echo $classData['class_name'] . ' - ' . $classData['section']; ?></td>
                                     <?php endif ?>
-                                    <td class="text-center"><?php echo $homework['student_id'] ?></td>
+                                    <?php if ($homework['student_id'] != NULL): ?>
+                                    <?php $studentData = getStudentById($PDO, $homework['student_id']) ?>
+                                    <?php if ($studentData != false): ?>
+                                    <td class="text-center"><?php echo $studentData['name'] . ' - ' . $studentData['admission_no']; ?></td>
+                                    <?php endif ?>
+                                    <?php else: ?>
+                                        <td class="text-center">All</td>
+                                    <?php endif ?>
                                     <td>
                                         <form action="<?php echo $base_url ?>teacher/homework.php" method="GET">
                                             <input type="hidden" name="homeworkId" value="<?php echo $homework['id'] ?>">
