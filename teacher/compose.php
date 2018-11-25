@@ -155,17 +155,21 @@
             if (empty($student_id)) {
                 $data = ['message' => $homework, 'date_of_message' => $dateSubmitted, 'class_id' => $class_id];
                 if (!is_null(submitHomework($PDO, $data))) {
-                    $success = 'Homework successfully submitted';
+                    $success = 'Homework sent successfully. The page will refresh in 5 seconds.';
+                    header("refresh:5;url=compose.php");
                 } else {
                     $error = 'Something went wrong.. Try again';
+                    header("refresh:5;url=compose.php");
                 }
 
             } else {
                 $data = ['message' => $homework, 'date_of_message' => $dateSubmitted, 'class_id' => $class_id];
                 if (!is_null(submitHomework($PDO, $data, $student_id=$student_id))) {
-                    $success = 'Homework successfully submitted';
+                    $success = 'Homework sent successfully. The page will refresh in 5 seconds.';
+                    header("refresh:5;url=compose.php");
                 } else {
                     $error = 'Something went wrong.. Try again';
+                    header("refresh:5;url=compose.php");
                 }
             }
         }
@@ -274,7 +278,10 @@
         </section>
         <script>
             $(document).ready(function() {
-                $('#datetime').datepicker();
+                $('#datetime').datepicker({
+                    dateFormat: 'dd/mm/yy'
+                });
+                
             });
             $('#class').change(function(e) {
                 $.ajax({
