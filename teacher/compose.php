@@ -1,7 +1,6 @@
 <?php 
-    // echo parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     require(__DIR__.'/../config.php');
-    require(__DIR__.'/../logging.php');
+    require(__DIR__.'/../helpers.php');
     session_start();
 
     if ($_SESSION['role'] !== 'teacher') {
@@ -17,13 +16,41 @@
 
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
+            addToLog($PDO, 'Teacher Logged out', $_SESSION['data'][0]['id']);
             session_destroy();
             header('Location: ../');    
         }
     }
 
+    if (isset($_SERVER["HTTP_ORIGIN"])) {
+        header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+    }
+
+
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Max-Age: 86400");
+
+    if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
+        if (isset($_SERVER["HTTP_ACCESS_CONTROL_REQUEST_METHOD"])) {
+            header("Access-Control-Allow-Methods: GET");
+        }
+
+        if (isset($_SERVER["HTTP_ACCESS_CONTROL_REQUEST_HEADERS"])) {
+            header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+        }
+        exit(0);
+    }
+
     if (isset($_GET['class_id'])) {
-        echo $_GET['class_id'];
+        $students_data = getStudentsByClass($PDO, $_GET['class_id']);
+        if ($students_data === NULL) {
+            header("Status: 404 Not Found");
+            return;
+        } else {
+            header('Content-Type: application/json'); 
+            echo json_encode($students_data);
+        }
+        return;
     }
 
     function getClasses($PDO) {
@@ -42,18 +69,9 @@
         }
     }
 
-    // function getStudents($PDO, $
-) {
-    //     try {
-    //         $stmt = $PDO->prepare("SELECT `id`, ``")
-    //     } catch (Exception $e) {
-
-    //    }
-    // }
-
     function getStudentsByClass($PDO, $class_id) {
         try {
-            $stmt = $PDO->prepare("SELECT * FROM `student` WHERE `class_id` = :class_id AND `date_deleted` IS NULL");
+            $stmt = $PDO->prepare("SELECT `id`, `name`, `admission_no` FROM `student` WHERE `class_id` = :class_id AND `date_deleted` IS NULL");
             $stmt->execute([':class_id' => $class_id]);
             if ($stmt->rowCount() === 0) {
                 return NULL;
@@ -86,11 +104,11 @@
                                 ");
                 $stmt->execute([
                                 ':message' => $data['message'], ':date_of_message' => $date, 
-                                ':student_id' => NULL, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['id'],
-                                ':date_created' => CURRENT_TIMESTAMP, ':date_modified' => CURRENT_TIMESTAMP
+                                ':student_id' => NULL, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['data'][0]['id'],
+                                ':date_created' => (string) date("Y-m-d"), ':date_modified' => ((string) date("Y-m-d"))
                             ]);
-                echo 'done sent the message without student id';
-                addToLog($PDO, 'added homework', $_SESSION['id']);
+                $lastMessage = getLastRow($PDO, 'message');
+                addToLog($PDO, 'added homework', $_SESSION['data'][0]['id'], $message_id=$lastMessage['id']);
                 return $stmt->rowCount();
             } catch (Exception $e) {
                 print($e);
@@ -105,17 +123,18 @@
                                 ");
                 $stmt->execute([
                                 ':message' => $data['message'], 
-                                ':student_id' => $data['student_id'], ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['id'],
-                                ':date_created' => CURRENT_TIMESTAMP, ':date_modified' => CURRENT_TIMESTAMP
+                                ':student_id' => $student_id, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['data'][0]['id'],
+                                ':date_created' => ((string) date("Y-m-d")), ':date_modified' => ((string) date("Y-m-d"))
                             ]);
-                echo 'done sent the message with student id';
-                addToLog($PDO, 'added homework', $_SESSION['id']);
+                $lastMessage = getLastRow($PDO, 'message');
+                addToLog($PDO, 'added homework', $_SESSION['data'][0]['id'], $message_id=$lastMessage['id']);
                 return $stmt->rowCount();
             } catch (Exception $e) {
                 print($e);
                 return NULL;
             }
         }
+        
     }
 
     // for loading the data with the class data
@@ -131,7 +150,7 @@
             try {
                 $date = new DateTime($dateSubmitted);
             } catch (Exception $e) {
-                $error = 'Date is wrong.. Please Enter a Valid Date!';
+                $error = "Date is wrong.. Please Enter a Valid Date!";
             }
             if (empty($student_id)) {
                 $data = ['message' => $homework, 'date_of_message' => $dateSubmitted, 'class_id' => $class_id];
@@ -141,6 +160,13 @@
                     $error = 'Something went wrong.. Try again';
                 }
 
+            } else {
+                $data = ['message' => $homework, 'date_of_message' => $dateSubmitted, 'class_id' => $class_id];
+                if (!is_null(submitHomework($PDO, $data, $student_id=$student_id))) {
+                    $success = 'Homework successfully submitted';
+                } else {
+                    $error = 'Something went wrong.. Try again';
+                }
             }
         }
     }
@@ -219,7 +245,7 @@
                 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
                     <div class="form-group row">
                         <label for="date_of_homework" class="col-form-label col-md-2">Date of Homework*</label>
-                        <input type="text" name="date_of_homework" class="form-control col-md-4" id="datetime" required>
+                        <input type="text" name="date_of_homework" class="form-control col-md-4" id="datetime" required autocomplete="off">
                     </div>
                     <div class="form-group row">
                         <label for="class" class="col-form-label col-md-2">Class*</label>
@@ -245,31 +271,41 @@
                     </div>
                 </form>
             </div>
-            <script>
-                $(document).ready(function() {
-                    $('#datetime').datepicker();
-                });
-
-                // $('#class').on('change', function(e) {
-                //     $.ajax({
-                //         url: "<?php echo $base_url ?>teacher/get_class.php",
-                //         type: "POST",
-                //         data: {
-                //             'class_id': e.target.value
-                //         },
-                //         success: function(results) {
-                //             let html = ``;
-                //             return new Promise(function() {
-                //                 results.forEach(function(result)) {
-                //                     html += `<option value=${result.id}>${result.name} - ${result.admission_no}</option>`;
-                //                 });  
-                //                 Promise.resolve();
-                //             }).then(function(html) {
-                //                 $('#students').append(html);
-                //             });
-                //         }
-                //     })
-                // });
-            </script>
+        </section>
+        <script>
+            $(document).ready(function() {
+                $('#datetime').datepicker();
+            });
+            $('#class').change(function(e) {
+                $.ajax({
+                    url: "<?php echo $_SERVER['PHP_SELF'] ?>",
+                    type: "GET",
+                    data: {
+                        'class_id': e.target.value,
+                    },
+                    success: function(results) {
+                        console.log(results);
+                        if (results === '') {
+                            return;
+                        }
+                        var UI_studentsSelect = $('#students');
+                        UI_studentsSelect.empty();
+                        UI_studentsSelect.append(new Option(`All`, ``, true, true));
+                        try {
+                            results = JSON.parse(results);
+                        } catch(e) {
+                            
+                        } finally {
+                            results.forEach(function(result) {
+                                UI_studentsSelect.append(new Option(`${result.name} - ${result.admission_no}`, `${result.id}`));
+                            });
+                        }
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                })
+            });
+        </script>
 <?php require_once(__DIR__.'/../footer.html'); ?>
 

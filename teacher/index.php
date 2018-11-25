@@ -1,5 +1,6 @@
 <?php 
     require(__DIR__.'/../config.php');
+    require(__DIR__.'/../helpers.php');
     session_start();
 
     function getHomeworks($PDO, $teacherId) {
@@ -16,6 +17,34 @@
         }
     }
 
+    function getClassesById($PDO, $classId) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `class` WHERE `id` = :id");
+            $stmt->execute([':id' => $classId]);
+            if ($stmt->rowCount() == 0) {
+                return false;
+            }
+            return $stmt->fetch();
+        } catch (Exception $e) {
+            print($e);
+            return false;
+        }
+    }
+
+    function getStudentById($PDO, $studentId) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `student` WHERE `id` = :id");
+            $stmt->execute([':id' => $studentId]);
+            if ($stmt->rowCount() == 0) {
+                return false;
+            }
+            return $stmt->fetch();
+        } catch (Exception $e) {
+            print($e);
+            return false;
+        }
+    }
+
     if ($_SESSION['role'] !== 'teacher') {
         session_destroy();
         header('Location: ../');
@@ -23,6 +52,12 @@
 
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
+            require(__DIR__ . '/../db/db.connection.php');
+            $PDO = getConnection();
+            if (is_null($PDO)) {
+                die("Can't connect to database");
+            }
+            addToLog($PDO, 'Teacher Logged out', $_SESSION['data'][0]['id']);
             session_destroy();
             header('Location: ../');
         }
@@ -103,7 +138,10 @@
                                     <?php $date = date_create($homework['date_created']) ?>
                                     <td class="text-center"><?php print(date_format($date, 'Y-m-d')) ?></td>
                                     <td class="text-justify"><?php echo substr($homework['message'], 0, 50) ?></td>
-                                    <td class="text-center"><?php echo $homework['class_id'] ?></td>
+                                    <?php $classData = getClassesById($PDO, $homework['class_id']); ?>
+                                    <?php if ($classData != false) :?>
+                                    <td class="text-center"><?php echo $classData['class_name'] . ' - ' . $classData['section']; ?></td>
+                                    <?php endif ?>
                                     <td class="text-center"><?php echo $homework['student_id'] ?></td>
                                     <td>
                                         <form action="<?php echo $base_url ?>teacher/homework.php" method="GET">

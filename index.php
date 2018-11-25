@@ -1,5 +1,5 @@
 <?php
-
+    require(__DIR__.'/helpers.php');
     session_start();
     if (isset($_SESSION['role'])) {
         header("Location: " . $_SESSION['role'] . "/");
@@ -61,6 +61,7 @@
             if ($teacherData != NULL) {
                 $_SESSION['role'] = 'teacher';
                 $_SESSION['data'] = $teacherData;
+                addToLog($PDO, 'Teacher Logged in', $_SESSION['data'][0]['id']);
                 $PDO = null;
                 header('Location: teacher/');
             }

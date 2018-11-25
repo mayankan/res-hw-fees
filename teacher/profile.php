@@ -24,6 +24,7 @@
 
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
+            addToLog($PDO, 'Teacher Logged out', $_SESSION['data'][0]['id']);
             session_destroy();
             header('Location: ../');
         }
