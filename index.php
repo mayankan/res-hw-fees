@@ -70,7 +70,7 @@
                 $studentData = checkStudent($_POST['username'], $_POST['password'], $PDO);
                 if ($studentData != NULL) {
                     $_SESSION['role'] = 'student';
-                    $_SESSION['data'] = $studentData[0];
+                    $_SESSION['data'] = $studentData;
                     $PDO = null;
                     header('Location: student/');
                 } 

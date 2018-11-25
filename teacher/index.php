@@ -121,7 +121,7 @@
                 <div id="homeworks">
                     <div class="row">
                         <div class="col-md-12">
-                            <table class="table table-hover responsive-table">
+                            <table class="table table-hover responsive-table table-bordered">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Date</th>
@@ -135,9 +135,9 @@
                                 <?php if (!is_null($homeworks)): ?> 
                                 <?php while ($homework = array_shift($homeworks)): ?>
                                 <tr>
-                                    <?php $date = date_create($homework['date_created']) ?>
+                                    <?php $date = date_create($homework['date_of_message']) ?>
                                     <td class="text-center"><?php print(date_format($date, 'Y-m-d')) ?></td>
-                                    <td class="text-justify"><?php echo substr($homework['message'], 0, 50) ?></td>
+                                    <td class="text-center"><?php echo substr($homework['message'], 0, 50) ?></td>
                                     <?php $classData = getClassesById($PDO, $homework['class_id']); ?>
                                     <?php if ($classData != false) :?>
                                     <td class="text-center"><?php echo $classData['class_name'] . ' - ' . $classData['section']; ?></td>

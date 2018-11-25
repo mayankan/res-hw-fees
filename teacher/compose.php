@@ -122,7 +122,7 @@
                                     VALUES (:message, $date, :student_id, :class_id, :teacher_id, :date_created, :date_modified)
                                 ");
                 $stmt->execute([
-                                ':message' => $data['message'], 
+                                ':message' => $data['message'], ':date_of_message' => $date,
                                 ':student_id' => $student_id, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['data'][0]['id'],
                                 ':date_created' => ((string) date("Y-m-d")), ':date_modified' => ((string) date("Y-m-d"))
                             ]);

@@ -14,6 +14,52 @@
         }
     }
 
+    function getClassByStudentId($PDO, $studentId) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `student` WHERE `id` = :id");
+            $stmt->execute([':id' => $studentId]);
+            return $stmt->fetch()['class_id'];
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
+
+    function getTeacherName($PDO, $teacherId) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `id` = :id");
+            $stmt->execute([':id' => $teacherId]);
+            return $stmt->fetch()['name'];
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
+
+    function getHomeworks($PDO, $classId) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `message` WHERE `class_id` = :class_id AND date_deleted IS NULL ORDER BY `date_of_message` DESC");
+            $stmt->execute([':class_id' => $classId]);
+            if ($stmt->rowCount() === 0) {
+                return NULL;
+            }
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
+
+    if (isset($_SESSION['data']['id'])) {
+        require(__DIR__ . '/../db/db.connection.php');
+        $PDO = getConnection();
+        if (is_null($PDO)) {
+            die("Can't connect to database");
+        }
+        $classId = getClassByStudentId($PDO, $_SESSION['data']['id']);
+        $homeworks = getHomeworks($PDO, $classId);
+    }
+
 ?>
 
 <?php require_once(__DIR__.'/../header.html'); ?>
@@ -60,14 +106,32 @@
                 <div id="homeworks">
                     <div class="row">
                         <div class="col-md-12">
-                            <table class="table responsive-table">
+                            <table class="table table-hover responsive-table table-bordered">
                                 <thead>
                                     <th class="text-center">Date</th>
                                     <th class="text-center">Homework</th>
                                     <th class="text-center">Given By</th>
                                 </thead>
                                 <tbody>
-                                
+                                <?php if (!is_null($homeworks)): ?> 
+                                <?php while ($homework = array_shift($homeworks)): ?>
+                                <tr>
+                                    <?php $date = date_create($homework['date_of_message']) ?>
+                                    <td class="text-center"><?php print(date_format($date, 'Y-m-d')) ?></td>
+                                    <td class="text-justify"><?php echo substr($homework['message'], 0, 50) ?></td>
+                                    <?php $teacherName = getTeacherName($PDO, $homework['teacher_id']); ?>
+                                    <?php if ($teacherName !== NULL): ?>
+                                    <td class="text-center"><?php echo $teacherName; ?></td>
+                                    <?php endif ?>
+                                    <td>
+                                        <form action="<?php echo $base_url ?>teacher/homework.php" method="GET">
+                                            <input type="hidden" name="homeworkId" value="<?php echo $homework['id'] ?>">
+                                            <button type="submit" class="btn btn-block btn-outline-warning">Edit</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <?php endwhile ?>
+                                <?php endif ?>
                                 </tbody>
                             </table>
                         </div>
