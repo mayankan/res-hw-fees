@@ -165,7 +165,7 @@
                                 </ul>
                                 <div class="card mt-3">
                                     <div class="card-body">
-                                        <h5 class="d-inline-block">Message - </h5>
+                                        <h5 class="d-inline-block">Homework</h5>
                                         <p><?php echo $homework['message']; ?></p> 
                                     </div>
                                 </div>

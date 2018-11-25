@@ -126,7 +126,7 @@
                                     <td>
                                         <form action="<?php echo $base_url ?>student/homework.php" method="GET">
                                             <input type="hidden" name="homeworkId" value="<?php echo $homework['id'] ?>">
-                                            <button type="submit" class="btn btn-block btn-outline-warning">Edit</button>
+                                            <button type="submit" class="btn btn-block btn-outline-warning">View</button>
                                         </form>
                                     </td>
                                 </tr>
