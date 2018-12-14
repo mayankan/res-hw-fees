@@ -93,13 +93,11 @@
 
     function submitHomework($PDO, $data, $student_id=false) {
         $date = $data['date_of_message'];
-        $date = strtotime($date);
-        $date = (string) date('Y-m-d', $date);
         if (!$student_id) {
             try {
                 $stmt = $PDO->prepare("
                                     INSERT INTO `message` 
-                                    (`message`, `date_of_message`, `student_id`, `class_id`, `teacher_id`)
+                                    (`message`, `date_of_message`, `student_id`, `class_id`, `teacher_id`, `date_created`, `date_modified`)
                                     VALUES (:message, :date_of_message, :student_id, :class_id, :teacher_id, :date_created, :date_modified)
                                 ");
                 $stmt->execute([
@@ -119,7 +117,7 @@
                 $stmt = $PDO->prepare("
                                     INSERT INTO `message` 
                                     (`message`, `date_of_message`, `student_id`, `class_id`, `teacher_id`, `date_created`, `date_modified`)
-                                    VALUES (:message, $date, :student_id, :class_id, :teacher_id, :date_created, :date_modified)
+                                    VALUES (:message, :date_of_message, :student_id, :class_id, :teacher_id, :date_created, :date_modified)
                                 ");
                 $stmt->execute([
                                 ':message' => $data['message'], ':date_of_message' => $date,
@@ -148,28 +146,28 @@
             $student_id = $_POST['student'];
             $homework = filter_var($_POST['homework'], FILTER_SANITIZE_STRING);
             try {
-                $date = new DateTime($dateSubmitted);
+                $date = strtotime($dateSubmitted);
+                $date = (string) date('Y-m-d', $date);
             } catch (Exception $e) {
                 $error = "Date is wrong.. Please Enter a Valid Date!";
+                return;
             }
             if (empty($student_id)) {
-                $data = ['message' => $homework, 'date_of_message' => $dateSubmitted, 'class_id' => $class_id];
+                $data = ['message' => $homework, 'date_of_message' => $date, 'class_id' => $class_id];
                 if (!is_null(submitHomework($PDO, $data))) {
                     $success = 'Homework sent successfully. The page will refresh in 5 seconds.';
                     header("refresh:5;url=compose.php");
                 } else {
                     $error = 'Something went wrong.. Try again';
-                    header("refresh:5;url=compose.php");
                 }
 
             } else {
-                $data = ['message' => $homework, 'date_of_message' => $dateSubmitted, 'class_id' => $class_id];
+                $data = ['message' => $homework, 'date_of_message' => $date, 'class_id' => $class_id];
                 if (!is_null(submitHomework($PDO, $data, $student_id=$student_id))) {
                     $success = 'Homework sent successfully. The page will refresh in 5 seconds.';
                     header("refresh:5;url=compose.php");
                 } else {
                     $error = 'Something went wrong.. Try again';
-                    header("refresh:5;url=compose.php");
                 }
             }
         }
@@ -278,41 +276,42 @@
         </section>
         <script>
             $(document).ready(function() {
-                $('#datetime').datepicker({
-                    dateFormat: 'dd/mm/yy'
+                $('#datetime').datepicker();
+                $('#class').change(function(e) {
+                    $.ajax({
+                        url: "<?php echo $_SERVER['PHP_SELF'] ?>",
+						type: "GET",
+						headers: {
+							'Content-Type': 'application/json'
+						},
+                        data: {
+                            'class_id': e.target.value,
+                        },
+                        success: function(results) {
+                            console.log(results);
+                            if (results === '') {
+                                return;
+                            }
+                            var UI_studentsSelect = $('#students');
+                            UI_studentsSelect.empty();
+                            UI_studentsSelect.append(new Option(`All`, ``, true, true));
+                            try {
+                                results = JSON.parse(results);
+                            } catch(e) {
+                                
+                            } finally {
+                                results.forEach(function(result) {
+                                    UI_studentsSelect.append(new Option(`${result.name} - ${result.admission_no}`, `${result.id}`));
+                                });
+                            }
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+                    })
                 });
-                
             });
-            $('#class').change(function(e) {
-                $.ajax({
-                    url: "<?php echo $_SERVER['PHP_SELF'] ?>",
-                    type: "GET",
-                    data: {
-                        'class_id': e.target.value,
-                    },
-                    success: function(results) {
-                        console.log(results);
-                        if (results === '') {
-                            return;
-                        }
-                        var UI_studentsSelect = $('#students');
-                        UI_studentsSelect.empty();
-                        UI_studentsSelect.append(new Option(`All`, ``, true, true));
-                        try {
-                            results = JSON.parse(results);
-                        } catch(e) {
-                            
-                        } finally {
-                            results.forEach(function(result) {
-                                UI_studentsSelect.append(new Option(`${result.name} - ${result.admission_no}`, `${result.id}`));
-                            });
-                        }
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                })
-            });
+            
         </script>
 <?php require_once(__DIR__.'/../footer.html'); ?>
 

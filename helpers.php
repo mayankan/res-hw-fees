@@ -42,4 +42,57 @@
         }
     }
 
+    function getHomework($PDO, $id) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `message` WHERE id = :id AND date_deleted IS NULL");
+            $stmt->execute([':id' => $id]);
+            if ($stmt->rowCount() === 0) {
+                return NULL;
+            }
+            return $stmt->fetch();
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
+
+    function getStudent($PDO, $studentId) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `student` WHERE `id` = :id");
+            $stmt->execute([':id' => $studentId]);
+            if ($stmt->rowCount() == 0) {
+                return false;
+            }
+            return $stmt->fetch();
+        } catch (Exception $e) {
+            print($e);
+            return false;
+        }
+    }
+
+    function getClass($PDO, $classId) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `class` WHERE `id` = :id");
+            $stmt->execute([':id' => $classId]);
+            if ($stmt->rowCount() == 0) {
+                return false;
+            }
+            return $stmt->fetch();
+        } catch (Exception $e) {
+            print($e);
+            return false;
+        }
+    }
+
+    function getTeacherName($PDO, $teacherId) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `id` = :id");
+            $stmt->execute([':id' => $teacherId]);
+            return $stmt->fetch()['name'];
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
+
 ?>

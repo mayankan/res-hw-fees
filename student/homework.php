@@ -1,5 +1,6 @@
 <?php
     require(__DIR__.'/../config.php');
+    require(__DIR__.'/../helpers.php');
     session_start();
 
     if ($_SESSION['role'] !== 'student') {
@@ -11,48 +12,6 @@
         if ($_GET['logout'] === 'true') {
             session_destroy();
             header('Location: ../');
-        }
-    }
-
-    function getHomework($PDO, $id) {
-        try {
-            $stmt = $PDO->prepare("SELECT * FROM `message` WHERE id = :id AND date_deleted IS NULL");
-            $stmt->execute([':id' => $id]);
-            if ($stmt->rowCount() === 0) {
-                return NULL;
-            }
-            return $stmt->fetch();
-        } catch (Exception $e) {
-            print($e);
-            return NULL;
-        }
-    }
-
-    function getStudent($PDO, $studentId) {
-        try {
-            $stmt = $PDO->prepare("SELECT * FROM `student` WHERE `id` = :id");
-            $stmt->execute([':id' => $studentId]);
-            if ($stmt->rowCount() == 0) {
-                return false;
-            }
-            return $stmt->fetch();
-        } catch (Exception $e) {
-            print($e);
-            return false;
-        }
-    }
-
-    function getClass($PDO, $classId) {
-        try {
-            $stmt = $PDO->prepare("SELECT * FROM `class` WHERE `id` = :id");
-            $stmt->execute([':id' => $classId]);
-            if ($stmt->rowCount() == 0) {
-                return false;
-            }
-            return $stmt->fetch();
-        } catch (Exception $e) {
-            print($e);
-            return false;
         }
     }
 
@@ -69,7 +28,11 @@
         if ($homework !== NULL) {
             if ($homework['student_id'] !== NULL) {
                 if ($homework['student_id'] !== $_SESSION['data']['id']) {
-                    header('Location: index.php');
+                    if (isset($_SESSION)) {
+                        header('Location: index.php');
+                    } else {
+                        header('Location: ../');
+                    }
                 }
                 $student = getStudent($PDO, $homework['student_id']);
                 if ($student !== NULL) {
@@ -86,6 +49,10 @@
                     }
                 }
                 $homework['class'] = $class['class_name'] . ' - ' .$class['section'];
+            }
+            $teacher = getTeacherName($PDO, $homework['teacher_id']);
+            if ($teacher !== NULL) {
+                $homework['teacher'] = $teacher;
             }
         }
     } else {
@@ -142,7 +109,7 @@
                     <div class="col">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">By Shreyans Jain</h3>
+                                <h3 class="card-title">By <?php echo $homework['teacher'] ?></h3>
                             </div>
                             <div class="card-body">
                                 <h4 class="py-2">Details : </h4>
@@ -150,7 +117,7 @@
                                     <li class="list-group-item">
                                         <?php $date = date_create($homework['date_of_message']) ?>
                                         <h5 class="d-inline-block">Date of Homework - </h5>
-                                        <span><?php echo date_format($date, 'Y-m-d'); ?></span>
+                                        <span><?php echo date_format($date, 'd F Y'); ?></span>
                                     </li>
                                     <li class="list-group-item">
                                         <h5 class="d-inline-block">For Class - </h5>
@@ -159,14 +126,19 @@
                                     <?php if ($homework['student_id'] !== NULL): ?>
                                     <li class="list-group-item">
                                         <h5 class="d-inline-block">For Student - </h5>
-                                        <span>Mayank Anand</span>
+                                        <span><?php echo $homework['student'] ?></span>
                                     </li>
                                     <?php endif ?>
                                 </ul>
                                 <div class="card mt-3">
                                     <div class="card-body">
-                                        <h5 class="d-inline-block">Homework</h5>
+                                        <h5 class="d-inline-block">Homework : </h5>
                                         <p><?php echo $homework['message']; ?></p> 
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col">
+                                        <a href="<?php echo $base_url; ?>teacher/" class="btn btn-info">Go Back</a>
                                     </div>
                                 </div>
                             </div>
