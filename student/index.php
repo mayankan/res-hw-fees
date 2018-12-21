@@ -36,10 +36,10 @@
         }
     }
 
-    function getHomeworks($PDO, $classId) {
+    function getHomeworks($PDO, $classId, $start_limit=0, $end_limit=10) {
         try {
-            $stmt = $PDO->prepare("SELECT * FROM `message` WHERE `class_id` = :class_id AND date_deleted IS NULL ORDER BY `date_of_message` DESC");
-            $stmt->execute([':class_id' => $classId]);
+            $stmt = $PDO->prepare("SELECT * FROM `message` WHERE `class_id` = :class_id AND date_deleted IS NULL ORDER BY `date_of_message` DESC LIMIT :start_limit, :end_limit");
+            $stmt->execute([':class_id' => $classId, ':start_limit' => $start_limit, ':end_limit' => $end_limit]);
             if ($stmt->rowCount() === 0) {
                 return NULL;
             }
@@ -57,7 +57,24 @@
             die("Can't connect to database");
         }
         $classId = getClassByStudentId($PDO, $_SESSION['data']['id']);
-        $homeworks = getHomeworks($PDO, $classId);
+        if (!isset($_GET['page_no'])) {
+            $homeworks = getHomeworks($PDO, $classId);
+            $_SESSION['page_no'] = 1;
+        } else {
+            $page_no = (int)$_GET['page_no'];
+            if ($page_no <= 0) {
+                echo 'negative';
+                header("Location: index.php?page_no=1");
+                return;
+            }
+            $end_limit = $page_no * 10;
+            $start_limit = $end_limit - 10;
+            $homeworks = getHomeworks($PDO, $classId, $start_limit=$start_limit, $end_limit=$end_limit);
+            if ($homeworks == NULL) {
+                header('Location: index.php?page_no=' . (((int)$_GET['page_no']) - 1));
+            }
+            $_SESSION['page_no'] = $_GET['page_no'];
+        }
     }
 
 ?>
@@ -104,6 +121,24 @@
         <section id="homeworks">
             <div class="container-fluid">
                 <div id="homeworks">
+                    <div class="row py-2">
+                        <div class="col-6 d-flex justify-content-start">
+                            <?php if ($_SESSION['page_no'] <= 1): ?>
+                            <a href="#" class="btn btn-outline-dark" disabled>
+                                <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
+                            </a>
+                            <?php else: ?>
+                            <a href="<?php echo $base_url ?>student/index.php?page_no=<?php echo $_SESSION['page_no'] - 1 ?>" class="btn btn-outline-dark">
+                                <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
+                            </a>
+                            <?php endif ?>
+                        </div>
+                        <div class="col-6 d-flex justify-content-end">
+                            <a href="<?php echo $base_url ?>student/index.php?page_no=<?php echo $_SESSION['page_no'] + 1 ?>" class="btn btn-outline-dark">
+                                Next <i class="fa fa-arrow-right fa-1" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-12">
                             <table class="table table-hover responsive-table table-bordered">
@@ -111,6 +146,7 @@
                                     <th class="text-center">Date</th>
                                     <th class="text-center">Homework</th>
                                     <th class="text-center">Given By</th>
+                                    <th></th>
                                 </thead>
                                 <tbody>
                                 <?php if (!is_null($homeworks)): ?> 

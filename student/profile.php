@@ -1,6 +1,18 @@
 <?php 
     require(__DIR__.'/../config.php');
+    require(__DIR__.'/../helpers.php');
     session_start();
+
+    function getStudentData($PDO, $id) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `student` WHERE `id` = :id");
+            $stmt->execute([':id' => $id]);
+            return $stmt->fetch();
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
 
     if ($_SESSION['role'] !== 'student') {
         session_destroy();
@@ -11,6 +23,19 @@
         if ($_GET['logout'] === 'true') {
             session_destroy();
             header('Location: ../');
+        }
+    }
+    $studentData = NULL;
+    if ($_SESSION['data']['id']) {
+        require(__DIR__ . '/../db/db.connection.php');
+        $PDO = getConnection();
+        if (is_null($PDO)) {
+            die("Can't connect to database");
+        }
+        $studentData = getStudentData($PDO, $_SESSION['data']['id']);
+        $classData = NULL;
+        if ($studentData !== NULL) {
+            $classData = getClass($PDO, $studentData['class_id']);
         }
     }
 
@@ -55,9 +80,50 @@
 
         
 
-        <section id="profile">
+        <section id="profile" class="m-4">
             <div class="container-fluid">
-                
+                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
+                    <div class="form-group">
+                        <!-- profile image -->
+                    </div>
+                    <div class="form-group row">
+                        <label for="admission_no" class="col-form-label col-md-2">Admission Number</label>
+                        <input disabled type="text" name="admission_no" class="form-control col-md-4" value="<?php echo $studentData['admission_no'] ?>">
+                    </div>
+                    <div class="form-group row">
+                        <label for="name" class="col-form-label col-md-2">Full Name</label>
+                        <input disabled type="text" name="full_name" class="form-control col-md-4" value="<?php echo $studentData['name'] ?>">
+                    </div>
+                    <div class="form-group row">
+                        <label for="father_name" class="col-form-label col-md-2">Father's Name</label>
+                        <input disabled type="text" father="father_name" class="form-control col-md-4" value="<?php echo $studentData['father_name'] ?>">
+                    </div>
+                    <div class="form-group row">
+                        <label for="mother_name" class="col-form-label col-md-2">Mother's Name</label>
+                        <input disabled type="text" father="mother_name" class="form-control col-md-4" value="<?php echo $studentData['mother_name'] ?>">
+                    </div>
+                    <div class="form-group row">
+                        <?php $date = date_create($studentData['dob']) ?>
+                        <label for="dob" class="col-form-label col-md-2">Date of Birth</label>
+                        <input disabled type="text" father="dob" class="form-control col-md-4" value="<?php echo date_format($date, 'd F Y'); ?>">
+                    </div>
+                    <div class="form-group row">
+                        <label for="gender" class="col-form-label col-md-2">Gender</label>
+                        <input disabled type="text" father="gender" class="form-control col-md-4" value="<?php echo $studentData['gender'] ?>">
+                    </div>
+                    <div class="form-group row">
+                        <label for="address" class="col-form-label col-md-2">address</label>
+                        <textarea name="address" class="form-control col-md-4" disabled cols="30" rows="6"><?php echo $studentData['address'] ?></textarea>
+                    </div>
+                    <div class="form-group row">
+                        <label for="mobile_number" class="col-form-label col-md-2">Mobile Number</label>
+                        <input disabled type="number" name="mobile_number" class="form-control col-md-4" value="<?php echo $studentData['mobile_number'] ?>">
+                    </div>
+                    <div class="form-group row">
+                        <label for="class" class="col-form-label col-md-2">Class & Section</label>
+                        <input disabled type="text" name="class" class="form-control col-md-4" value="<?php echo $classData['class_name'] . ' - ' . $classData['section'] ?>">
+                    </div>
+                </form>
             </div>
         </section>
             

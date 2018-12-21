@@ -4,13 +4,15 @@
     session_start();
 
     if ($_SESSION['role'] !== 'student') {
-    	header('Location: ../404.html');
+        header('Location: ../404.html');
+        return;
     }
 
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
             session_destroy();
             header('Location: ../');
+            return;
         }
     }
 
@@ -35,7 +37,6 @@
                 }
                 $student = getStudent($PDO, $homework['student_id']);
                 if ($student !== NULL) {
-                    if ($student)
                     $homework['student'] = $student['name'];
                 }
             }
