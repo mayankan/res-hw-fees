@@ -3,8 +3,8 @@
     session_start();
 
     if ($_SESSION['role'] !== 'student') {
-        session_destroy();
-        header('Location: ../');
+        header('Location: ../404.html');
+        return;
     }
 
     if (isset($_GET['logout'])) {

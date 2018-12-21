@@ -41,8 +41,7 @@
     }
     
     if ($_SESSION['role'] !== 'teacher') {
-        session_destroy();
-        header('Location: ../');
+        header('Location: ../404.html');
     }
 
     if (isset($_GET['logout'])) {
