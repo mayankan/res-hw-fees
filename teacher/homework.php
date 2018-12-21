@@ -1,6 +1,7 @@
 <?php
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../helpers.php');
+    require(__DIR__ . '/../db/db.connection.php');
     session_start();
 
     function deleteHomework($PDO, $homeworkId) {
@@ -38,6 +39,10 @@
 
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
+            $PDO = getConnection();
+            if (is_null($PDO)) {
+                die("Can't connect to database");
+            }
             addToLog($PDO, 'Teacher Logged out', $_SESSION['data'][0]['id']);
             session_destroy();
             header('Location: ../');
@@ -45,7 +50,6 @@
     }
 
     if (isset($_GET['homeworkId'])) {
-        require(__DIR__ . '/../db/db.connection.php');
         $PDO = getConnection();
         if (is_null($PDO)) {
             die("Can't connect to database");
