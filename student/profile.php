@@ -7,6 +7,9 @@
         try {
             $stmt = $PDO->prepare("SELECT * FROM `student` WHERE `id` = :id");
             $stmt->execute([':id' => $id]);
+            if ($stmt->rowCount() <= 0) {
+                return NULL;
+            }
             return $stmt->fetch();
         } catch (Exception $e) {
             print($e);
@@ -78,8 +81,7 @@
             </nav>
         </header>   
 
-        
-
+        <?php if (!is_null($studentData)): ?>
         <section id="profile" class="m-4">
             <div class="container-fluid">
                 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
@@ -126,5 +128,12 @@
                 </form>
             </div>
         </section>
+        <?php else: ?>
+        <section id="profile" class="m-4">
+            <div class="container-fluid">
+                <h1 class="display-2">Something went wrong try refreshing</h1>
+            </div>
+        </section>
+        <?php endif ?>
             
 <?php require_once(__DIR__.'/../footer.html');
