@@ -3,6 +3,34 @@
     require(__DIR__.'/../helpers.php');
     session_start();
 
+    function deleteHomework($PDO, $homeworkId) {
+        try {
+            $stmt = $PDO->prepare("UPDATE `message` SET `date_deleted` = :date_deleted WHERE `id` = :id");
+            $stmt->execute(['date_deleted' => date("Y/m/d h:i:s"), ':id' => $homeworkId]);
+            if ($stmt->rowCount() === 0) {
+                return NULL;
+            }
+            return $stmt->fetch();
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
+
+    function updateHomework($PDO, $homeworkId, $message) {
+        try {
+            $stmt = $PDO->prepare("UPDATE `message` SET `message` = :message WHERE `id` = :id");
+            $stmt->execute([':message' => $message, ':id' => $homeworkId]);
+            if ($stmt->rowCount() === 0) {
+                return NULL;
+            }
+            return $stmt->fetch();
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
+
     if ($_SESSION['role'] !== 'teacher') {
         session_destroy();
         header('Location: ../');
@@ -34,7 +62,6 @@
             }
             $student = getStudent($PDO, $homework['student_id']);
             if ($student !== NULL) {
-                if ($student)
                 $homework['student'] = $student['name'];
             }
             if ($class !== NULL) {
@@ -45,13 +72,55 @@
                 $homework['teacher'] = $teacher;
             }
         }
-    } else {
+        $_SESSION['homeworkId'] = $_GET['homeworkId'];
+    } else if ($_SERVER['REQUEST_METHOD'] !== "POST") {
         header('Location: index.php');
     }
 
-    if (isset($_POST)) {
-        
+    // updating the message
+    if (isset($_POST['homework_id']) && isset($_POST['message'])) {
+        if ($_POST['homework_id'] !== $_SESSION['homeworkId']) {
+            unset($_SESSION['homeworkId']);
+            header('Location: index.php');
+        }
+        unset($_SESSION['homeworkId']);
+        require(__DIR__ . '/../db/db.connection.php');
+        $PDO = getConnection();
+        if (is_null($PDO)) {
+            die("Can't connect to database");
+        }
+        if (updateHomework($PDO, $_POST['homework_id'], $_POST['message']) !== NULL) {
+            addToLog($PDO, 'Updated Homework', $_SESSION['data'][0]['id'], $message_id=$_POST['homework_id']);
+            $_SESSION['success'] = 'Message has been updated';
+            header("Location: homework.php?homeworkId=" . $_SESSION['homeworkId']);
+        } else {
+            $_SESSION['error'] = 'Message can\'t be updated';
+            header("Location: homework.php?homeworkId=" . $_SESSION['homeworkId']);
+        }
     }
+
+    // deleting the whole homework
+    if (isset($_POST['homeworkId'])) {
+        if ($_POST['homeworkId'] !== $_SESSION['homeworkId']) {
+            unset($_SESSION['homeworkId']);
+            header('Location: index.php');
+        }
+        unset($_SESSION['homeworkId']);
+        require(__DIR__ . '/../db/db.connection.php');
+        $PDO = getConnection();
+        if (is_null($PDO)) {
+            die("Can't connect to database");
+        }
+        if (deleteHomework($PDO, $_POST['homeworkId']) !== NULL) {
+            addToLog($PDO, 'Deleted Homework', $_SESSION['data'][0]['id'], $message_id=$_POST['homeworkId']);
+            $_SESSION['success'] = 'Message has been deleted';
+            header('Location: index.php');
+        } else {
+            $_SESSION['error'] = 'Message can\'t be deleted';
+            header('Location: index.php');
+        }
+    }
+
 ?>
 
 <?php require_once(__DIR__.'/../header.html'); ?>
@@ -95,6 +164,34 @@
                 </div>
             </nav>
         </header>
+
+        <section id="error" class="mt-4">
+            <div class="container">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <?php if (isset($_SESSION['error'])): ?>
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <strong><?php echo $_SESSION['error'] ?></strong>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                        <?php unset($_SESSION['error']); ?>
+                        <?php endif ?> 
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <?php if (isset($_SESSION['success'])): ?>
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <strong><?php echo $_SESSION['success'] ?></strong>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                        <?php unset($_SESSION['success']); ?>
+                        <?php endif ?> 
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="homework">
             <div class="container mt-5">
                 <div class="row">
@@ -131,17 +228,18 @@
                                         <div id="form-div" style="display: none;">
                                             <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
                                                 <input type="hidden" name="homework_id" value="<?php echo $_GET['homeworkId'] ?>">
-                                                <textarea class="form-control" rows="8"><?php echo $homework['message'] ?></textarea>
+                                                <textarea name="message" class="form-control" rows="8"><?php echo $homework['message'] ?></textarea>
                                                 <button type="submit" class="btn btn-success mt-2">Submit</button>
+                                                <button type="button" id="cancel" class="btn btn-danger mt-2">Cancel</button>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
-                                    <div class="col-md-6">
+                                    <div class="col-6">
                                         <a href="<?php echo $base_url; ?>teacher/" class="btn btn-info">Go Back</a>
                                     </div>
-                                    <div class="col-md-6 d-flex justify-content-end">
+                                    <div class="col-6 d-flex justify-content-end">
                                         <button type="button" id="edit" class="btn btn-warning mx-2">Edit</button>
                                         <form class="d-inline-block" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
                                             <input type="hidden" name="homeworkId" value="<?php echo $_GET['homeworkId'] ?>">
@@ -161,6 +259,12 @@
                     $('#show-div').hide();
                     $('#form-div').show();
                     $('#edit').hide();
+                });
+
+                $('#cancel').click(function() {
+                    $('#show-div').show();
+                    $('#form-div').hide();
+                    $('#edit').show();
                 });
             });
         </script>

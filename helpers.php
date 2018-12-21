@@ -17,11 +17,11 @@
     function addToLog($PDO, $message, $teacherId, $message_id=false) {
         if (!$message_id) {
             $stmt = $PDO->prepare("
-                                INSERT INTO `log` (`log_action`, `teacher_id`) VALUES (:log_action, :teacher_id);
+                                INSERT INTO `log` (`log_action`, `teacher_id`, `date_of_action`) VALUES (:log_action, :teacher_id, :date_of_action);
                             ");
             try {
                 $stmt->execute([
-                                ':log_action' => $message, ':teacher_id' => $teacherId
+                                ':log_action' => $message, ':teacher_id' => $teacherId, ':date_of_action' => date("Y/m/d h:i:s")
                             ]);
             } catch (Exception $e) {
                 return false;
@@ -29,11 +29,11 @@
             return true;
         } else {
             $stmt = $PDO->prepare("
-                INSERT INTO `log` (`log_action`, `message_id` ,`teacher_id`) VALUES (:log_action, :message_id, :teacher_id);
+                INSERT INTO `log` (`log_action`, `message_id` ,`teacher_id`, `date_of_action`) VALUES (:log_action, :message_id, :teacher_id, :date_of_action);
             ");
             try {
             $stmt->execute([
-                            ':log_action' => $message, 'message_id' => $message_id ,':teacher_id' => $teacherId
+                            ':log_action' => $message, 'message_id' => $message_id ,':teacher_id' => $teacherId, ':date_of_action' => date("Y/m/d h:i:s")
                         ]);
             } catch (Exception $e) {
                 return false;

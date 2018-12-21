@@ -4,8 +4,7 @@
     session_start();
 
     if ($_SESSION['role'] !== 'student') {
-        session_destroy();
-        header('Location: ../');
+    	header('Location: ../404.html');
     }
 
     if (isset($_GET['logout'])) {
@@ -138,7 +137,7 @@
                                 </div>
                                 <div class="row mt-4">
                                     <div class="col">
-                                        <a href="<?php echo $base_url; ?>teacher/" class="btn btn-info">Go Back</a>
+                                        <a href="<?php echo $base_url; ?>student/" class="btn btn-info">Go Back</a>
                                     </div>
                                 </div>
                             </div>

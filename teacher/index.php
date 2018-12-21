@@ -3,10 +3,10 @@
     require(__DIR__.'/../helpers.php');
     session_start();
 
-    function getHomeworks($PDO, $teacherId) {
+    function getHomeworks($PDO, $teacherId, $start_limit=0, $end_limit=10) {
         try {
-            $stmt = $PDO->prepare("SELECT * FROM `message` WHERE teacher_id = :teacher_id AND date_deleted IS NULL");
-            $stmt->execute([':teacher_id' => $teacherId]);
+            $stmt = $PDO->prepare("SELECT * FROM `message` WHERE teacher_id = :teacher_id AND date_deleted IS NULL LIMIT :start_limit, :end_limit");
+            $stmt->execute([':start_limit' => $start_limit, ':end_limit' => $end_limit, ':teacher_id' => $teacherId]);
             if ($stmt->rowCount() === 0) {
                 return NULL;
             }
@@ -46,8 +46,7 @@
     }
 
     if ($_SESSION['role'] !== 'teacher') {
-        session_destroy();
-        header('Location: ../');
+        header('Location: ../404.html');
     }
 
     if (isset($_GET['logout'])) {
@@ -69,7 +68,24 @@
         if (is_null($PDO)) {
             die("Can't connect to database");
         }
-        $homeworks = getHomeworks($PDO, $_SESSION['data'][0]['id']);
+        if (!isset($_GET['page_no'])) {
+            $homeworks = getHomeworks($PDO, $_SESSION['data'][0]['id']);
+            $_SESSION['page_no'] = 1;
+        } else {
+            $page_no = (int)$_GET['page_no'];
+            if ($page_no <= 0) {
+                echo 'negative';
+                header("Location: index.php?page_no=1");
+                return;
+            }
+            $end_limit = $page_no * 10;
+            $start_limit = $end_limit - 10;
+            $homeworks = getHomeworks($PDO, $_SESSION['data'][0]['id'], $start_limit=$start_limit, $end_limit=$end_limit);
+            if ($homeworks == NULL) {
+                header('Location: index.php?page_no=' . (((int)$_GET['page_no']) - 1));
+            }
+            $_SESSION['page_no'] = $_GET['page_no'];
+        }
     }
 
 ?>
@@ -116,12 +132,58 @@
             </nav>
         </header>   
 
+        <section id="error" class="mt-2">
+            <div class="container">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <?php if (isset($_SESSION['error'])): ?>
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <strong><?php echo $_SESSION['error'] ?></strong>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                        <?php unset($_SESSION['error']); ?>
+                        <?php endif ?> 
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <?php if (isset($_SESSION['success'])): ?>
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <strong><?php echo $_SESSION['success'] ?></strong>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                        <?php unset($_SESSION['success']); ?>
+                        <?php endif ?> 
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <?php if (!is_null($homeworks)): ?> 
         <section id="homeworks">
             <div class="container-fluid">
                 <div id="homeworks">
+                    <div class="row pb-2">
+                        <div class="col-6 d-flex justify-content-start">
+                            <?php if ($_SESSION['page_no'] <= 1): ?>
+                            <a href="#" class="btn btn-outline-dark" disabled>
+                                <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
+                            </a>
+                            <?php else: ?>
+                            <a href="<?php echo $base_url ?>teacher/index.php?page_no=<?php echo $_SESSION['page_no'] - 1 ?>" class="btn btn-outline-dark">
+                                <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
+                            </a>
+                            <?php endif ?>
+                        </div>
+                        <div class="col-6 d-flex justify-content-end">
+                            <a href="<?php echo $base_url ?>teacher/index.php?page_no=<?php echo $_SESSION['page_no'] + 1 ?>" class="btn btn-outline-dark">
+                                Next <i class="fa fa-arrow-right fa-1" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <table class="table table-hover responsive-table table-bordered">
+                            <table class="table table-hover table-responsive-sm table-bordered">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Date</th>
@@ -132,7 +194,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <?php if (!is_null($homeworks)): ?> 
                                 <?php while ($homework = array_shift($homeworks)): ?>
                                 <tr>
                                     <?php $date = date_create($homework['date_of_message']) ?>
@@ -158,7 +219,6 @@
                                     </td>
                                 </tr>
                                 <?php endwhile ?>
-                                <?php endif ?>
                                 </tbody>
                             </table>
                         </div>
@@ -166,4 +226,7 @@
                 </div>
             </div>
         </section>
+        <?php else: ?>
+
+        <?php endif ?>
 <?php require_once(__DIR__.'/../footer.html');

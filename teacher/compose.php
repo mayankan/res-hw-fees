@@ -4,8 +4,7 @@
     session_start();
 
     if ($_SESSION['role'] !== 'teacher') {
-        session_destroy();
-        header('Location: ../');
+		header('Location: ../404.html');
     }
 
     require(__DIR__.'/../db/db.connection.php');
@@ -282,7 +281,7 @@
                         url: "<?php echo $_SERVER['PHP_SELF'] ?>",
 						type: "GET",
 						headers: {
-							'Content-Type': 'application/json'
+							'Content-type': 'application/json'
 						},
                         data: {
                             'class_id': e.target.value,
