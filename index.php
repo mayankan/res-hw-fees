@@ -45,7 +45,7 @@
         if (isset($_POST)) {
 
             // check admin before to make things faster and secure
-            if ($_POST['username'] === "admin" && $_POST['password'] === "rainbow@12345") {
+            if ($_POST['username'] === "admin" && $_POST['password'] === "123") {
                 $_SESSION['role'] = 'admin';
                 header('Location: admin/');
             }

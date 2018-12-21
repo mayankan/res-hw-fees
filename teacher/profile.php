@@ -47,6 +47,10 @@
 
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
+            $PDO = getConnection();
+            if (is_null($PDO)) {
+                die("Can't connect to database");
+            }
             addToLog($PDO, 'Teacher Logged out', $_SESSION['data'][0]['id']);
             session_destroy();
             header('Location: ../');
