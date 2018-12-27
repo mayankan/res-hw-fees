@@ -21,7 +21,7 @@
     function changePassword($PDO, $newPass) {
         try {
             $stmt = $PDO->prepare("UPDATE `teacher` SET `password` = :pass WHERE `id` = :id");
-            $stmt->execute([':pass' => $newPass, ':id' => $_SESSION['data'][0]['id']]);
+            $stmt->execute([':pass' => $newPass, ':id' => $_SESSION['data']['id']]);
             return $stmt->fetch();
         } catch (Exception $e) {
             print($e);
@@ -32,7 +32,7 @@
     function updateInformation($PDO, $name, $email) {
         try {
             $stmt = $PDO->prepare("UPDATE `teacher` SET `name` = :name, `email_address` = :email WHERE `id` = :id");
-            $stmt->execute([':name' => $name, ':email' => $email,':id' => $_SESSION['data'][0]['id']]);
+            $stmt->execute([':name' => $name, ':email' => $email,':id' => $_SESSION['data']['id']]);
             return $stmt->fetch();
         } catch (Exception $e) {
             print($e);
@@ -50,19 +50,19 @@
             if (is_null($PDO)) {
                 die("Can't connect to database");
             }
-            addToLog($PDO, 'Teacher Logged out', $_SESSION['data'][0]['id']);
+            addToLog($PDO, 'Teacher Logged out', $_SESSION['data']['id']);
             session_destroy();
             header('Location: ../');
         }
     }
 
     $teacherData = NULL;
-    if ($_SESSION['data'][0]['id']) {
+    if ($_SESSION['data']['id']) {
         $PDO = getConnection();
         if (is_null($PDO)) {
             die("Can't connect to database");
         }
-        $teacherData = getTeacherData($PDO, $_SESSION['data'][0]['id']);
+        $teacherData = getTeacherData($PDO, $_SESSION['data']['id']);
         unset($PDO);
     }
 
@@ -86,7 +86,7 @@
         if (is_null($PDO)) {
             die("Can't connect to database");
         }
-        $teacherData = getTeacherData($PDO, $_SESSION['data'][0]['id']);
+        $teacherData = getTeacherData($PDO, $_SESSION['data']['id']);
 
         if ($teacherData['password'] !== $oldPass) {
             $_SESSION['error'] = 'Old Password do not match';

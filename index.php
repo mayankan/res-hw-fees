@@ -1,18 +1,24 @@
 <?php
     require(__DIR__.'/helpers.php');
+    require(__DIR__ . '/db/db.connection.php');
     session_start();
     if (isset($_SESSION['role'])) {
         header("Location: " . $_SESSION['role'] . "/");
     }
 
     function checkTeacher($username, $password, $PDO) {
+        $password_hash = hash('sha256', $password);
         try {
-            $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `username` = :username AND `password` = :password AND `date_deleted` IS NULL");
-            $stmt->execute([':username' => $username, ':password' => $password]);
+            $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `username` = :username AND `date_deleted` IS NULL");
+            $stmt->execute([':username' => $username]);
             if ($stmt->rowCount() === 0) {
                 return NULL;
+            }
+            $data = $stmt->fetch();
+            if (hash_equals($password_hash, $data['password'])) {
+                return $data;
             } else {
-                return $stmt->fetchAll();
+                return NULL;
             }
         } catch (Exception $e) {
             print($e);
@@ -50,7 +56,6 @@
                 header('Location: admin/');
             }
 
-            require(__DIR__ . '/db/db.connection.php');
             $PDO = getConnection();
             if (is_null($PDO)) {
                 die("Can't connect to database");
@@ -61,7 +66,7 @@
             if ($teacherData != NULL) {
                 $_SESSION['role'] = 'teacher';
                 $_SESSION['data'] = $teacherData;
-                addToLog($PDO, 'Teacher Logged in', $_SESSION['data'][0]['id']);
+                addToLog($PDO, 'Teacher Logged in', $_SESSION['data']['id']);
                 $PDO = null;
                 header('Location: teacher/');
             }
@@ -75,7 +80,9 @@
                     header('Location: student/');
                 } 
                 else {
-                    $error = "Invalid username or password";
+                    $_SESSION['error'] = "Invalid username or password";
+                    header('Location: index.php');
+                    return;
                 }
 
             }
@@ -96,11 +103,12 @@
         <div class="container">
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-6">
-                    <?php if (isset($error)): ?>
+                    <?php if (isset($_SESSION['error'])): ?>
                     <div class="alert alert-danger alert-dismissible fade show">
-                        <strong><?php echo $error ?></strong>
+                        <strong><?php echo $_SESSION['error'] ?></strong>
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                     </div>
+                    <?php unset($_SESSION['error']); ?>
                     <?php endif ?> 
                     <h3 class="text-center pb-2">Enter your Login Credentials</h3>
                     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">

@@ -43,7 +43,7 @@
             if (is_null($PDO)) {
                 die("Can't connect to database");
             }
-            addToLog($PDO, 'Teacher Logged out', $_SESSION['data'][0]['id']);
+            addToLog($PDO, 'Teacher Logged out', $_SESSION['data']['id']);
             session_destroy();
             header('Location: ../');
         }
@@ -57,7 +57,7 @@
         $homework = getHomework($PDO, $_GET['homeworkId']);
         $class = getClass($PDO, $homework['class_id']);
         if ($homework !== NULL) {
-            if ($homework['teacher_id'] !== $_SESSION['data'][0]['id']) {
+            if ($homework['teacher_id'] !== $_SESSION['data']['id']) {
                 if (isset($_SESSION)) {
                     header('Location: index.php');
                 } else {
@@ -94,7 +94,7 @@
             die("Can't connect to database");
         }
         if (updateHomework($PDO, $_POST['homework_id'], $_POST['message']) !== NULL) {
-            addToLog($PDO, 'Updated Homework', $_SESSION['data'][0]['id'], $message_id=$_POST['homework_id']);
+            addToLog($PDO, 'Updated Homework', $_SESSION['data']['id'], $message_id=$_POST['homework_id']);
             $_SESSION['success'] = 'Message has been updated';
             header("Location: homework.php?homeworkId=" . $_SESSION['homeworkId']);
         } else {
@@ -116,7 +116,7 @@
             die("Can't connect to database");
         }
         if (deleteHomework($PDO, $_POST['homeworkId']) !== NULL) {
-            addToLog($PDO, 'Deleted Homework', $_SESSION['data'][0]['id'], $message_id=$_POST['homeworkId']);
+            addToLog($PDO, 'Deleted Homework', $_SESSION['data']['id'], $message_id=$_POST['homeworkId']);
             $_SESSION['success'] = 'Message has been deleted';
             header('Location: index.php');
         } else {

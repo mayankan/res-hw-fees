@@ -15,7 +15,7 @@
 
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
-            addToLog($PDO, 'Teacher Logged out', $_SESSION['data'][0]['id']);
+            addToLog($PDO, 'Teacher Logged out', $_SESSION['data']['id']);
             session_destroy();
             header('Location: ../');    
         }
@@ -101,11 +101,11 @@
                                 ");
                 $stmt->execute([
                                 ':message' => $data['message'], ':date_of_message' => $date, 
-                                ':student_id' => NULL, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['data'][0]['id'],
+                                ':student_id' => NULL, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['data']['id'],
                                 ':date_created' => (string) date("Y-m-d"), ':date_modified' => ((string) date("Y-m-d"))
                             ]);
                 $lastMessage = getLastRow($PDO, 'message');
-                addToLog($PDO, 'added homework', $_SESSION['data'][0]['id'], $message_id=$lastMessage['id']);
+                addToLog($PDO, 'added homework', $_SESSION['data']['id'], $message_id=$lastMessage['id']);
                 return $stmt->rowCount();
             } catch (Exception $e) {
                 print($e);
@@ -120,11 +120,11 @@
                                 ");
                 $stmt->execute([
                                 ':message' => $data['message'], ':date_of_message' => $date,
-                                ':student_id' => $student_id, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['data'][0]['id'],
+                                ':student_id' => $student_id, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['data']['id'],
                                 ':date_created' => ((string) date("Y-m-d")), ':date_modified' => ((string) date("Y-m-d"))
                             ]);
                 $lastMessage = getLastRow($PDO, 'message');
-                addToLog($PDO, 'added homework', $_SESSION['data'][0]['id'], $message_id=$lastMessage['id']);
+                addToLog($PDO, 'added homework', $_SESSION['data']['id'], $message_id=$lastMessage['id']);
                 return $stmt->rowCount();
             } catch (Exception $e) {
                 print($e);

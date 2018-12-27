@@ -2,7 +2,7 @@
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../helpers.php');
     session_start();
-
+    
     function getHomeworks($PDO, $teacherId, $start_limit=0, $end_limit=10) {
         try {
             $stmt = $PDO->prepare("SELECT * FROM `message` WHERE teacher_id = :teacher_id AND date_deleted IS NULL LIMIT :start_limit, :end_limit");
@@ -56,20 +56,20 @@
             if (is_null($PDO)) {
                 die("Can't connect to database");
             }
-            addToLog($PDO, 'Teacher Logged out', $_SESSION['data'][0]['id']);
+            addToLog($PDO, 'Teacher Logged out', $_SESSION['data']['id']);
             session_destroy();
             header('Location: ../');
         }
     }
 
-    if (isset($_SESSION['data'][0]['id'])) {
+    if (isset($_SESSION['data']['id'])) {
         require(__DIR__ . '/../db/db.connection.php');
         $PDO = getConnection();
         if (is_null($PDO)) {
             die("Can't connect to database");
         }
         if (!isset($_GET['page_no'])) {
-            $homeworks = getHomeworks($PDO, $_SESSION['data'][0]['id']);
+            $homeworks = getHomeworks($PDO, $_SESSION['data']['id']);
             $_SESSION['page_no'] = 1;
         } else {
             $page_no = (int)$_GET['page_no'];
@@ -80,7 +80,7 @@
             }
             $end_limit = $page_no * 10;
             $start_limit = $end_limit - 10;
-            $homeworks = getHomeworks($PDO, $_SESSION['data'][0]['id'], $start_limit=$start_limit, $end_limit=$end_limit);
+            $homeworks = getHomeworks($PDO, $_SESSION['data']['id'], $start_limit=$start_limit, $end_limit=$end_limit);
             if ($homeworks == NULL) {
                 header('Location: index.php?page_no=' . (((int)$_GET['page_no']) - 1));
             }

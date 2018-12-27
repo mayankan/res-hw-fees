@@ -2,7 +2,7 @@
     require(__DIR__.'/../config.php');
     session_start();
 
-    if (($_SESSION['role']) != 'admin') {
+    if ($_SESSION['role'] !== 'admin') {
         header('Location: ../404.html');
         return;
     }
