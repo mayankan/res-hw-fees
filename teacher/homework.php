@@ -88,7 +88,6 @@
             header('Location: index.php');
         }
         unset($_SESSION['homeworkId']);
-        require(__DIR__ . '/../db/db.connection.php');
         $PDO = getConnection();
         if (is_null($PDO)) {
             die("Can't connect to database");
@@ -110,7 +109,6 @@
             header('Location: index.php');
         }
         unset($_SESSION['homeworkId']);
-        require(__DIR__ . '/../db/db.connection.php');
         $PDO = getConnection();
         if (is_null($PDO)) {
             die("Can't connect to database");

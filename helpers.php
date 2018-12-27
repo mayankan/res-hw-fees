@@ -56,6 +56,20 @@
         }
     }
 
+    function getAllHomework($PDO, $id) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `message` WHERE id = :id");
+            $stmt->execute([':id' => $id]);
+            if ($stmt->rowCount() === 0) {
+                return NULL;
+            }
+            return $stmt->fetch();
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
+
     function getStudent($PDO, $studentId) {
         try {
             $stmt = $PDO->prepare("SELECT * FROM `student` WHERE `id` = :id");

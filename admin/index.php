@@ -1,9 +1,26 @@
 <?php 
     require(__DIR__.'/../config.php');
+    require(__DIR__.'/../db/db.connection.php');
+    require(__DIR__.'/../helpers.php');
     session_start();
+    
     if ($_SESSION['role'] !== 'admin') {
         header('Location: ../404.html');
         return;
+    }
+
+    function getLogs($PDO, $start_limit=0) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `log` LIMIT :start_limit, 10");
+            $stmt->execute([':start_limit' => $start_limit]);
+            if ($stmt->rowCount() === 0) {
+                return NULL;
+            }
+            return $stmt->fetchAll();
+        } catch(Exception $e) {
+            print($e);
+            return NULL;
+        }
     }
 
     if (isset($_GET['logout'])) {
@@ -14,8 +31,13 @@
         }
     }
 
+    $PDO = getConnection();
+    if (is_null($PDO)) {
+        die("Can't connect to the database");
+    }
+    $logs = NULL;
     if (!isset($_GET['page_no'])) {
-        // $homeworks = getHomeworks($PDO, $_SESSION['data']['id']);
+        $logs = getLogs($PDO);
         $_SESSION['page_no'] = 1;
     } else {
         $page_no = (int)$_GET['page_no'];
@@ -25,13 +47,14 @@
         }
         $end_limit = $page_no * 10;
         $start_limit = $end_limit - 10;
-        // $homeworks = getHomeworks($PDO, $_SESSION['data']['id'], $start_limit=$start_limit, $end_limit=$end_limit);
-        // if ($homeworks == NULL) {
-        //     header('Location: index.php?page_no=' . (((int)$_GET['page_no']) - 1));
-        //     return;
-        // }
+        $logs = getLogs($PDO, $start_limit=$start_limit);
+        if ($logs === NULL) {
+            header('Location: index.php?page_no=' . (((int)$_GET['page_no']) - 1));
+            return;
+        }
         $_SESSION['page_no'] = $_GET['page_no'];
     }
+    
 ?>
 
 <?php require_once(__DIR__.'/../header.html'); ?>
@@ -81,6 +104,7 @@
             </nav>
         </header>
 
+        <?php if (!is_null($logs)): ?>
         <section id="logs" class="mt-2">
             <div class="container-fluid">
                 <div class="row pb-2">
@@ -90,13 +114,13 @@
                             <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
                         </a>
                         <?php else: ?>
-                        <a href="<?php echo $base_url ?>teacher/index.php?page_no=<?php echo $_SESSION['page_no'] - 1 ?>" class="btn btn-outline-dark">
+                        <a href="<?php echo $base_url ?>admin/index.php?page_no=<?php echo $_SESSION['page_no'] - 1 ?>" class="btn btn-outline-dark">
                             <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
                         </a>
                         <?php endif ?>
                     </div>
                     <div class="col-6 d-flex justify-content-end">
-                        <a href="<?php echo $base_url ?>teacher/index.php?page_no=<?php echo $_SESSION['page_no'] + 1 ?>" class="btn btn-outline-dark">
+                        <a href="<?php echo $base_url ?>admin/index.php?page_no=<?php echo $_SESSION['page_no'] + 1 ?>" class="btn btn-outline-dark">
                             Next <i class="fa fa-arrow-right fa-1" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -112,15 +136,52 @@
                                     <th>Date of Homework</th>
                                     <th>Student Sent to</th>
                                     <th>Teacher Assigned</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                            
+                                <?php foreach ($logs as $log): ?>
+                                <tr>
+                                    <td>
+                                        <?php echo $log['date_of_action'] ?>
+                                    </td> 
+                                    <td>
+                                        <?php echo $log['log_action'] ?>
+                                    </td>
+                                    <?php if (is_null($log['message_id'])): ?>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <?php else: ?>
+                                    <?php $homework = getAllHomework($PDO, $log['message_id']) ?>
+                                    <td>
+                                        <?php echo substr($homework['message'], 0, 50) ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $homework['date_of_message'] ?>
+                                    </td>
+                                    <?php if (is_null($homework['student_id'])): ?>
+                                    <td></td>
+                                    <?php else: ?>    
+                                    <td>
+                                    <?php echo getStudent($PDO, $homework['student_id'])['name'] ?>
+                                    </td>
+                                    <?php endif ?>                                
+                                    <?php endif ?>
+                                    <td>
+                                        <?php echo getTeacherName($PDO, $log['teacher_id']); ?>
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-outline-warning btn-block">View</a>
+                                    </td>
+                                </tr>
+                                <?php endforeach ?>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </section>
+        <? endif ?>
 
 <?php require_once(__DIR__.'/../footer.html'); ?>
