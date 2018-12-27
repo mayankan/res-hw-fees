@@ -265,7 +265,7 @@
                     </div>
                     <div class="form-group">
                         <label for="homework" class="col-form-label">Homework*</label>
-                        <textarea name="homework" cols="30" rows="10" class="form-control" required></textarea>
+                        <textarea name="homework" autocomplete="off" cols="30" rows="10" class="form-control" required></textarea>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-success">Submit</button>
