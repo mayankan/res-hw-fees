@@ -1,10 +1,25 @@
 <?php 
     require(__DIR__.'/../config.php');
+    require(__DIR__.'/../db/db.connection.php');
     session_start();
 
     if ($_SESSION['role'] !== 'admin') {
         header('Location: ../404.html');
         return;
+    }
+
+    function getTeachers($PDO, $start_limit=0) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `teacher` LIMIT :start_limit,10");
+            $stmt->execute([':start_limit' => $start_limit]);
+            if ($stmt->rowCount() == 0) {
+                return NULL;
+            }
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
     }
 
     if (isset($_GET['logout'])) {
@@ -15,6 +30,29 @@
         }
     }
 
+    $PDO = getConnection();
+    if (is_null($PDO)) {
+        die("Can't connect to the database");
+    }
+    $teachers = NULL;
+    if (!isset($_GET['page_no'])) {
+        $teachers = getTeachers($PDO);
+        $_SESSION['page_no'] = 1;
+    } else {
+        $page_no = (int)$_GET['page_no'];
+        if ($page_no <= 0) {
+            header("Location: teachers.php?page_no=1");
+            return;
+        }
+        $end_limit = $page_no * 10;
+        $start_limit = $end_limit - 10;
+        $teachers = getTeachers($PDO, $start_limit=$start_limit);
+        if ($teachers === NULL) {
+            header('Location: teachers.php?page_no=' . (((int)$_GET['page_no']) - 1));
+            return;
+        }
+        $_SESSION['page_no'] = $_GET['page_no'];
+    }
 
 ?>
 
@@ -48,7 +86,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>admin/students.php" class="nav-link">
-                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> View/Edit Students
+                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> View Students
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -63,6 +101,57 @@
                     </div>
                 </div>
             </nav>
-        </header>        
+        </header>  
+        
+        <section id="teachers" class="mt-2">
+            <div class="container-fluid">
+                <div class="row pb-2">
+                    <div class="col-6 d-flex justify-content-start">
+                        <?php if ($_SESSION['page_no'] <= 1): ?>
+                        <a href="#" class="btn btn-outline-dark" disabled>
+                            <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
+                        </a>
+                        <?php else: ?>
+                        <a href="<?php echo $base_url ?>admin/teachers.php?page_no=<?php echo $_SESSION['page_no'] - 1 ?>" class="btn btn-outline-dark">
+                            <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
+                        </a>
+                        <?php endif ?>
+                    </div>
+                    <div class="col-6 d-flex justify-content-end">
+                        <a href="<?php echo $base_url ?>admin/teachers.php?page_no=<?php echo $_SESSION['page_no'] + 1 ?>" class="btn btn-outline-dark">
+                            Next <i class="fa fa-arrow-right fa-1" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                <?php if (!is_null($teachers)): ?>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-hover table-responsive-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Username</th>
+                                    <th>Email Address</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($teachers as $teacher): ?>
+                                <tr>
+                                    <td><?php echo $teacher['name'] ?></td>
+                                    <td><?php echo $teacher['username'] ?></td>
+                                    <td><?php echo $teacher['email_address'] ?></td>
+                                    <td>
+                                        <a href="<?php echo $base_url ?>admin/teacher.php?id=<?php echo $teacher['id'] ?>" class="btn btn-outline-warning btn-block">Edit</a>
+                                    </td>
+                                </tr>
+                                <?php endforeach ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <?php endif ?>
+            </div>
+        </section>
 <?php require_once(__DIR__.'/../footer.html'); ?>
 

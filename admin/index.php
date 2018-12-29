@@ -87,7 +87,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>admin/students.php" class="nav-link">
-                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> View/Edit Students
+                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> View Students
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -172,7 +172,7 @@
                                         <?php echo getTeacherName($PDO, $log['teacher_id']); ?>
                                     </td>
                                     <td>
-                                        <a href="#" class="btn btn-outline-warning btn-block">View</a>
+                                        <a href="<?php echo $base_url ?>admin/log.php?homeworkId=<?php echo $log['id'] ?>" class="btn btn-outline-warning btn-block">View</a>
                                     </td>
                                 </tr>
                                 <?php endforeach ?>
