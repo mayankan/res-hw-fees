@@ -19,9 +19,10 @@
     }
 
     function changePassword($PDO, $newPass, $id) {
+        $hashedPass = hash('sha256', $newPass);
         try {
             $stmt = $PDO->prepare("UPDATE `teacher` SET `password` = :pass WHERE `id` = :id");
-            $stmt->execute([':pass' => $newPass, ':id' => $id]);
+            $stmt->execute([':pass' => $hashedPass, ':id' => $id]);
             return $stmt->fetch();
         } catch (Exception $e) {
             print($e);
@@ -182,7 +183,7 @@
                                 <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
                                     <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
                                 </a>
-                                <form action="<? echo $_SERVER['PHP_SELF'] ?>" id="logout">
+                                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
                                 </form>
                             </li>

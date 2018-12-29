@@ -19,9 +19,10 @@
     }
 
     function changePassword($PDO, $newPass) {
+        $hashedPass = hash('sha256', $newPass);
         try {
             $stmt = $PDO->prepare("UPDATE `teacher` SET `password` = :pass WHERE `id` = :id");
-            $stmt->execute([':pass' => $newPass, ':id' => $_SESSION['data']['id']]);
+            $stmt->execute([':pass' => $hashedPass, ':id' => $_SESSION['data']['id']]);
             return $stmt->fetch();
         } catch (Exception $e) {
             print($e);
@@ -87,8 +88,8 @@
             die("Can't connect to database");
         }
         $teacherData = getTeacherData($PDO, $_SESSION['data']['id']);
-
-        if ($teacherData['password'] !== $oldPass) {
+        $hashedPass = hash('sha256', $oldPass);
+        if (!hash_equals($hashedPass, $teacherData['password'])) {
             $_SESSION['error'] = 'Old Password do not match';
             header('Location: profile.php');
             return;
