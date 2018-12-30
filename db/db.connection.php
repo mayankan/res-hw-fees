@@ -19,5 +19,11 @@
         	return null;
         }
     }
+    function getMSSQLCon(){
+        $username = 'rainbowschooljp';
+        $password = 'Ovho#210';
+        $host = '182.50.133.109';
+        $db_name = 'rainbowjanakpuri';
+    }
 
 ?>
