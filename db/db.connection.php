@@ -25,6 +25,20 @@
         $password = 'Ovho#210';
         $host = '182.50.133.109';
         $db_name = 'rainbowjanakpuri';
+        $dsn = "sqlsrv:Server=$host;Database=$db_name";
+        $options = [
+        	PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        	PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        	PDO::ATTR_EMULATE_PREPARES => false
+        ];
+
+        try {
+        	$PDO = new PDO($dsn, $username, $password, $options);
+        	return $PDO;
+        } catch(PDOException $e) {
+            print($e);
+        	return NULL;
+        }
     }
 
 ?>
