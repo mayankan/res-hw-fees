@@ -1,8 +1,8 @@
-<?php 
+<?php
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../helpers.php');
     session_start();
-    
+
     function getHomeworks($PDO, $teacherId, $start_limit=0, $end_limit=10) {
         try {
             $stmt = $PDO->prepare("SELECT * FROM `message` WHERE teacher_id = :teacher_id AND date_deleted IS NULL LIMIT :start_limit, :end_limit");
@@ -122,7 +122,7 @@
                                 <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
                                     <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
                                 </a>
-                                <form action="<? echo $_SERVER['PHP_SELF'] ?>" id="logout">
+                                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
                                 </form>
                             </li>
@@ -130,7 +130,7 @@
                     </div>
                 </div>
             </nav>
-        </header>   
+        </header>
 
         <section id="error" class="mt-2">
             <div class="container">
@@ -142,7 +142,7 @@
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                         </div>
                         <?php unset($_SESSION['error']); ?>
-                        <?php endif ?> 
+                        <?php endif ?>
                     </div>
                 </div>
                 <div class="row d-flex justify-content-center">
@@ -153,13 +153,13 @@
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                         </div>
                         <?php unset($_SESSION['success']); ?>
-                        <?php endif ?> 
+                        <?php endif ?>
                     </div>
                 </div>
             </div>
         </section>
 
-        <?php if (!is_null($homeworks)): ?> 
+        <?php if (!is_null($homeworks)): ?>
         <section id="homeworks">
             <div class="container-fluid">
                 <div id="homeworks">

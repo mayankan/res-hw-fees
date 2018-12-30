@@ -93,7 +93,7 @@
                                 <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
                                     <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
                                 </a>
-                                <form action="<? echo $_SERVER['PHP_SELF'] ?>" id="logout">
+                                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
                                 </form>
                             </li>

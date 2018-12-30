@@ -1,9 +1,9 @@
-<?php 
+<?php
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../db/db.connection.php');
     require(__DIR__.'/../helpers.php');
     session_start();
-    
+
     if ($_SESSION['role'] !== 'admin') {
         header('Location: ../404.html');
         return;
@@ -54,7 +54,7 @@
         }
         $_SESSION['page_no'] = $_GET['page_no'];
     }
-    
+
 ?>
 
 <?php require_once(__DIR__.'/../header.html'); ?>
@@ -94,7 +94,7 @@
                                 <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
                                     <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
                                 </a>
-                                <form action="<? echo $_SERVER['PHP_SELF'] ?>" id="logout">
+                                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
                                 </form>
                             </li>
@@ -144,7 +144,7 @@
                                 <tr>
                                     <td>
                                         <?php echo $log['date_of_action'] ?>
-                                    </td> 
+                                    </td>
                                     <td>
                                         <?php echo $log['log_action'] ?>
                                     </td>
@@ -160,13 +160,13 @@
                                     <td>
                                         <?php echo $homework['date_of_message'] ?>
                                     </td>
+                                    <?php endif ?>
                                     <?php if (is_null($homework['student_id'])): ?>
                                     <td></td>
-                                    <?php else: ?>    
+                                    <?php else: ?>
                                     <td>
                                     <?php echo getStudent($PDO, $homework['student_id'])['name'] ?>
                                     </td>
-                                    <?php endif ?>                                
                                     <?php endif ?>
                                     <td>
                                         <?php echo getTeacherName($PDO, $log['teacher_id']); ?>
@@ -182,6 +182,5 @@
                 </div>
             </div>
         </section>
-        <? endif ?>
-
+    <?php endif ?>
 <?php require_once(__DIR__.'/../footer.html'); ?>

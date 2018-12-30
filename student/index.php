@@ -1,4 +1,4 @@
-<?php 
+<?php
     require(__DIR__.'/../config.php');
     session_start();
 
@@ -106,7 +106,7 @@
                                 <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
                                     <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
                                 </a>
-                                <form action="<? echo $_SERVER['PHP_SELF'] ?>" id="logout">
+                                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
                                 </form>
                             </li>
@@ -114,9 +114,9 @@
                     </div>
                 </div>
             </nav>
-        </header>   
+        </header>
 
-        
+
 
         <section id="homeworks">
             <div class="container-fluid">
@@ -149,7 +149,7 @@
                                     <th></th>
                                 </thead>
                                 <tbody>
-                                <?php if (!is_null($homeworks)): ?> 
+                                <?php if (!is_null($homeworks)): ?>
                                 <?php while ($homework = array_shift($homeworks)): ?>
                                 <tr>
                                     <?php $date = date_create($homework['date_of_message']) ?>
@@ -175,5 +175,5 @@
                 </div>
             </div>
         </section>
-            
+
 <?php require_once(__DIR__.'/../footer.html');

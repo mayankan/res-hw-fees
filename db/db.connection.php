@@ -25,15 +25,10 @@
         $password = 'Ovho#210';
         $host = '182.50.133.109';
         $db_name = 'rainbowjanakpuri';
-        $dsn = "sqlsrv:Server=$host;Database=$db_name";
-        $options = [
-        	PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        	PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        	PDO::ATTR_EMULATE_PREPARES => false
-        ];
-
+        $mssqldriver = '{SQL Server}';
+        $dsn = "odbc:Driver=$mssqldriver;Server=$host;Database=$db_name";
         try {
-        	$PDO = new PDO($dsn, $username, $password, $options);
+        	$PDO = new PDO($dsn, $username, $password);
         	return $PDO;
         } catch(PDOException $e) {
             print($e);

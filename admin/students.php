@@ -15,7 +15,7 @@
         if ($name !== "") {
             $sql .= " WHERE `name` LIKE :name";
             $data[':name'] = '%' . $name . '%';
-        } 
+        }
         if ($admission_no !== "") {
             if ($name === "") {
                 $sql .= " WHERE `admission_no` = :adm_no";
@@ -133,7 +133,7 @@
                                 <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
                                     <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
                                 </a>
-                                <form action="<? echo $_SERVER['PHP_SELF'] ?>" id="logout">
+                                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
                                 </form>
                             </li>
@@ -141,7 +141,7 @@
                     </div>
                 </div>
             </nav>
-        </header>   
+        </header>
 
         <section id="name" class="mt-2">
             <div class="container">
@@ -166,7 +166,7 @@
                 </div>
             </div>
         </section>
-        
+
         <div id="students" class="mt-2">
             <div class="container-fluid">
                 <div class="row pb-2">
@@ -224,4 +224,3 @@
             </div>
         </div>
 <?php require_once(__DIR__.'/../footer.html'); ?>
-

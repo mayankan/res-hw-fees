@@ -1,4 +1,4 @@
-<?php 
+<?php
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../helpers.php');
     session_start();
@@ -71,7 +71,7 @@
                                 <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
                                     <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
                                 </a>
-                                <form action="<? echo $_SERVER['PHP_SELF'] ?>" id="logout">
+                                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
                                 </form>
                             </li>
@@ -79,7 +79,7 @@
                     </div>
                 </div>
             </nav>
-        </header>   
+        </header>
 
         <?php if (!is_null($studentData)): ?>
         <section id="profile" class="m-4">
@@ -135,5 +135,5 @@
             </div>
         </section>
         <?php endif ?>
-            
+
 <?php require_once(__DIR__.'/../footer.html');

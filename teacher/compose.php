@@ -1,4 +1,4 @@
-<?php 
+<?php
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../helpers.php');
     session_start();
@@ -17,7 +17,7 @@
         if ($_GET['logout'] === 'true') {
             addToLog($PDO, 'Teacher Logged out', $_SESSION['data']['id']);
             session_destroy();
-            header('Location: ../');    
+            header('Location: ../');
         }
     }
 
@@ -46,7 +46,7 @@
             header("Status: 404 Not Found");
             return;
         } else {
-            header('Content-Type: application/json'); 
+            header('Content-Type: application/json');
             echo json_encode($students_data);
         }
         return;
@@ -95,12 +95,12 @@
         if (!$student_id) {
             try {
                 $stmt = $PDO->prepare("
-                                    INSERT INTO `message` 
+                                    INSERT INTO `message`
                                     (`message`, `date_of_message`, `student_id`, `class_id`, `teacher_id`, `date_created`, `date_modified`)
                                     VALUES (:message, :date_of_message, :student_id, :class_id, :teacher_id, :date_created, :date_modified)
                                 ");
                 $stmt->execute([
-                                ':message' => $data['message'], ':date_of_message' => $date, 
+                                ':message' => $data['message'], ':date_of_message' => $date,
                                 ':student_id' => NULL, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['data']['id'],
                                 ':date_created' => (string) date("Y-m-d"), ':date_modified' => ((string) date("Y-m-d"))
                             ]);
@@ -114,7 +114,7 @@
         } else {
             try {
                 $stmt = $PDO->prepare("
-                                    INSERT INTO `message` 
+                                    INSERT INTO `message`
                                     (`message`, `date_of_message`, `student_id`, `class_id`, `teacher_id`, `date_created`, `date_modified`)
                                     VALUES (:message, :date_of_message, :student_id, :class_id, :teacher_id, :date_created, :date_modified)
                                 ");
@@ -131,13 +131,13 @@
                 return NULL;
             }
         }
-        
+
     }
 
     // for loading the data with the class data
     $classes = getClasses($PDO);
 
-    // for submiting a homework to the database 
+    // for submiting a homework to the database
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST)) {
             $dateSubmitted = $_POST['date_of_homework'];
@@ -206,7 +206,7 @@
                                 <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
                                     <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
                                 </a>
-                                <form action="<? echo $_SERVER['PHP_SELF'] ?>" id="logout">
+                                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
                                 </form>
                             </li>
@@ -214,7 +214,7 @@
                     </div>
                 </div>
             </nav>
-        </header>   
+        </header>
 
         <section id="error" class="mt-4">
             <div class="container">
@@ -225,7 +225,7 @@
                             <strong><?php echo $error ?></strong>
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                         </div>
-                        <?php endif ?> 
+                        <?php endif ?>
                     </div>
                 </div>
                 <div class="row d-flex justify-content-center">
@@ -235,7 +235,7 @@
                             <strong><?php echo $success ?></strong>
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                         </div>
-                        <?php endif ?> 
+                        <?php endif ?>
                     </div>
                 </div>
             </div>
@@ -254,7 +254,7 @@
                             <option value="" selected>--</option>
                             <?php while ($class = array_shift($classes)): ?>
                                 <option value="<?php echo $class['id'] ?>"><?php echo $class['class_name'] ?> - <?php echo $class['section'] ?></option>
-                            <? endwhile ?>
+                            <?php endwhile ?>
                         </select>
                     </div>
                     <div class="form-group row">
@@ -297,7 +297,7 @@
                             try {
                                 results = JSON.parse(results);
                             } catch(e) {
-                                
+
                             } finally {
                                 results.forEach(function(result) {
                                     UI_studentsSelect.append(new Option(`${result.name} - ${result.admission_no}`, `${result.id}`));
@@ -310,7 +310,6 @@
                     })
                 });
             });
-            
+
         </script>
 <?php require_once(__DIR__.'/../footer.html'); ?>
-

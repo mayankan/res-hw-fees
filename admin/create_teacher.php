@@ -1,4 +1,4 @@
-<?php 
+<?php
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../db/db.connection.php');
     session_start();
@@ -7,7 +7,7 @@
         $hashedPass = hash('sha256', $password);
         try {
             $stmt = $PDO->prepare("
-                INSERT INTO `teacher` (`name`, `username`, `password`, `email_address`, `date_created`) 
+                INSERT INTO `teacher` (`name`, `username`, `password`, `email_address`, `date_created`)
                             VALUES (:name, :username, :password, :email, :date_created)
             ");
             $stmt->execute([':name' => $fullName, ':username' => $username, ':password' => $hashedPass, ':email' => $email
@@ -19,7 +19,7 @@
         } catch (Exception $e) {
             print($e);
             return false;
-        }   
+        }
     }
 
     if ($_SESSION['role'] !== 'admin') {
@@ -102,7 +102,7 @@
                                 <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
                                     <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
                                 </a>
-                                <form action="<? echo $_SERVER['PHP_SELF'] ?>" id="logout">
+                                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
                                 </form>
                             </li>
@@ -121,7 +121,7 @@
                                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                             </div>
                             <?php unset($_SESSION['error']); ?>
-                            <?php endif ?> 
+                            <?php endif ?>
                         </div>
                     </div>
                     <div class="row d-flex justify-content-center">
@@ -132,7 +132,7 @@
                                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                             </div>
                             <?php unset($_SESSION['success']); ?>
-                            <?php endif ?> 
+                            <?php endif ?>
                         </div>
                     </div>
                 </div>
@@ -161,6 +161,5 @@
                     </div>
                 </form>
             </section>
-        </header>        
+        </header>
 <?php require_once(__DIR__.'/../footer.html'); ?>
-

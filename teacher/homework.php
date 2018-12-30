@@ -157,7 +157,7 @@
                                 <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
                                     <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
                                 </a>
-                                <form action="<? echo $_SERVER['PHP_SELF'] ?>" id="logout">
+                                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
                                 </form>
                             </li>
@@ -177,7 +177,7 @@
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                         </div>
                         <?php unset($_SESSION['error']); ?>
-                        <?php endif ?> 
+                        <?php endif ?>
                     </div>
                 </div>
                 <div class="row d-flex justify-content-center">
@@ -188,7 +188,7 @@
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                         </div>
                         <?php unset($_SESSION['success']); ?>
-                        <?php endif ?> 
+                        <?php endif ?>
                     </div>
                 </div>
             </div>
@@ -225,7 +225,7 @@
                                     <div class="card-body" id="message">
                                         <h5 class="d-inline-block">Homework : </h5>
                                         <div id="show-div">
-                                            <p><?php echo $homework['message']; ?></p> 
+                                            <p><?php echo $homework['message']; ?></p>
                                         </div>
                                         <div id="form-div" style="display: none;">
                                             <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">

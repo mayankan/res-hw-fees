@@ -1,4 +1,4 @@
-<?php 
+<?php
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../db/db.connection.php');
     require(__DIR__.'/../helpers.php');
@@ -95,7 +95,7 @@
                                 <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
                                     <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
                                 </a>
-                                <form action="<? echo $_SERVER['PHP_SELF'] ?>" id="logout">
+                                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
                                 </form>
                             </li>
@@ -153,7 +153,7 @@
                                         <div class="card mt-3">
                                             <div class="card-body">
                                                 <h5 class="d-inline-block">Homework : </h5>
-                                                <p><?php echo $log['homework']['message']; ?></p> 
+                                                <p><?php echo $log['homework']['message']; ?></p>
                                             </div>
                                         </div>
                                         <div class="row mt-4">
