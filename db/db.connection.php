@@ -19,7 +19,8 @@
         	return null;
         }
     }
-    function getMSSQLCon(){
+
+    function getMSSQLCon() {
         $username = 'rainbowschooljp';
         $password = 'Ovho#210';
         $host = '182.50.133.109';

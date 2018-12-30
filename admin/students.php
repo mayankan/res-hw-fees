@@ -9,10 +9,26 @@
         return;
     }
 
-    function getStudents($PDO, $start_limit=0, $filter="") {
+    function getStudents($PDO, $start_limit=0, $name="", $admission_no="") {
+        $sql = "SELECT * FROM `student`";
+        $data = [];
+        if ($name !== "") {
+            $sql .= " WHERE `name` LIKE :name";
+            $data[':name'] = '%' . $name . '%';
+        } 
+        if ($admission_no !== "") {
+            if ($name === "") {
+                $sql .= " WHERE `admission_no` = :adm_no";
+            } else {
+                $sql .= " AND `admission_no` = :adm_no";
+            }
+            $data[':adm_no'] = $admission_no;
+        }
+        $sql .= " LIMIT :start_limit,10";
+        $data[':start_limit'] = $start_limit;
         try {
-            $stmt = $PDO->prepare("SELECT * FROM `student` WHERE `name` LIKE :filter LIMIT :start_limit,10");
-            $stmt->execute([':start_limit' => $start_limit, ':filter' => '%' . $filter . '%']);
+            $stmt = $PDO->prepare($sql);
+            $stmt->execute($data);
             if ($stmt->rowCount() == 0) {
                 return NULL;
             }
@@ -37,10 +53,18 @@
     }
     $students = NULL;
     if (!isset($_GET['page_no'])) {
-        if (isset($_GET['filter'])) {
-            $students = getStudents($PDO, $start_limit=0, $filter=$_GET['filter']);
+        if (isset($_GET['name'])) {
+            if (isset($_GET['admission_no'])) {
+                $students = getStudents($PDO, $start_limit=0, $name=$_GET['name'], $admission_no=$_GET['admission_no']);
+            } else {
+                $students = getStudents($PDO, $start_limit=0, $name=$_GET['name']);
+            }
         } else {
-            $students = getStudents($PDO);
+            if (isset($_GET['admission_no'])) {
+                $students = getStudents($PDO, $start_limit=0, $name="", $admission_no=$_GET['admission_no']);
+            } else {
+                $students = getStudents($PDO);
+            }
         }
         $_SESSION['page_no'] = 1;
     } else {
@@ -51,10 +75,18 @@
         }
         $end_limit = $page_no * 10;
         $start_limit = $end_limit - 10;
-        if (isset($_GET['filter'])) {
-            $students = getStudents($PDO, $start_limit=$start_limit, $filter=$_GET['filter']);
+        if (isset($_GET['name'])) {
+            if (isset($_GET['admission_no'])) {
+                $students = getStudents($PDO, $start_limit=$start_limit, $name=$_GET['name'], $admission_no=$_GET['admission_no']);
+            } else {
+                $students = getStudents($PDO, $start_limit=$start_limit, $name=$_GET['name']);
+            }
         } else {
-            $students = getStudents($PDO, $start_limit=$start_limit);
+            if (isset($_GET['admission_no'])) {
+                $students = getStudents($PDO, $start_limit=$start_limit, $name="", $admission_no=$_GET['admission_no']);
+            } else {
+                $students = getStudents($PDO, $start_limit=$start_limit);
+            }
         }
         if ($students === NULL) {
             header('Location: students.php?page_no=' . (((int)$_GET['page_no']) - 1));
@@ -111,13 +143,22 @@
             </nav>
         </header>   
 
-        <section id="filter" class="mt-2">
+        <section id="name" class="mt-2">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="get">
                             <div class="form-group row d-flex justify-content-center">
-                                <input type="text" name="filter" class="form-control col-6 m-2" value="<?php echo $_GET['filter'] ?>" placeholder="Name">
+                                <?php if (isset($_GET['name'])): ?>
+                                <input type="text" name="name" class="form-control col-3 m-2" value="<?php echo $_GET['name'] ?>" placeholder="Name">
+                                <?php else: ?>
+                                <input type="text" name="name" class="form-control col-3 m-2" placeholder="Name">
+                                <?php endif ?>
+                                <?php if (isset($_GET['name'])): ?>
+                                <input type="text" name="admission_no" class="form-control col-3 m-2" value="<?php echo $_GET['admission_no'] ?>" placeholder="Name">
+                                <?php else: ?>
+                                <input type="text" name="admission_no" class="form-control col-3 m-2" placeholder="Admission Number">
+                                <?php endif ?>
                                 <button class="btn btn-success col-4 m-2">Filter</button>
                             </div>
                         </form>
