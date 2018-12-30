@@ -117,7 +117,7 @@
                     <div class="col-12">
                         <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="get">
                             <div class="form-group row d-flex justify-content-center">
-                                <input type="text" name="filter" class="form-control col-6 m-2" placeholder="filter">
+                                <input type="text" name="filter" class="form-control col-6 m-2" value="<?php echo $_GET['filter'] ?>" placeholder="Name">
                                 <button class="btn btn-success col-4 m-2">Filter</button>
                             </div>
                         </form>
