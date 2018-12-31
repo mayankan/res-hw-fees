@@ -151,7 +151,6 @@
                                     <?php if (is_null($log['message_id'])): ?>
                                     <td></td>
                                     <td></td>
-                                    <td></td>
                                     <?php else: ?>
                                     <?php $homework = getAllHomework($PDO, $log['message_id']) ?>
                                     <td>
