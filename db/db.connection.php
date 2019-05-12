@@ -8,6 +8,7 @@
         $username = 'u398111847_hw';
         $password = 'eSoIxZO39v9K';
         $host = 'sql7.main-hosting.eu';
+
         $db_name = 'u398111847_home';
         $dsn = "mysql:host=$host;dbname=$db_name";
         $options = [

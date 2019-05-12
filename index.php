@@ -1,6 +1,6 @@
 <?php
     require(__DIR__.'/helpers.php');
-    require(__DIR__ . '/db/db.connection.php');
+    require(__DIR__.'/db/db.connection.php');
     session_start();
     if (isset($_SESSION['role'])) {
         header("Location: " . $_SESSION['role'] . "/");
@@ -51,7 +51,7 @@
         if (isset($_POST)) {
 
             // check admin before to make things faster and secure
-            if ($_POST['username'] === "admin" && $_POST['password'] === "123") {
+            if (($_POST['username'] === "admin" && $_POST['password'] === "rainbow@123")||($_POST['username'] === "incharge" && $_POST['password'] === "rainbow@1")) {
                 $_SESSION['role'] = 'admin';
                 header('Location: admin/');
             }
@@ -92,14 +92,39 @@
 ?>
 <!-- Login page -->
 <?php require_once(__DIR__.'/header.html'); ?>
-        <title>Login</title>
-        <style>
-            .container, .row {
-                height: 100vh;
-            }
-        </style>
+        <title>Rainbow English Sr. Sec. School | Homework Login</title>
     </head>
-    <body>
+    <body class="home-page">
+	<div class="wrap-body">
+		<header class="" style="background-color: red;">
+			<div class="logo">
+				<a href="#"><img src="images/logo.png" /></a>
+				<span></span>
+			</div>
+			<div id="cssmenu" class="align-center">
+				<ul>
+					<li class="active has-sub"><a href="#"><span>Home</span></a>
+					<ul>
+							<li><a href="index"><span>Pay Fees</span></a></li>
+							<li><a href="http://www.rainbowschooljp.com"><span>Back to RainbowSchoolJP.com</span></a></li>
+					</ul></li>
+					<li><a href="http://www.rainbowschooljp.com/admission"><span>Admission</span></a></li>
+					<li><a href="http://www.rainbowschooljp.com/post-your-resume"><span>Careers</span></a></li>
+					<li><a href="http://www.rainbowschooljp.com/download-links"><span>Downloads</span></a></li>
+					<li><a href="http://www.rainbowschooljp.com/school-management-login-page"><span>Student Login</span></a></li>
+					<li><a href="http://www.rainbowschooljp.com/event-gallery"><span>Events</span></a></li>
+					<li class="has-sub"><a href="#"><span>About Us</span></a>
+					<ul>
+							<li><a href="http://www.rainbowschooljp.com/history"><span>History</span></a></li>
+							<li><a href="http://www.rainbowschooljp.com/vision"><span>Vision and Mission</span></a></li>
+							<li><a href="http://www.rainbowschooljp.com/emblem"><span>Emblem</span></a></li>
+					</ul></li>
+					<li class="last"><a href="http://www.rainbowschooljp.com/contact"><span>Contact Us</span></a></li>
+				</ul>
+				</div>
+		</header>
+		<br />
+		<br />
         <div class="container">
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-6">
@@ -127,4 +152,6 @@
                 </div>
             </div>
         </div>
+		<br />
+		<br />
 <?php require_once(__DIR__.'/footer.html'); ?>
