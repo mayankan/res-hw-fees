@@ -79,7 +79,7 @@
 
 ?>
 
-<?php require_once(__DIR__.'/../base_files/header.php'); ?>
+<?php require_once(__DIR__.'/../header.php'); ?>
         <title>Student panel | Home</title>
     </head>
     <body>
@@ -176,4 +176,4 @@
             </div>
         </section>
 
-<?php require_once(__DIR__.'/../base_files/footer.php');
+<?php require_once(__DIR__.'/../footer.php');
