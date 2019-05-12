@@ -1,3 +1,4 @@
+<?php require_once(__DIR__.'/../config.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -13,9 +14,9 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
         <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
         <!-- CSS
-    	================================================== -->
-        <link rel="stylesheet" href="css/zerogrid.css" />
-        <link rel="stylesheet" href="css/style.css" />
+        ================================================== -->
+        <link rel="stylesheet" href="<?php echo $base_url ?>\css\zerogrid.css" />
+        <link rel="stylesheet" href="<?php echo $base_url ?>\css\style.css" />
 
         <script
             src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -37,9 +38,9 @@
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"
         ></script>
-        <link rel="stylesheet" href="css/menu.css" />
+        <link rel="stylesheet" href="<?php echo $base_url ?>\css\menu.css" />
         <!-- <script src="js/jquery.min.js" type="text/javascript"></script> -->
-        <script src="js/script.js"></script>
+        <script src="<?php echo $base_url ?>\js\script.js"></script>
         <!--[if lt IE 8]>
             <div style=" clear: both; text-align:center; position: relative;">
                 <a
@@ -59,5 +60,3 @@
             <script src="js/html5.js"></script>
             <script src="js/css3-mediaqueries.js"></script>
         <![endif]-->
-    </head>
-</html>

@@ -90,8 +90,7 @@
     }
     
 ?>
-<!-- Login page -->
-<?php require_once(__DIR__.'/header.html'); ?>
+<?php require_once(__DIR__.'/base_files/header.php'); ?>
         <title>Rainbow English Sr. Sec. School | Homework Login</title>
     </head>
     <body class="home-page">
@@ -154,4 +153,4 @@
         </div>
 		<br />
 		<br />
-<?php require_once(__DIR__.'/footer.html'); ?>
+<?php require_once(__DIR__.'/base_files/footer.php'); ?>

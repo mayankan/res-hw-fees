@@ -61,7 +61,7 @@
 
 ?>
 
-<?php require_once(__DIR__.'/../header.html'); ?>
+<?php require_once(__DIR__.'/../base_files/header.php'); ?>
         <title>Student panel | Homework</title>
         <style>
             .card-title {
@@ -148,4 +148,4 @@
             </div>
         </section>
     </body>
-<?php require_once(__DIR__.'/../footer.html');
+<?php require_once(__DIR__.'/../base_files/footer.php');

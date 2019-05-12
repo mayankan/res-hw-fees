@@ -146,7 +146,7 @@
 
 ?>
 
-<?php require_once(__DIR__.'/../header.html'); ?>
+<?php require_once(__DIR__.'/../base_files/header.php'); ?>
         <title>Admin Panel | Teacher Profile</title>
     </head>
     <body>
@@ -273,4 +273,4 @@
             });
         </script>
             
-<?php require_once(__DIR__.'/../footer.html');
+<?php require_once(__DIR__.'/../base_files/footer.php');

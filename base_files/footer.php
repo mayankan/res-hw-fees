@@ -1,32 +1,33 @@
-         <footer>
+<?php require_once(__DIR__.'/../config.php'); ?>
+        <footer>
 			<div class="zerogrid wrap-footer">
 				<h2 class="widget-title">OUR ASSOCIATES</h2>
 				<div class="row">
 					<div class="col-1-4 col-footer-1">
 						<div class="wrap-col">
-							<img src="images/NIITGuru.gif" />
+							<img src="<?php echo $base_url ?>\images\NIITGuru.gif" />
 						</div>
 					</div>
 					<div class="col-1-4 col-footer-2">
 						<div class="wrap-col">
-							<img src="images/extramark.png" />
+							<img src="<?php echo $base_url ?>\images\extramark.png" />
 						</div>
 					</div>
 					<div class="col-1-4 col-footer-3">
 						<div class="wrap-col">
-							<img src="images/f2.png" />
+							<img src="<?php echo $base_url ?>\images\f2.png" />
 						</div>
 					</div>
 					<div class="col-1-4 col-footer-4">
 						<div class="wrap-col">
-							<img src="images/f1.png" />
+							<img src="<?php echo $base_url ?>\images\f1.png" />
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="zerogrid bottom-footer">
 				<div class="copyright">
-					© COPYRIGHT <a href="http://www.rainbowschooljp.com">RAINBOW ENGLISH SCHOOL</a> - Designed by Mayank Anand
+					&copy; COPYRIGHT <a href="http://www.rainbowschooljp.com">RAINBOW ENGLISH SCHOOL</a> - Designed by Mayank Anand
 				</div>
 			</div>
 		</footer>

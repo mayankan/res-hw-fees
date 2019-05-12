@@ -96,7 +96,7 @@
     }
 ?>
 
-<?php require_once(__DIR__.'/../header.html'); ?>
+<?php require_once(__DIR__.'/../base_files/header.php'); ?>
         <title>Admin Panel | View/Edit Students</title>
     </head>
     <body>
@@ -223,4 +223,4 @@
                 <?php endif ?>
             </div>
         </div>
-<?php require_once(__DIR__.'/../footer.html'); ?>
+<?php require_once(__DIR__.'/../base_files/footer.php'); ?>
