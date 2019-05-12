@@ -74,7 +74,7 @@
         }
     }
 
-    $stmt = $msdb->prepare('SELECT * FROM dbo.Class WHERE IsDeleted = 0 AND SessionId = 1');
+    $stmt = $msdb->prepare('SELECT * FROM dbo.Class WHERE IsDeleted = 0 AND SessionId = 2');
     $stmt->execute();
     $originalClassData = $stmt->fetchAll();
     foreach ($originalClassData as $class) {
