@@ -58,7 +58,7 @@
 
 ?>
 
-<?php require_once(__DIR__.'/../base_files/header.php'); ?>
+<?php require_once(__DIR__.'/../header.php'); ?>
         <title>Admin panel | Log</title>
     </head>
     <body>
@@ -171,4 +171,4 @@
             </div>
         </section>
         <?php endif ?>
-<?php require_once(__DIR__.'/../base_files/footer.php'); ?>
+<?php require_once(__DIR__.'/../footer.php'); ?>

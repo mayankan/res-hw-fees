@@ -1,4 +1,4 @@
-<?php require_once(__DIR__.'/../config.php'); ?>
+<?php require_once(__DIR__.'/config.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -15,8 +15,8 @@
         <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
         <!-- CSS
         ================================================== -->
-        <link rel="stylesheet" href="<?php echo $base_url ?>\css\zerogrid.css" />
-        <link rel="stylesheet" href="<?php echo $base_url ?>\css\style.css" />
+        <link rel="stylesheet" href="<?php echo $base_url ?>static/css/zerogrid.css" />
+        <link rel="stylesheet" href="<?php echo $base_url ?>static/css/style.css" />
 
         <script
             src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -38,9 +38,9 @@
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"
         ></script>
-        <link rel="stylesheet" href="<?php echo $base_url ?>\css\menu.css" />
+        <link rel="stylesheet" href="<?php echo $base_url ?>static/css/menu.css" />
         <!-- <script src="js/jquery.min.js" type="text/javascript"></script> -->
-        <script src="<?php echo $base_url ?>\js\script.js"></script>
+        <script src="<?php echo $base_url ?>static/js/script.js"></script>
         <!--[if lt IE 8]>
             <div style=" clear: both; text-align:center; position: relative;">
                 <a
@@ -60,3 +60,34 @@
             <script src="js/html5.js"></script>
             <script src="js/css3-mediaqueries.js"></script>
         <![endif]-->
+        <title>Rainbow English Sr. Sec. School | Homework Login</title>
+    </head>
+    <body class="home-page">
+	<div class="wrap-body">
+		<header class="" style="background-color: red;">
+			<div class="logo">
+				<a href="#"><img src="<?php echo $base_url ?>static/images/logo.png" /></a>
+				<span></span>
+			</div>
+			<div id="cssmenu" class="align-center">
+				<ul>
+					<li class="active has-sub"><a href="#"><span>Home</span></a>
+					<ul>
+							<li><a href="http://www.rainbowonlinefees.com"><span>Pay Fees</span></a></li>
+							<li><a href="http://www.rainbowschooljp.com"><span>Back to RainbowSchoolJP.com</span></a></li>
+					</ul></li>
+					<li><a href="http://www.rainbowschooljp.com/admission"><span>Admission</span></a></li>
+					<li><a href="http://www.rainbowschooljp.com/post-your-resume"><span>Careers</span></a></li>
+					<li><a href="http://www.rainbowschooljp.com/download-links"><span>Downloads</span></a></li>
+					<li><a href="http://www.rainbowschooljp.com/school-management-login-page"><span>Student Login</span></a></li>
+					<li><a href="http://www.rainbowschooljp.com/event-gallery"><span>Events</span></a></li>
+					<li class="has-sub"><a href="#"><span>About Us</span></a>
+					<ul>
+							<li><a href="http://www.rainbowschooljp.com/history"><span>History</span></a></li>
+							<li><a href="http://www.rainbowschooljp.com/vision"><span>Vision and Mission</span></a></li>
+							<li><a href="http://www.rainbowschooljp.com/emblem"><span>Emblem</span></a></li>
+					</ul></li>
+					<li class="last"><a href="http://www.rainbowschooljp.com/contact"><span>Contact Us</span></a></li>
+				</ul>
+			</div>
+		</header>

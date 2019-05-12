@@ -65,7 +65,7 @@
 
 ?>
 
-<?php require_once(__DIR__.'/../base_files/header.php'); ?>
+<?php require_once(__DIR__.'/../header.php'); ?>
         <title>Admin Panel | Create Teacher</title>
     </head>
     <body>
@@ -162,4 +162,4 @@
                 </form>
             </section>
         </header>
-<?php require_once(__DIR__.'/../base_files/footer.php'); ?>
+<?php require_once(__DIR__.'/../footer.php'); ?>
