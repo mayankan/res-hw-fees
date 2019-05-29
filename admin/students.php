@@ -9,22 +9,26 @@
         return;
     }
 
-    function getStudents($PDO, $start_limit=0, $name="", $admission_no="") {
-        $sql = "SELECT * FROM `student`";
+    function getStudents($PDO, $start_limit=0, $name="", $admission_no="", $class_id="") {
+        $sql = "SELECT * FROM `student` WHERE 1=1 AND";
         $data = [];
         if ($name !== "") {
-            $sql .= " WHERE `name` LIKE :name";
+            $sql .= "`name` LIKE :name AND";
             $data[':name'] = '%' . $name . '%';
         }
         if ($admission_no !== "") {
-            if ($name === "") {
-                $sql .= " WHERE `admission_no` LIKE :adm_no";
-            } else {
-                $sql .= " AND `admission_no` LIKE :adm_no";
-            }
+            $sql .= "`admission_no` LIKE :adm_no AND";
             $data[':adm_no'] = '%' . $admission_no . '%';
         }
-        $sql .= " LIMIT :start_limit,10";
+        if ($class_id !== "") {
+            $sql .= "`class_id` = :class_id AND";
+            $data[':class_id'] = $class_id;
+        }
+        if (strpos($sql, "WHERE")) {
+            // echo substr($sql, 0, strlen($sql) - 4);
+            $sql = substr($sql, 0, strlen($sql) - 4);
+        }
+        $sql .= " LIMIT :start_limit,10;";
         $data[':start_limit'] = $start_limit;
         try {
             $stmt = $PDO->prepare($sql);
@@ -53,19 +57,23 @@
     }
     $students = NULL;
     if (!isset($_GET['page_no'])) {
-        if (isset($_GET['name'])) {
-            if (isset($_GET['admission_no'])) {
-                $students = getStudents($PDO, $start_limit=0, $name=$_GET['name'], $admission_no=$_GET['admission_no']);
-            } else {
-                $students = getStudents($PDO, $start_limit=0, $name=$_GET['name']);
-            }
-        } else {
-            if (isset($_GET['admission_no'])) {
-                $students = getStudents($PDO, $start_limit=0, $name="", $admission_no=$_GET['admission_no']);
-            } else {
-                $students = getStudents($PDO);
-            }
-        }
+        $admission_no = isset($_GET['admission_no']) ? $_GET['admission_no'] : "";
+        $name = isset($_GET['name']) ? $_GET['name'] : "";
+        $class_id = isset($_GET['class_id']) ? $_GET['class_id'] : "";
+        // if (isset($_GET['name'])) {
+        //     if (isset($_GET['admission_no'])) {
+        //         $students = getStudents($PDO, $start_limit=0, $name=$_GET['name'], $admission_no=$_GET['admission_no']);
+        //     } else {
+        //         $students = getStudents($PDO, $start_limit=0, $name=$_GET['name']);
+        //     }
+        // } else {
+        //     if (isset($_GET['admission_no'])) {
+        //         $students = getStudents($PDO, $start_limit=0, $name="", $admission_no=$_GET['admission_no']);
+        //     } else {
+        //         $students = getStudents($PDO);
+        //     }
+        // }
+        $students = getStudents($PDO, $start_limit=0, $name=$name, $admission_no=$admission_no, $class_id=$class_id);
         $_SESSION['page_no'] = 1;
     } else {
         $page_no = (int)$_GET['page_no'];
@@ -75,19 +83,23 @@
         }
         $end_limit = $page_no * 10;
         $start_limit = $end_limit - 10;
-        if (isset($_GET['name'])) {
-            if (isset($_GET['admission_no'])) {
-                $students = getStudents($PDO, $start_limit=$start_limit, $name=$_GET['name'], $admission_no=$_GET['admission_no']);
-            } else {
-                $students = getStudents($PDO, $start_limit=$start_limit, $name=$_GET['name']);
-            }
-        } else {
-            if (isset($_GET['admission_no'])) {
-                $students = getStudents($PDO, $start_limit=$start_limit, $name="", $admission_no=$_GET['admission_no']);
-            } else {
-                $students = getStudents($PDO, $start_limit=$start_limit);
-            }
-        }
+        $admission_no = isset($_GET['admission_no']) ? $_GET['admission_no'] : "";
+        $name = isset($_GET['name']) ? $_GET['name'] : "";
+        $class_id = isset($_GET['class_id']) ? $_GET['class_id'] : "";
+        // if (isset($_GET['name'])) {
+        //     if (isset($_GET['admission_no'])) {
+        //         $students = getStudents($PDO, $start_limit=$start_limit, $name=$_GET['name'], $admission_no=$_GET['admission_no']);
+        //     } else {
+        //         $students = getStudents($PDO, $start_limit=$start_limit, $name=$_GET['name']);
+        //     }
+        // } else {
+        //     if (isset($_GET['admission_no'])) {
+        //         $students = getStudents($PDO, $start_limit=$start_limit, $name="", $admission_no=$_GET['admission_no']);
+        //     } else {
+        //         $students = getStudents($PDO, $start_limit=$start_limit);
+        //     }
+        // }
+        $students = getStudents($PDO, $start_limit=$start_limit, $name=$name, $admission_no=$admission_no, $class_id=$class_id);
         if ($students === NULL) {
             header('Location: students.php?page_no=' . (((int)$_GET['page_no']) - 1));
             return;
@@ -163,7 +175,29 @@
                                 <input type="text" name="admission_no" class="form-control col-3 m-2" placeholder="Admission Number">
                                 <?php endif ?>
 
-                                <button class="btn btn-success col-4 m-2">Filter</button>
+                                <!-- Filter for Class -->
+                                <?php if (isset($_GET['class_id'])): ?>
+                                <select name="class_id" class="form-control col-3 m-2">
+                                <?php $classes = getAllClasses($PDO); ?>
+                                <option value="">Classes</option>
+                                <?php while ($class = array_shift($classes)): ?>
+                                    <?php if ($class['id'] == $_GET['class_id']): ?>
+                                    <option value="<?php echo $class['id'] ?>" selected><?php echo $class['class_name'] ?> - <?php echo $class['section'] ?></option>
+                                    <?php else: ?>
+                                    <option value="<?php echo $class['id'] ?>"><?php echo $class['class_name'] ?> - <?php echo $class['section'] ?></option>
+                                    <?php endif ?>
+                                <?php endwhile ?>
+                                </select>
+                                <?php else: ?>
+                                <select name="class_id" class="form-control col-3 m-2">
+                                <?php $classes = getAllClasses($PDO); ?>
+                                <option value="" selected>Classes</option>
+                                <?php while ($class = array_shift($classes)): ?>
+                                    <option value="<?php echo $class['id'] ?>"><?php echo $class['class_name'] ?> - <?php echo $class['section'] ?></option>
+                                <?php endwhile ?>
+                                </select>
+                                <?php endif ?>
+                                <button class="btn btn-success col-3 m-2">Filter</button>
                             </div>
                         </form>
                     </div>
@@ -180,13 +214,33 @@
                             <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
                         </a>
                         <?php else: ?>
-                        <a href="<?php echo $base_url ?>admin/students.php?page_no=<?php echo $_SESSION['page_no'] - 1 ?>" class="btn btn-outline-dark">
-                            <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
-                        </a>
+                            <?php $backUrl = $base_url . "admin/students.php?page_no=" . ((int)$_SESSION['page_no'] - 1); ?>
+                            <?php if (isset($_GET['name'])): ?>
+                                <?php $backUrl .= "&name=" . $_GET['name']; ?>
+                            <?php endif ?>
+                            <?php if (isset($_GET['admission_no'])): ?>
+                                <?php $backUrl .= "&admission_no=" . $_GET['admission_no']; ?>
+                            <?php endif ?>
+                            <?php if (isset($_GET['class_id'])): ?>
+                                <?php $backUrl .= "&class_id=" . $_GET['class_id']; ?>
+                            <?php endif ?>
+                            <a href="<?php echo $backUrl ?>" class="btn btn-outline-dark">
+                                <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
+                            </a>
                         <?php endif ?>
                     </div>
                     <div class="col-6 d-flex justify-content-end">
-                        <a href="<?php echo $base_url ?>admin/students.php?page_no=<?php echo $_SESSION['page_no'] + 1 ?>" class="btn btn-outline-dark">
+                        <?php $nextUrl = $base_url . "admin/students.php?page_no=" . ((int)$_SESSION['page_no'] + 1); ?>
+                        <?php if (isset($_GET['name'])): ?>
+                            <?php $nextUrl .= "&name=" . $_GET['name']; ?>
+                        <?php endif ?>
+                        <?php if (isset($_GET['admission_no'])): ?>
+                            <?php $nextUrl .= "&admission_no=" . $_GET['admission_no']; ?>
+                        <?php endif ?>
+                        <?php if (isset($_GET['class_id'])): ?>
+                            <?php $nextUrl .= "&class_id=" . $_GET['class_id']; ?>
+                        <?php endif ?>
+                        <a href="<?php echo $nextUrl ?>" class="btn btn-outline-dark">
                             Next <i class="fa fa-arrow-right fa-1" aria-hidden="true"></i>
                         </a>
                     </div>

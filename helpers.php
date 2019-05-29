@@ -109,4 +109,18 @@
         }
     }
 
+    function getAllClasses($PDO) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `class`");
+            $stmt->execute();
+            if ($stmt->rowCount() == 0) {
+                return NULL;
+            }
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
+
 ?>
