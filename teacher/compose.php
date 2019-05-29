@@ -104,8 +104,9 @@
                                 ':student_id' => NULL, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['data']['id'],
                                 ':date_created' => (string) date("Y-m-d"), ':date_modified' => ((string) date("Y-m-d"))
                             ]);
-                $lastMessage = getLastRow($PDO, 'message');
-                addToLog($PDO, 'added homework', $_SESSION['data']['id'], $message_id=$lastMessage['id']);
+                // $lastMessage = getLastRow($PDO, 'message');
+                $lastMessageId = $PDO->lastInsertId();
+                addToLog($PDO, 'added homework', $_SESSION['data']['id'], $message_id=$lastMessageId);
                 return $stmt->rowCount();
             } catch (Exception $e) {
                 print($e);
@@ -123,8 +124,9 @@
                                 ':student_id' => $student_id, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['data']['id'],
                                 ':date_created' => ((string) date("Y-m-d")), ':date_modified' => ((string) date("Y-m-d"))
                             ]);
-                $lastMessage = getLastRow($PDO, 'message');
-                addToLog($PDO, 'added homework', $_SESSION['data']['id'], $message_id=$lastMessage['id']);
+                // $lastMessage = getLastRow($PDO, 'message');
+                $lastMessageId = $PDO->lastInsertId();
+                addToLog($PDO, 'added homework', $_SESSION['data']['id'], $message_id=$lastMessageId);
                 return $stmt->rowCount();
             } catch (Exception $e) {
                 print($e);

@@ -11,7 +11,7 @@
 
     function getLogs($PDO, $start_limit=0) {
         try {
-            $stmt = $PDO->prepare("SELECT * FROM `log` LIMIT :start_limit, 10");
+            $stmt = $PDO->prepare("SELECT * FROM `log` ORDER BY `date_of_action` DESC LIMIT :start_limit, 10");
             $stmt->execute([':start_limit' => $start_limit]);
             if ($stmt->rowCount() === 0) {
                 return NULL;
