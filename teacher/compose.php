@@ -275,7 +275,7 @@
         </section>
         <script>
             $(document).ready(function() {
-                $('#datetime').datepicker();
+                $('#datetime').datepicker({dateFormat: "DD, d MM, yy"});
                 $('#class').change(function(e) {
                     $.ajax({
                         url: "<?php echo $_SERVER['PHP_SELF'] ?>",
