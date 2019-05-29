@@ -215,7 +215,11 @@
                                     <td><?php echo $class['class_name'] . ' - ' . $class['section'] ?></td>
                                     <td><?php echo $student['father_name'] ?></td>
                                     <td><?php echo $student['mobile_number'] ?></td>
-                                    <td><?php echo $student['gender'] ?></td>
+                                    <?php if ((int) $student['gender'] === 1): ?>
+                                    <td>Male</td>
+                                    <?php else: ?>
+                                    <td>Female</td>
+                                    <?php endif ?>
                                     <?php $date = date_create($student['dob']) ?>
                                     <td><?php echo date_format($date, 'd-m-Y') ?></td>
                                 </tr>
