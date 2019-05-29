@@ -156,14 +156,18 @@
                                                 <p><?php echo $log['homework']['message']; ?></p>
                                             </div>
                                         </div>
-                                        <div class="row mt-4">
-                                            <div class="col">
-                                                <a href="<?php echo $base_url; ?>admin/" class="btn btn-info">Go Back</a>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                                 <?php endif ?>
+                                <div class="row mt-4">
+                                    <div class="col">
+                                        <?php if (isset($_GET['page_no'])): ?>
+                                        <a href="<?php echo $base_url; ?>admin?page_no=<?php echo $_GET['page_no'] ?>" class="btn btn-info">Go Back</a>
+                                        <?php else: ?>
+                                        <a href="<?php echo $base_url; ?>admin" class="btn btn-info">Go Back</a>
+                                        <?php endif ?>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

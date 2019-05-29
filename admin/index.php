@@ -141,6 +141,7 @@
                             </thead>
                             <tbody>
                                 <?php foreach ($logs as $log): ?>
+                                <?php $homework = NULL; ?>
                                 <tr>
                                     <td>
                                         <?php echo $log['date_of_action'] ?>
@@ -170,9 +171,16 @@
                                     <td>
                                         <?php echo getTeacherName($PDO, $log['teacher_id']); ?>
                                     </td>
+                                    <?php if (isset($_GET['page_no'])): ?>
+                                    <td>
+                                        <a href="<?php echo $base_url ?>admin/log.php?homeworkId=<?php echo $log['id'] ?>&page_no=<?php echo $_GET['page_no'] ?>" class="btn btn-outline-warning btn-block">View</a>
+                                    </td>
+                                    <?php else: ?>
                                     <td>
                                         <a href="<?php echo $base_url ?>admin/log.php?homeworkId=<?php echo $log['id'] ?>" class="btn btn-outline-warning btn-block">View</a>
                                     </td>
+                                    <?php endif ?>
+                                    
                                 </tr>
                                 <?php endforeach ?>
                             </tbody>

@@ -1,5 +1,5 @@
 <?php require_once(__DIR__.'/config.php'); ?>
-        <footer>
+        <footer class="mt-5">
 			<div class="zerogrid wrap-footer">
 				<h2 class="widget-title">OUR ASSOCIATES</h2>
 				<div class="row">
