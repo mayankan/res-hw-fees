@@ -18,11 +18,11 @@
         }
         if ($admission_no !== "") {
             if ($name === "") {
-                $sql .= " WHERE `admission_no` = :adm_no";
+                $sql .= " WHERE `admission_no` LIKE :adm_no";
             } else {
-                $sql .= " AND `admission_no` = :adm_no";
+                $sql .= " AND `admission_no` LIKE :adm_no";
             }
-            $data[':adm_no'] = $admission_no;
+            $data[':adm_no'] = '%' . $admission_no . '%';
         }
         $sql .= " LIMIT :start_limit,10";
         $data[':start_limit'] = $start_limit;
@@ -149,16 +149,20 @@
                     <div class="col-12">
                         <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="get">
                             <div class="form-group row d-flex justify-content-center">
+                                <!-- Filter for Name -->
                                 <?php if (isset($_GET['name'])): ?>
                                 <input type="text" name="name" class="form-control col-3 m-2" value="<?php echo $_GET['name'] ?>" placeholder="Name">
                                 <?php else: ?>
                                 <input type="text" name="name" class="form-control col-3 m-2" placeholder="Name">
                                 <?php endif ?>
-                                <?php if (isset($_GET['name'])): ?>
-                                <input type="text" name="admission_no" class="form-control col-3 m-2" value="<?php echo $_GET['admission_no'] ?>" placeholder="Name">
+
+                                <!-- Filter for Admission Number -->
+                                <?php if (isset($_GET['admission_no'])): ?>
+                                <input type="text" name="admission_no" class="form-control col-3 m-2" value="<?php echo $_GET['admission_no'] ?>" placeholder="Admission Number">
                                 <?php else: ?>
                                 <input type="text" name="admission_no" class="form-control col-3 m-2" placeholder="Admission Number">
                                 <?php endif ?>
+
                                 <button class="btn btn-success col-4 m-2">Filter</button>
                             </div>
                         </form>
