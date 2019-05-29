@@ -8,6 +8,8 @@
         try {
             $stmt = $PDO->prepare("UPDATE `message` SET `date_deleted` = :date_deleted WHERE `id` = :id");
             $stmt->execute(['date_deleted' => date("Y/m/d h:i:s"), ':id' => $homeworkId]);
+            //Add To Log - Homework Deleted
+            //addToLog($PDO, 'Homework Deleted', $_SESSION['data']['id'], $message_id=$lastMessage['id']);
             if ($stmt->rowCount() === 0) {
                 return NULL;
             }
@@ -22,6 +24,8 @@
         try {
             $stmt = $PDO->prepare("UPDATE `message` SET `message` = :message WHERE `id` = :id");
             $stmt->execute([':message' => $message, ':id' => $homeworkId]);
+            //Add To Log - Homework Updated
+            //addToLog($PDO, 'Homework Updated', $_SESSION['data']['id'], $message_id=$lastMessage['id']);
             if ($stmt->rowCount() === 0) {
                 return NULL;
             }

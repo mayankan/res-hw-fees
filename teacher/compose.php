@@ -105,7 +105,7 @@
                                 ':date_created' => (string) date("Y-m-d"), ':date_modified' => ((string) date("Y-m-d"))
                             ]);
                 $lastMessage = getLastRow($PDO, 'message');
-                addToLog($PDO, 'added homework', $_SESSION['data']['id'], $message_id=$lastMessage['id']);
+                addToLog($PDO, 'Homework Sent', $_SESSION['data']['id'], $message_id=$lastMessage['id']);
                 return $stmt->rowCount();
             } catch (Exception $e) {
                 print($e);
@@ -124,7 +124,7 @@
                                 ':date_created' => ((string) date("Y-m-d")), ':date_modified' => ((string) date("Y-m-d"))
                             ]);
                 $lastMessage = getLastRow($PDO, 'message');
-                addToLog($PDO, 'added homework', $_SESSION['data']['id'], $message_id=$lastMessage['id']);
+                addToLog($PDO, 'Homework Sent', $_SESSION['data']['id'], $message_id=$lastMessage['id']);
                 return $stmt->rowCount();
             } catch (Exception $e) {
                 print($e);
