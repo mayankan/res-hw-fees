@@ -23,8 +23,8 @@
         try {
             $stmt = $PDO->prepare("UPDATE `teacher` SET `password` = :pass WHERE `id` = :id");
             $stmt->execute([':pass' => $hashedPass, ':id' => $_SESSION['data']['id']]);
-            //Add To Log - Changed Password
-            //addToLog($PDO, 'Changed Password', $_SESSION['data']['id'];
+            // Add To Log - Changed Password
+            addToLog($PDO, 'Changed Password', $_SESSION['data']['id']);
             return $stmt->fetch();
         } catch (Exception $e) {
             print($e);
@@ -36,8 +36,8 @@
         try {
             $stmt = $PDO->prepare("UPDATE `teacher` SET `name` = :name, `email_address` = :email WHERE `id` = :id");
             $stmt->execute([':name' => $name, ':email' => $email,':id' => $_SESSION['data']['id']]);
-            //Add To Log - Updated Profile, Mention Old Name & Old Email
-            //addToLog($PDO, 'Updated Profile from Name - {}, Email - {}', $_SESSION['data']['id'];
+            // Add To Log - Updated Profile, Mention Old Name & Old Email
+            addToLog($PDO, "Updated Profile from Name - {$_SESSION['data']['name']}, Email - {$_SESSION['data']['email_address']}", $_SESSION['data']['id']);
             return $stmt->fetch();
         } catch (Exception $e) {
             print($e);
@@ -68,6 +68,7 @@
             die("Can't connect to database");
         }
         $teacherData = getTeacherData($PDO, $_SESSION['data']['id']);
+        $_SESSION['data'] = $teacherData;
         unset($PDO);
     }
 

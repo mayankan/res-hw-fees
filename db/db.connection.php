@@ -1,5 +1,7 @@
 <?php
 
+    // https://auth-db13.hostinger.in/ - for checking PHPMyAdmin
+
     function getConnection() {
         // $username = 'u281853335_hw';
         // $password = 'ViKHubGJ7L1O';
