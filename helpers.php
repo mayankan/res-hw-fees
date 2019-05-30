@@ -53,6 +53,20 @@
         }
     }
 
+    function getAllLogs($PDO) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `log`");
+            $stmt->execute();
+            if ($stmt->rowCount() === 0) {
+                return NULL;
+            }
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
+
     function getHomework($PDO, $id) {
         try {
             $stmt = $PDO->prepare("SELECT * FROM `message` WHERE id = :id AND date_deleted IS NULL");

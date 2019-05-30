@@ -125,6 +125,10 @@
                                         <h5 class="d-inline-block">Action - </h5>
                                         <span><?php echo $log['log_action'] ?></span>
                                     </li>
+                                    <li class="list-group-item">
+                                        <h5 class="d-inline-block">IP Address - </h5>
+                                        <span><?php echo $log['ip_address'] ?></span>
+                                    </li>
                                 </ul>
                                 <?php if (!is_null($log['message_id'])): ?>
                                 <div class="card mt-3">

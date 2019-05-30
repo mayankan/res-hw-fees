@@ -11,7 +11,7 @@
 
     function getLogs($PDO, $start_limit=0) {
         try {
-            $stmt = $PDO->prepare("SELECT * FROM `log` LIMIT :start_limit, 10");
+            $stmt = $PDO->prepare("SELECT * FROM `log` ORDER BY `date_of_action` DESC LIMIT :start_limit, 10");
             $stmt->execute([':start_limit' => $start_limit]);
             if ($stmt->rowCount() === 0) {
                 return NULL;
@@ -108,7 +108,7 @@
         <section id="logs" class="mt-2">
             <div class="container-fluid">
                 <div class="row pb-2">
-                    <div class="col-6 d-flex justify-content-start">
+                    <div class="col-4 d-flex justify-content-start">
                         <?php if ($_SESSION['page_no'] <= 1): ?>
                         <a href="#" class="btn btn-outline-dark" disabled>
                             <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
@@ -119,7 +119,10 @@
                         </a>
                         <?php endif ?>
                     </div>
-                    <div class="col-6 d-flex justify-content-end">
+                    <div class="col-4">
+                        <a href="<?php echo $base_url ?>admin/export_logs.php" class="btn btn-success btn-block">Get Exported Logs</a>
+                    </div>
+                    <div class="col-4 d-flex justify-content-end">
                         <a href="<?php echo $base_url ?>admin/index.php?page_no=<?php echo $_SESSION['page_no'] + 1 ?>" class="btn btn-outline-dark">
                             Next <i class="fa fa-arrow-right fa-1" aria-hidden="true"></i>
                         </a>
@@ -136,6 +139,7 @@
                                     <th>Date of Homework</th>
                                     <th>Student Sent to</th>
                                     <th>Teacher Assigned</th>
+                                    <th>IP Address</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -171,6 +175,9 @@
                                     <td>
                                         <?php echo getTeacherName($PDO, $log['teacher_id']); ?>
                                     </td>
+                                    <td>
+                                        <?php echo $log['ip_address'] ?>
+                                    </td>
                                     <?php if (isset($_GET['page_no'])): ?>
                                     <td>
                                         <a href="<?php echo $base_url ?>admin/log.php?homeworkId=<?php echo $log['id'] ?>&page_no=<?php echo $_GET['page_no'] ?>" class="btn btn-outline-warning btn-block">View</a>
@@ -180,7 +187,6 @@
                                         <a href="<?php echo $base_url ?>admin/log.php?homeworkId=<?php echo $log['id'] ?>" class="btn btn-outline-warning btn-block">View</a>
                                     </td>
                                     <?php endif ?>
-                                    
                                 </tr>
                                 <?php endforeach ?>
                             </tbody>
