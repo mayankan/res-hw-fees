@@ -8,7 +8,7 @@
         header('Location: ../404.html');
         return;
     }
-
+    
     function getLogs($PDO, $start_limit=0) {
         try {
             $stmt = $PDO->prepare("SELECT * FROM `log` ORDER BY `date_of_action` DESC LIMIT :start_limit, 10");
@@ -120,7 +120,7 @@
                         <?php endif ?>
                     </div>
                     <div class="col-4">
-                        <a href="<?php echo $base_url ?>admin/export_logs.php" class="btn btn-success btn-block">Get Exported Logs</a>
+                        <a href="<?php echo $base_url ?>admin/export_logs.php" class="btn btn-success btn-block">Export Logs</a>
                     </div>
                     <div class="col-4 d-flex justify-content-end">
                         <a href="<?php echo $base_url ?>admin/index.php?page_no=<?php echo $_SESSION['page_no'] + 1 ?>" class="btn btn-outline-dark">
