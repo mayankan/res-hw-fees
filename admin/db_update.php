@@ -88,7 +88,7 @@
                 die("Something went wrong");
             }
         } else {
-            echo 'something went wrong';
+            echo 'Something went wrong';
         }
 
         if ($originalStudentData !== NULL) {

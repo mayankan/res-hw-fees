@@ -54,7 +54,7 @@
 
     if (isset($_POST['changePass'])) {
         if (empty($_POST['new_pass']) || empty($_POST['confirm_pass']) || empty($_POST['id'])) {
-            $_SESSION['error'] = 'You did not enter the required fields to change password';
+            $_SESSION['error'] = 'Please Enter the required fields to Update Password';
             header('Location: teacher.php?id=' . $_SESSION['teacher_id']);
             return;
         }
@@ -81,7 +81,7 @@
         }
 
         if (changePassword($PDO, $newPass, $id) !== NULL) {
-            $_SESSION['success'] = "Successfully! Update the Password";
+            $_SESSION['success'] = "Successfully Updated the Password";
             header('Location: teacher.php?id=' . $_SESSION['teacher_id']);
             return;
         } else {
@@ -93,7 +93,7 @@
 
     if (isset($_POST['changeInfo'])) {
         if (empty($_POST['full_name']) || empty($_POST['email']) || empty($_POST['id'])) {
-            $_SESSION['error'] = 'You did not enter the required fields to update the information';
+            $_SESSION['error'] = 'Please Enter the required fields to Update the Information';
             header('Location: teacher.php?id=' . $_SESSION['teacher_id']);
             return;
         }
@@ -103,13 +103,13 @@
         $email = $_POST['email'];
 
         if ($_SESSION['teacher_id'] != $id) {
-            $_SESSION['error'] = 'Id is wrong';
+            $_SESSION['error'] = 'Teacher Id is invalid';
             header('Location: teacher.php?id=' . $_SESSION['teacher_id']);
             return;
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $_SESSION['error'] = 'Email is wrong';
+            $_SESSION['error'] = 'Email Address is invalid';
             header('Location: teacher.php?id=' . $_SESSION['teacher_id']);            
             return; 
         }
@@ -120,7 +120,7 @@
         }
 
         if (updateInformation($PDO, $name, $email, $id) !== NULL) {
-            $_SESSION['success'] = "Successfully! Update the Information";
+            $_SESSION['success'] = "Successfully updated the Information";
             header('Location: teacher.php?id=' . $_SESSION['teacher_id']);            
             return;
         } else {
