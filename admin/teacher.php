@@ -54,7 +54,7 @@
 
     if (isset($_POST['changePass'])) {
         if (empty($_POST['new_pass']) || empty($_POST['confirm_pass']) || empty($_POST['id'])) {
-            $_SESSION['error'] = 'Please Enter the required fields to Update Password';
+            $_SESSION['error'] = 'Please Enter the required fields to Update the password.';
             header('Location: teacher.php?id=' . $_SESSION['teacher_id']);
             return;
         }
@@ -93,7 +93,7 @@
 
     if (isset($_POST['changeInfo'])) {
         if (empty($_POST['full_name']) || empty($_POST['email']) || empty($_POST['id'])) {
-            $_SESSION['error'] = 'Please Enter the required fields to Update the Information';
+            $_SESSION['error'] = 'Please Enter the required fields to Update the Information.';
             header('Location: teacher.php?id=' . $_SESSION['teacher_id']);
             return;
         }

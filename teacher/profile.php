@@ -24,7 +24,7 @@
             $stmt = $PDO->prepare("UPDATE `teacher` SET `password` = :pass WHERE `id` = :id");
             $stmt->execute([':pass' => $hashedPass, ':id' => $_SESSION['data']['id']]);
             // Add To Log - Changed Password
-            addToLog($PDO, 'Changed Password', $_SESSION['data']['id']);
+            addToLog($PDO, 'Teacher Changed Password', $_SESSION['data']['id']);
             return $stmt->fetch();
         } catch (Exception $e) {
             print($e);
@@ -37,7 +37,7 @@
             $stmt = $PDO->prepare("UPDATE `teacher` SET `name` = :name, `email_address` = :email WHERE `id` = :id");
             $stmt->execute([':name' => $name, ':email' => $email,':id' => $_SESSION['data']['id']]);
             // Add To Log - Updated Profile, Mention Old Name & Old Email
-            addToLog($PDO, "Updated Profile from Name - {$_SESSION['data']['name']}, Email - {$_SESSION['data']['email_address']}", $_SESSION['data']['id']);
+            addToLog($PDO, "Teacher Updated Profile from Name - {$_SESSION['data']['name']}, Email - {$_SESSION['data']['email_address']}", $_SESSION['data']['id']);
             return $stmt->fetch();
         } catch (Exception $e) {
             print($e);
@@ -74,7 +74,7 @@
 
     if (isset($_POST['changePass'])) {
         if (empty($_POST['old_pass']) || empty($_POST['new_pass']) || empty($_POST['confirm_pass'])) {
-            $_SESSION['error'] = 'You did not enter the required fields to change password';
+            $_SESSION['error'] = 'Please enter the required fields to change password.';
             header('Location: profile.php');
             return;
         }
@@ -83,7 +83,7 @@
         $confirmPass = $_POST['confirm_pass'];
 
         if ($confirmPass !== $newPass) {
-            $_SESSION['error'] = 'Passwords do not match';
+            $_SESSION['error'] = 'Passwords do not match! Please Try again.';
             header('Location: profile.php');
             return;
         }
@@ -95,13 +95,13 @@
         $teacherData = getTeacherData($PDO, $_SESSION['data']['id']);
         $hashedPass = hash('sha256', $oldPass);
         if (!hash_equals($hashedPass, $teacherData['password'])) {
-            $_SESSION['error'] = 'Old Password do not match';
+            $_SESSION['error'] = 'Old Password is incorrect! Please Try again.';
             header('Location: profile.php');
             return;
         }
 
         if (changePassword($PDO, $newPass) !== NULL) {
-            $_SESSION['success'] = "Successfully! Update the Password";
+            $_SESSION['success'] = "Successfully Updated the Password";
             header('Location: profile.php');
             return;
         } else {
@@ -113,7 +113,7 @@
 
     if (isset($_POST['changeInfo'])) {
         if (empty($_POST['full_name']) || empty($_POST['email'])) {
-            $_SESSION['error'] = 'You did not enter the required fields to update the information';
+            $_SESSION['error'] = 'Please enter the required fields to update the information.';
             header('Location: profile.php');
             return;
         }
@@ -122,7 +122,7 @@
         $email = $_POST['email'];
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $_SESSION['error'] = 'Email is wrong';
+            $_SESSION['error'] = 'Please Enter valid Email Address.';
             header('Location: profile.php');
             return;
         }
@@ -133,7 +133,7 @@
         }
 
         if (updateInformation($PDO, $name, $email) !== NULL) {
-            $_SESSION['success'] = "Successfully! Update the Information";
+            $_SESSION['success'] = "Successfully Updated the Information";
             header('Location: profile.php');
             return;
         } else {

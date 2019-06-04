@@ -53,7 +53,7 @@
         }
 
         if (createTeacher($PDO, $fullName, $username, $password, $email)) {
-            $_SESSION['success'] = 'Teacher has been successfully created';
+            $_SESSION['success'] = 'Teacher User has been successfully created.';
             header('Location: create_teacher.php');
             return;
         } else {

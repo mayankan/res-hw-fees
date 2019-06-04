@@ -63,7 +63,7 @@
         } else {
             $page_no = (int)$_GET['page_no'];
             if ($page_no <= 0) {
-                echo 'negative';
+                echo 'Page Number Not Found at student/index.php';
                 header("Location: index.php?page_no=1");
                 return;
             }

@@ -151,16 +151,16 @@
                 $date = strtotime($dateSubmitted);
                 $date = (string) date('Y-m-d', $date);
             } catch (Exception $e) {
-                $error = "Date is wrong.. Please Enter a Valid Date!";
+                $error = "Entered Date is invalid. Please try entering again.";
                 return;
             }
             if (empty($student_id)) {
                 $data = ['message' => $homework, 'date_of_message' => $date, 'class_id' => $class_id];
                 if (!is_null(submitHomework($PDO, $data))) {
-                    $success = 'Homework sent successfully. The page will refresh in 5 seconds.';
+                    $success = 'Homework Sent successfully. The page will refresh in 5 seconds.';
                     header("refresh:5;url=compose.php");
                 } else {
-                    $error = 'Something went wrong.. Try again';
+                    $error = 'Something Sent wrong.. Try again';
                 }
 
             } else {
@@ -169,7 +169,7 @@
                     $success = 'Homework sent successfully. The page will refresh in 5 seconds.';
                     header("refresh:5;url=compose.php");
                 } else {
-                    $error = 'Something went wrong.. Try again';
+                    $error = 'Something went wrong. Try again';
                 }
             }
         }
