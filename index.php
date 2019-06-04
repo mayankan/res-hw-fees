@@ -5,7 +5,16 @@
     if (isset($_SESSION['role'])) {
         header("Location: " . $_SESSION['role'] . "/");
     }
-
+    /**
+     * Login via Teacher Table's Username and Password
+     *
+     * @param TeacherUsername $username TeacherPassword $password PDOObject $PDO
+     *
+     * @return TeacherClass $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+     *
+    */
     function checkTeacher($username, $password, $PDO) {
         $password_hash = hash('sha256', $password);
         try {
