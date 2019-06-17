@@ -56,20 +56,62 @@
         }
     }
 
+    function checkAdmin($username, $password, $PDO) {
+        $password_hash = hash('sha256', $password);
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `username` = :username AND `date_deleted` IS NULL AND `role` != 'teacher'");
+            $stmt->execute([':username' => $username]);
+            if ($stmt->rowCount() === 0) {
+                return NULL;
+            }
+            $data = $stmt->fetch();
+            if (hash_equals($password_hash, $data['password'])) {
+                return $data;
+            } else {
+                return NULL;
+            }
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST)) {
-
-            // check admin before to make things faster and secure
-            if (($_POST['username'] === "admin" && $_POST['password'] === "rainbow@123")||($_POST['username'] === "incharge" && $_POST['password'] === "rainbow@1")) {
-                $_SESSION['role'] = 'admin';
-                header('Location: admin/');
-            }
 
             $PDO = getConnection();
             if (is_null($PDO)) {
                 die("Can't connect to database");
             }
 
+            // check admin before to make things faster and secure
+            // if (($_POST['username'] === "admin" && $_POST['password'] === "rainbow@123") || ($_POST['username'] === "incharge" && $_POST['password'] === "rainbow@1")) {
+            //     $_SESSION['role'] = 'admin';
+            //     header('Location: admin/');
+            // }
+
+            $user = str_split($_POST['username']);
+            if (implode(array_slice($user, 0, 5)) == 'admin') {
+                $adminData = checkAdmin($_POST['username'], $_POST['password'], $PDO);
+                if ($adminData != NULL) {
+                    if ($adminData['role'] == 'admin') {
+                        $_SESSION['role'] = 'admin';
+                        $PDO = NULL;
+                        header('Location: admin/');
+                        return;
+                    } else if ($adminData['role'] == 'super admin') {
+                        $_SESSION['role'] = 'super admin';
+                        $PDO = NULL;
+                        header('Location: super_admin/');
+                        return;
+                    } else if ($adminData['role'] == 'fee clerk') {
+                        $_SESSION['role'] = 'fee clerk';
+                        $PDO = NULL;
+                        header('Location: fee_clerk/');
+                        return;
+                    }
+                }
+            }
 
             $teacherData = checkTeacher($_POST['username'], $_POST['password'], $PDO);
             if ($teacherData != NULL) {
@@ -78,6 +120,7 @@
                 addToLog($PDO, 'Teacher Logged in', $_SESSION['data']['id']);
                 $PDO = null;
                 header('Location: teacher/');
+                return;
             }
             else {
 
@@ -87,6 +130,7 @@
                     $_SESSION['data'] = $studentData;
                     $PDO = null;
                     header('Location: student/');
+                    return;
                 } 
                 else {
                     $_SESSION['error'] = "Invalid username or password";
