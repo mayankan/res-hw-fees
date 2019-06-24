@@ -23,6 +23,7 @@ Super Admin
 Fee Clerk
   -can view and change maintainence mode(Online, Month End, Custom Maintainence)
   -can create and update Fee Data using CSV File
+  -can view fee data
 //  -can create Fee data using Form
 //  -can add fee receipts using Form
   -can view Student users fetched from SQL Server Database
