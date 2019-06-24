@@ -1,12 +1,18 @@
 <?php
+    /**
+     * This Page is used to show students all the homeworks for them
+    */
     require(__DIR__.'/../config.php');
+    require(__DIR__.'/../helpers.php');
     session_start();
 
+    // logs out user if it's not a student
     if ($_SESSION['role'] !== 'student') {
         header('Location: ../404.html');
         return;
     }
 
+    // checks for logout variable in GET Request and if it's true logs out user
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
             session_destroy();
@@ -14,32 +20,22 @@
         }
     }
 
-    function getClassByStudentId($PDO, $studentId) {
+    /**
+     * Get all homeworks for the student
+     *
+     * @param PDOObject $PDO
+     * @param Number $classId
+     * @param Number $startLimit
+     *
+     * @return Homeworks $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+     *
+    */
+    function getHomeworks($PDO, $classId, $startLimit=0) {
         try {
-            $stmt = $PDO->prepare("SELECT * FROM `student` WHERE `id` = :id");
-            $stmt->execute([':id' => $studentId]);
-            return $stmt->fetch()['class_id'];
-        } catch (Exception $e) {
-            print($e);
-            return NULL;
-        }
-    }
-
-    function getTeacherName($PDO, $teacherId) {
-        try {
-            $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `id` = :id");
-            $stmt->execute([':id' => $teacherId]);
-            return $stmt->fetch()['name'];
-        } catch (Exception $e) {
-            print($e);
-            return NULL;
-        }
-    }
-
-    function getHomeworks($PDO, $classId, $start_limit=0, $end_limit=10) {
-        try {
-            $stmt = $PDO->prepare("SELECT * FROM `message` WHERE `class_id` = :class_id AND date_deleted IS NULL ORDER BY `date_of_message` DESC LIMIT :start_limit, :end_limit");
-            $stmt->execute([':class_id' => $classId, ':start_limit' => $start_limit, ':end_limit' => $end_limit]);
+            $stmt = $PDO->prepare("SELECT * FROM `message` WHERE `class_id` = :class_id AND date_deleted IS NULL ORDER BY `date_of_message` DESC LIMIT :startLimit, 10");
+            $stmt->execute([':class_id' => $classId, ':startLimit' => $startLimit]);
             if ($stmt->rowCount() === 0) {
                 return NULL;
             }
@@ -50,26 +46,25 @@
         }
     }
 
+    // Global $homeworks data for the response and server
+    $homeworks = NULL;
     if (isset($_SESSION['data']['id'])) {
         require(__DIR__ . '/../db/db.connection.php');
         $PDO = getConnection();
         if (is_null($PDO)) {
             die("Can't connect to database");
         }
-        $classId = getClassByStudentId($PDO, $_SESSION['data']['id']);
+        $classId = getStudent($PDO, $_SESSION['data']['id'])['class_id'];
         if (!isset($_GET['page_no'])) {
             $homeworks = getHomeworks($PDO, $classId);
             $_SESSION['page_no'] = 1;
         } else {
-            $page_no = (int)$_GET['page_no'];
-            if ($page_no <= 0) {
-                echo 'Page Number Not Found at student/index.php';
-                header("Location: index.php?page_no=1");
-                return;
+            $pageNumber = (int)$_GET['page_no'];
+            if ($pageNumber <= 0) {
+                $pageNumber = 1;
             }
-            $end_limit = $page_no * 10;
-            $start_limit = $end_limit - 10;
-            $homeworks = getHomeworks($PDO, $classId, $start_limit=$start_limit, $end_limit=$end_limit);
+            $startLimit = ($pageNumber * 10) - 10;
+            $homeworks = getHomeworks($PDO, $classId, $startLimit=$startLimit);
             if ($homeworks == NULL) {
                 header('Location: index.php?page_no=' . (((int)$_GET['page_no']) - 1));
             }
@@ -115,8 +110,6 @@
                 </div>
             </nav>
         </header>
-
-
 
         <section id="homeworks">
             <div class="container-fluid">

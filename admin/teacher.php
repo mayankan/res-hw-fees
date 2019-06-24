@@ -6,7 +6,7 @@
 
     function getTeacherData($PDO, $id) {
         try {
-            $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `id` = :id");
+            $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `id` = :id AND `role` = 'teacher'");
             $stmt->execute([':id' => $id]);
             if ($stmt->rowCount() <= 0) {
                 return NULL;
@@ -21,7 +21,7 @@
     function changePassword($PDO, $newPass, $id) {
         $hashedPass = hash('sha256', $newPass);
         try {
-            $stmt = $PDO->prepare("UPDATE `teacher` SET `password` = :pass WHERE `id` = :id");
+            $stmt = $PDO->prepare("UPDATE `teacher` SET `password` = :pass WHERE `id` = :id AND `role` = 'teacher'");
             $stmt->execute([':pass' => $hashedPass, ':id' => $id]);
             return $stmt->fetch();
         } catch (Exception $e) {

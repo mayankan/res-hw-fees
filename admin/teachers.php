@@ -10,7 +10,7 @@
 
     function getTeachers($PDO, $start_limit=0) {
         try {
-            $stmt = $PDO->prepare("SELECT * FROM `teacher` LIMIT :start_limit,10");
+            $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `role` = 'teacher' LIMIT :start_limit,10");
             $stmt->execute([':start_limit' => $start_limit]);
             if ($stmt->rowCount() == 0) {
                 return NULL;

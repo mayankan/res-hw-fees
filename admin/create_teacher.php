@@ -1,8 +1,25 @@
 <?php
+    /**
+     * This page is used to create Teacher 
+    */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../db/db.connection.php');
     session_start();
 
+    /**
+     * Create Teacher in `teacher` table
+     *
+     * @param PDOObject $PDO
+     * @param String $fullName - Teacher Name
+     * @param String $username - Teacher Username
+     * @param String $password - Teacher Password
+     * @param String $email - Teacher Email Address
+     *
+     * @return Teacher $data
+     *
+     * @throws Exception // No Specefic Exception Defined
+     *
+    */
     function createTeacher($PDO, $fullName, $username, $password, $email) {
         $hashedPass = hash('sha256', $password);
         try {
@@ -22,11 +39,13 @@
         }
     }
 
+    // logs out user if it's not a admin
     if ($_SESSION['role'] !== 'admin') {
         header('Location: ../404.html');
         return;
     }
 
+    // checks for logout variable in GET Request and if it's true logs out user
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
             session_destroy();
@@ -41,6 +60,7 @@
         $password = $_POST['password'];
         $email = $_POST['email'];
 
+        // check required fields
         if ($fullName === '' && $username === '' && $password === '' && $email === '') {
             $_SESSION['error'] = 'You forgot to enter the required fields';
             header('Location: create_teacher.php');

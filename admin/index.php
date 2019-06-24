@@ -1,18 +1,33 @@
 <?php
+    /**
+     * This page is used to view all logs for the homework system
+    */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../db/db.connection.php');
     require(__DIR__.'/../helpers.php');
     session_start();
 
+    // logs out user if it's not a admin
     if ($_SESSION['role'] !== 'admin') {
         header('Location: ../404.html');
         return;
     }
     
-    function getLogs($PDO, $start_limit=0) {
+    /**
+     * Get data for all logs
+     *
+     * @param PDOObject $PDO
+     * @param Number $startLimit
+     *
+     * @return Logs $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+     *
+    */
+    function getLogs($PDO, $startLimit=0) {
         try {
             $stmt = $PDO->prepare("SELECT * FROM `log` ORDER BY `date_of_action` DESC LIMIT :start_limit, 10");
-            $stmt->execute([':start_limit' => $start_limit]);
+            $stmt->execute([':start_limit' => $startLimit]);
             if ($stmt->rowCount() === 0) {
                 return NULL;
             }
@@ -23,6 +38,7 @@
         }
     }
 
+    // checks for logout variable in GET Request and if it's true logs out user
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
             session_destroy();
@@ -40,14 +56,13 @@
         $logs = getLogs($PDO);
         $_SESSION['page_no'] = 1;
     } else {
-        $page_no = (int)$_GET['page_no'];
-        if ($page_no <= 0) {
-            header("Location: index.php?page_no=1");
-            return;
+        $pageNumber = (int)$_GET['page_no'];
+        if ($pageNumber <= 0) {
+            $pageNumber = 1;
         }
-        $end_limit = $page_no * 10;
-        $start_limit = $end_limit - 10;
-        $logs = getLogs($PDO, $start_limit=$start_limit);
+        $end_limit = $pageNumber * 10;
+        $startLimit = $end_limit - 10;
+        $logs = getLogs($PDO, $startLimit=$startLimit);
         if ($logs === NULL) {
             header('Location: index.php?page_no=' . (((int)$_GET['page_no']) - 1));
             return;
@@ -145,49 +160,65 @@
                             </thead>
                             <tbody>
                                 <?php foreach ($logs as $log): ?>
-                                <?php $homework = NULL; ?>
-                                <tr>
-                                    <td>
-                                        <?php echo $log['date_of_action'] ?>
-                                    </td>
-                                    <td>
-                                        <?php echo $log['log_action'] ?>
-                                    </td>
-                                    <?php if (is_null($log['message_id'])): ?>
-                                    <td></td>
-                                    <td></td>
-                                    <?php else: ?>
-                                    <?php $homework = getAllHomework($PDO, $log['message_id']) ?>
-                                    <td>
-                                        <?php echo substr($homework['message'], 0, 50) ?>
-                                    </td>
-                                    <td>
-                                        <?php echo $homework['date_of_message'] ?>
-                                    </td>
-                                    <?php endif ?>
-                                    <?php if (is_null($homework['student_id'])): ?>
-                                    <td></td>
-                                    <?php else: ?>
-                                    <td>
-                                    <?php echo getStudent($PDO, $homework['student_id'])['name'] ?>
-                                    </td>
-                                    <?php endif ?>
-                                    <td>
-                                        <?php echo getTeacherName($PDO, $log['teacher_id']); ?>
-                                    </td>
-                                    <td>
-                                        <?php echo $log['ip_address'] ?>
-                                    </td>
-                                    <?php if (isset($_GET['page_no'])): ?>
-                                    <td>
-                                        <a href="<?php echo $base_url ?>admin/log.php?homeworkId=<?php echo $log['id'] ?>&page_no=<?php echo $_GET['page_no'] ?>" class="btn btn-outline-warning btn-block">View</a>
-                                    </td>
-                                    <?php else: ?>
-                                    <td>
-                                        <a href="<?php echo $base_url ?>admin/log.php?homeworkId=<?php echo $log['id'] ?>" class="btn btn-outline-warning btn-block">View</a>
-                                    </td>
-                                    <?php endif ?>
-                                </tr>
+                                    <?php $homework = NULL; ?>
+                                    <tr>
+                                        <td>
+                                            <?php echo $log['date_of_action'] ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $log['log_action'] ?>
+                                        </td>
+
+                                        <?php if (is_null($log['message_id'])): ?>
+                                            <td></td>
+                                            <td></td>
+                                        <?php else: ?>
+                                            <?php $homework = getAllHomework($PDO, $log['message_id']) ?>
+                                            <td>
+                                                <?php echo substr($homework['message'], 0, 50) ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $homework['date_of_message'] ?>
+                                            </td>
+                                        <?php endif ?>
+
+                                        <?php if (is_null($homework['student_id'])): ?>
+                                            <td></td>
+                                        <?php else: ?>
+                                            <td>
+                                                <?php echo getStudent($PDO, $homework['student_id'])['name'] ?>
+                                            </td>
+                                        <?php endif ?>
+
+                                        <td>
+                                            <?php echo getTeacherName($PDO, $log['teacher_id']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $log['ip_address'] ?>
+                                        </td>
+
+                                        <?php if (isset($_GET['page_no'])): ?>
+                                            <td>
+                                                <a href="
+                                                    <?php echo $base_url ?>
+                                                    admin/log.php?homeworkId=
+                                                    <?php echo $log['id'] ?>
+                                                    &page_no=<?php echo $_GET['page_no'] ?>" 
+                                                    class="btn btn-outline-warning btn-block">
+                                                        View
+                                                </a>
+                                            </td>
+                                            <?php else: ?>
+                                            <td>
+                                                <a href="
+                                                    <?php echo $base_url ?>
+                                                    admin/log.php?homeworkId=<?php echo $log['id'] ?>" 
+                                                    class="btn btn-outline-warning btn-block">
+                                                        View
+                                                </a>
+                                            </td>
+                                        <?php endif ?>
+                                    </tr>
                                 <?php endforeach ?>
                             </tbody>
                         </table>

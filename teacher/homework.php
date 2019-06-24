@@ -1,9 +1,23 @@
 <?php
+    /**
+     * This page is used to compose homeworks 
+    */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../helpers.php');
     require(__DIR__ . '/../db/db.connection.php');
     session_start();
 
+    /**
+     * Delete a single homework based on homeworkId
+     *
+     * @param PDOObject $PDO
+     * @param Number $homeworkId
+     *
+     * @return Homework $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+     *
+    */
     function deleteHomework($PDO, $homeworkId) {
         try {
             $stmt = $PDO->prepare("UPDATE `message` SET `date_deleted` = :date_deleted WHERE `id` = :id");
@@ -20,6 +34,18 @@
         }
     }
 
+    /**
+     * Update a single homework with a new message
+     *
+     * @param PDOObject $PDO
+     * @param Number $homeworkId
+     * @param String message - message of the homework
+     *
+     * @return Homework $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+     *
+    */
     function updateHomework($PDO, $homeworkId, $message) {
         try {
             $stmt = $PDO->prepare("UPDATE `message` SET `message` = :message WHERE `id` = :id");
@@ -36,11 +62,13 @@
         }
     }
 
+    // logs out user if it's not a teacher
     if ($_SESSION['role'] !== 'teacher') {
         session_destroy();
         header('Location: ../');
     }
 
+    // checks for logout variable in GET Request and if it's true logs out user
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
             $PDO = getConnection();
@@ -53,6 +81,7 @@
         }
     }
 
+    // if homeworkId is set in GET Request then only this page should be rendered or else user should be redirected
     if (isset($_GET['homeworkId'])) {
         $PDO = getConnection();
         if (is_null($PDO)) {
@@ -86,6 +115,7 @@
     }
 
     // updating the homework
+    // updation only in case of homework ID and message for it are sent
     if (isset($_POST['homework_id']) && isset($_POST['message'])) {
         if ($_POST['homework_id'] !== $_SESSION['homeworkId']) {
             unset($_SESSION['homeworkId']);
@@ -107,7 +137,9 @@
     }
 
     // deleting the whole homework
+    // deletion only if only homework Id is sent
     if (isset($_POST['homeworkId'])) {
+        // this is to verify that homework Id is actually accessed by user and is not manipulated
         if ($_POST['homeworkId'] !== $_SESSION['homeworkId']) {
             unset($_SESSION['homeworkId']);
             header('Location: index.php');

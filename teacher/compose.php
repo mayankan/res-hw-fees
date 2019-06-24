@@ -1,8 +1,12 @@
 <?php
+    /**
+     * This page is used to compose homeworks 
+    */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../helpers.php');
     session_start();
 
+    // logs out user if it's not a teacher
     if ($_SESSION['role'] !== 'teacher') {
 		header('Location: ../404.html');
     }
@@ -13,6 +17,7 @@
         die("Can't connect to database");
     }
 
+    // checks for logout variable in GET Request and if it's true logs out user
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
             addToLog($PDO, 'Teacher Logged out', $_SESSION['data']['id']);
@@ -21,25 +26,28 @@
         }
     }
 
+    /**
+     * This code handles cors in case of outside Requests
+     * There are no requests from outside but still for reminding myself
+    */
+    // CORS START
     if (isset($_SERVER["HTTP_ORIGIN"])) {
         header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
     }
-
-
     header("Access-Control-Allow-Credentials: true");
     header("Access-Control-Max-Age: 86400");
-
     if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
         if (isset($_SERVER["HTTP_ACCESS_CONTROL_REQUEST_METHOD"])) {
             header("Access-Control-Allow-Methods: GET");
         }
-
         if (isset($_SERVER["HTTP_ACCESS_CONTROL_REQUEST_HEADERS"])) {
             header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
         }
         exit(0);
     }
+    // CORS END
 
+    // Ajax Request for fetching students on the basis of class selected
     if (isset($_GET['class_id'])) {
         $students_data = getStudentsByClass($PDO, $_GET['class_id']);
         if ($students_data === NULL) {
@@ -52,6 +60,16 @@
         return;
     }
 
+    /**
+     * Get data for all classes
+     *
+     * @param PDOObject $PDO
+     *
+     * @return Class $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+     *
+    */
     function getClasses($PDO) {
         try {
             $stmt = $PDO->prepare("
@@ -68,10 +86,21 @@
         }
     }
 
-    function getStudentsByClass($PDO, $class_id) {
+    /**
+     * Get data for all classes
+     *
+     * @param PDOObject $PDO
+     * @param Number $classId
+     *
+     * @return Class $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+     *
+    */
+    function getStudentsByClass($PDO, $classId) {
         try {
             $stmt = $PDO->prepare("SELECT `id`, `name`, `admission_no` FROM `student` WHERE `class_id` = :class_id AND `date_deleted` IS NULL");
-            $stmt->execute([':class_id' => $class_id]);
+            $stmt->execute([':class_id' => $classId]);
             if ($stmt->rowCount() === 0) {
                 return NULL;
             }
@@ -82,17 +111,21 @@
         }
     }
 
-    function checkStudentId($PDO, $studentId) {
-
-    }
-
-    function checkTeacherId($PDO, $teacherId) {
-
-    }
-
-    function submitHomework($PDO, $data, $student_id=false) {
+    /**
+     * For adding homework composed to the `message` table in database
+     *
+     * @param PDOObject $PDO
+     * @param AssociativeArray $data - data from the post request
+     * @param Number $studentId
+     *
+     * @return Class $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+     *
+    */
+    function submitHomework($PDO, $data, $studentId=false) {
         $date = $data['date_of_message'];
-        if (!$student_id) {
+        if (!$studentId) {
             try {
                 $stmt = $PDO->prepare("
                                     INSERT INTO `message`
@@ -121,7 +154,7 @@
                                 ");
                 $stmt->execute([
                                 ':message' => $data['message'], ':date_of_message' => $date,
-                                ':student_id' => $student_id, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['data']['id'],
+                                ':student_id' => $studentId, ':class_id' => $data['class_id'], ':teacher_id' => $_SESSION['data']['id'],
                                 ':date_created' => ((string) date("Y-m-d")), ':date_modified' => ((string) date("Y-m-d"))
                             ]);
                 // $lastMessage = getLastRow($PDO, 'message');
@@ -134,19 +167,20 @@
                 return NULL;
             }
         }
-
     }
 
     // for loading the data with the class data
     $classes = getClasses($PDO);
-
     // for submiting a homework to the database
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST)) {
             $dateSubmitted = $_POST['date_of_homework'];
-            $class_id = filter_var($_POST['class'], FILTER_SANITIZE_NUMBER_INT);
-            $student_id = $_POST['student'];
+            // for checking if class id is INT or not
+            $classId = filter_var($_POST['class'], FILTER_SANITIZE_NUMBER_INT);
+            $studentId = $_POST['student'];
+            // for checking if homework message is proper String or not
             $homework = filter_var($_POST['homework'], FILTER_SANITIZE_STRING);
+            // used to convert date to Y-m-d format if not possible then provided date is wrong
             try {
                 $date = strtotime($dateSubmitted);
                 $date = (string) date('Y-m-d', $date);
@@ -154,18 +188,17 @@
                 $error = "Entered Date is invalid. Please try entering again.";
                 return;
             }
-            if (empty($student_id)) {
-                $data = ['message' => $homework, 'date_of_message' => $date, 'class_id' => $class_id];
+            if (empty($studentId)) {
+                $data = ['message' => $homework, 'date_of_message' => $date, 'class_id' => $classId];
                 if (!is_null(submitHomework($PDO, $data))) {
                     $success = 'Homework Sent successfully. The page will refresh in 5 seconds.';
                     header("refresh:5;url=compose.php");
                 } else {
                     $error = 'Something Sent wrong.. Try again';
                 }
-
             } else {
-                $data = ['message' => $homework, 'date_of_message' => $date, 'class_id' => $class_id];
-                if (!is_null(submitHomework($PDO, $data, $student_id=$student_id))) {
+                $data = ['message' => $homework, 'date_of_message' => $date, 'class_id' => $classId];
+                if (!is_null(submitHomework($PDO, $data, $studentId=$studentId))) {
                     $success = 'Homework sent successfully. The page will refresh in 5 seconds.';
                     header("refresh:5;url=compose.php");
                 } else {
@@ -300,7 +333,7 @@
                             try {
                                 results = JSON.parse(results);
                             } catch(e) {
-
+                            
                             } finally {
                                 results.forEach(function(result) {
                                     UI_studentsSelect.append(new Option(`${result.name} - ${result.admission_no}`, `${result.id}`));
@@ -308,11 +341,11 @@
                             }
                         },
                         error: function(error) {
+                            // No error handling in case of Ajax Request Failing
                             console.log(error);
                         }
-                    })
+                    });
                 });
             });
-
         </script>
 <?php require_once(__DIR__.'/../footer.php'); ?>

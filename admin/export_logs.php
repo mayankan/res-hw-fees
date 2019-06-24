@@ -1,9 +1,12 @@
 <?php 
-
+    /**
+     * This page is used to export logs from `log` table
+    */
     require(__DIR__.'/../db/db.connection.php');
     require(__DIR__.'/../helpers.php');
     session_start();
 
+    // logs out user if it's not a admin
     if ($_SESSION['role'] !== 'admin') {
         header('Location: ../404.html');
         return;
@@ -14,11 +17,23 @@
         die("Can't connect to the database");
     }
 
+    /**
+     * put `message` data in csv file and provide it as a response
+     *
+     * @param PDOObject $PDO
+     * @param Array $array - Homework data array
+     * @param String $filename - Filename for the export
+     *
+     * @return File
+     *
+     * @throws Exception // No Specefic Exception Defined
+     *
+    */
     function array_to_csv_download($PDO, $array, $filename = "export.csv") {
         header('Content-Type: application/csv');
         header('Content-Disposition: attachment; filename="'.$filename.'";');
-    
-        $f = fopen('php://output', 'w');
+
+        $f = fopen('php://memory', 'w');
         fputcsv($f, array(
             "Date of Log",
             "Action",

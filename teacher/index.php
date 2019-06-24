@@ -1,12 +1,27 @@
 <?php
+    /**
+     * This page is used to see all the homeworks provided by the teacher
+    */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../helpers.php');
     session_start();
 
-    function getHomeworks($PDO, $teacherId, $start_limit=0, $end_limit=10) {
+    /**
+     * Get all Homeworks with limit
+     *
+     * @param PDOObject $PDO
+     * @param Number $teacherId
+     * @param Number $startLimit
+     *
+     * @return Homework $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+     *
+    */
+    function getHomeworks($PDO, $teacherId, $startLimit=0) {
         try {
-            $stmt = $PDO->prepare("SELECT * FROM `message` WHERE teacher_id = :teacher_id AND date_deleted IS NULL LIMIT :start_limit, :end_limit");
-            $stmt->execute([':start_limit' => $start_limit, ':end_limit' => $end_limit, ':teacher_id' => $teacherId]);
+            $stmt = $PDO->prepare("SELECT * FROM `message` WHERE teacher_id = :teacher_id AND date_deleted IS NULL LIMIT :start_limit, 10");
+            $stmt->execute([':start_limit' => $startLimit, ':teacher_id' => $teacherId]);
             if ($stmt->rowCount() === 0) {
                 return NULL;
             }
@@ -17,38 +32,40 @@
         }
     }
 
-    function getClassById($PDO, $classId) {
-        try {
-            $stmt = $PDO->prepare("SELECT * FROM `class` WHERE `id` = :id");
-            $stmt->execute([':id' => $classId]);
-            if ($stmt->rowCount() == 0) {
-                return false;
-            }
-            return $stmt->fetch();
-        } catch (Exception $e) {
-            print($e);
-            return false;
-        }
-    }
+    // function getClassById($PDO, $classId) {
+    //     try {
+    //         $stmt = $PDO->prepare("SELECT * FROM `class` WHERE `id` = :id");
+    //         $stmt->execute([':id' => $classId]);
+    //         if ($stmt->rowCount() == 0) {
+    //             return false;
+    //         }
+    //         return $stmt->fetch();
+    //     } catch (Exception $e) {
+    //         print($e);
+    //         return false;
+    //     }
+    // }
 
-    function getStudentById($PDO, $studentId) {
-        try {
-            $stmt = $PDO->prepare("SELECT * FROM `student` WHERE `id` = :id");
-            $stmt->execute([':id' => $studentId]);
-            if ($stmt->rowCount() == 0) {
-                return false;
-            }
-            return $stmt->fetch();
-        } catch (Exception $e) {
-            print($e);
-            return false;
-        }
-    }
+    // function getStudentById($PDO, $studentId) {
+    //     try {
+    //         $stmt = $PDO->prepare("SELECT * FROM `student` WHERE `id` = :id");
+    //         $stmt->execute([':id' => $studentId]);
+    //         if ($stmt->rowCount() == 0) {
+    //             return false;
+    //         }
+    //         return $stmt->fetch();
+    //     } catch (Exception $e) {
+    //         print($e);
+    //         return false;
+    //     }
+    // }
 
+    // logs out user if it's not a teacher
     if ($_SESSION['role'] !== 'teacher') {
         header('Location: ../404.html');
     }
 
+    // checks for logout variable in GET Request and if it's true logs out user
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
             require(__DIR__ . '/../db/db.connection.php');
@@ -72,15 +89,13 @@
             $homeworks = getHomeworks($PDO, $_SESSION['data']['id']);
             $_SESSION['page_no'] = 1;
         } else {
-            $page_no = (int)$_GET['page_no'];
-            if ($page_no <= 0) {
-                echo 'negative';
-                header("Location: index.php?page_no=1");
-                return;
+            $pageNumber = (int)$_GET['page_no'];
+            if ($pageNumber <= 0) {
+                $pageNumber = 1;
             }
-            $end_limit = $page_no * 10;
-            $start_limit = $end_limit - 10;
-            $homeworks = getHomeworks($PDO, $_SESSION['data']['id'], $start_limit=$start_limit, $end_limit=$end_limit);
+            $end_limit = $pageNumber * 10;
+            $startLimit = $end_limit - 10;
+            $homeworks = getHomeworks($PDO, $_SESSION['data']['id'], $startLimit=$startLimit);
             if ($homeworks == NULL) {
                 header('Location: index.php?page_no=' . (((int)$_GET['page_no']) - 1));
             }
@@ -197,17 +212,26 @@
                                 <?php while ($homework = array_shift($homeworks)): ?>
                                 <tr>
                                     <?php $date = date_create($homework['date_of_message']) ?>
-                                    <td class="text-center"><?php print(date_format($date, 'Y-m-d')) ?></td>
-                                    <td class="text-center"><?php echo substr($homework['message'], 0, 50) ?></td>
-                                    <?php $classData = getClassById($PDO, $homework['class_id']); ?>
+                                    <td class="text-center">
+                                        <?php print(date_format($date, 'Y-m-d')) ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php echo substr($homework['message'], 0, 50) ?>
+                                    </td>
+                                    <?php $classData = getClass($PDO, $homework['class_id']); ?>
                                     <?php if ($classData != false) :?>
-                                    <td class="text-center"><?php echo $classData['class_name'] . ' - ' . $classData['section']; ?></td>
+                                        <td class="text-center">
+                                            <?php echo $classData['class_name'] . ' - ' . $classData['section']; ?>
+                                        </td>
                                     <?php endif ?>
+
                                     <?php if ($homework['student_id'] != NULL): ?>
-                                    <?php $studentData = getStudentById($PDO, $homework['student_id']) ?>
-                                    <?php if ($studentData != false): ?>
-                                    <td class="text-center"><?php echo $studentData['name'] . ' - ' . $studentData['admission_no']; ?></td>
-                                    <?php endif ?>
+                                        <?php $studentData = getStudent($PDO, $homework['student_id']) ?>
+                                        <?php if ($studentData != false): ?>
+                                            <td class="text-center">
+                                                <?php echo $studentData['name'] . ' - ' . $studentData['admission_no']; ?>
+                                            </td>
+                                        <?php endif ?>
                                     <?php else: ?>
                                         <td class="text-center">All</td>
                                     <?php endif ?>

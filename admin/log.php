@@ -1,14 +1,29 @@
 <?php
+    /**
+     * This page is used to view a single log
+    */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../db/db.connection.php');
     require(__DIR__.'/../helpers.php');
     session_start();
 
+    // logs out user if it's not a admin
     if ($_SESSION['role'] !== 'admin') {
         header('Location: ../404.html');
         return;
     }
 
+    /**
+     * Get a single log from `log` table
+     *
+     * @param PDOObject $PDO
+     * @param Number $id
+     *
+     * @return Log $data
+     *
+     * @throws Exception // No Specefic Exception Defined
+     *
+    */
     function getLog($PDO, $id) {
         try {
             $stmt = $PDO->prepare("SELECT * FROM `log` WHERE `id` = :id");
@@ -23,6 +38,7 @@
         }
     }
 
+    // checks for logout variable in GET Request and if it's true logs out user
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
             session_destroy();

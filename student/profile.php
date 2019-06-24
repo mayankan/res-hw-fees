@@ -1,33 +1,26 @@
 <?php
+    /**
+     * This Page is used to see profile of student
+    */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../helpers.php');
     session_start();
 
-    function getStudentData($PDO, $id) {
-        try {
-            $stmt = $PDO->prepare("SELECT * FROM `student` WHERE `id` = :id");
-            $stmt->execute([':id' => $id]);
-            if ($stmt->rowCount() <= 0) {
-                return NULL;
-            }
-            return $stmt->fetch();
-        } catch (Exception $e) {
-            print($e);
-            return NULL;
-        }
-    }
-
+    // logs out user if it's not a student
     if ($_SESSION['role'] !== 'student') {
         header('Location: ../404.html');
         return;
     }
 
+    // checks for logout variable in GET Request and if it's true logs out user
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
             session_destroy();
             header('Location: ../');
         }
     }
+
+    // Global $studentData data for the response and server
     $studentData = NULL;
     if ($_SESSION['data']['id']) {
         require(__DIR__ . '/../db/db.connection.php');
@@ -35,8 +28,9 @@
         if (is_null($PDO)) {
             die("Can't connect to database");
         }
-        $studentData = getStudentData($PDO, $_SESSION['data']['id']);
+        $studentData = getStudent($PDO, $_SESSION['data']['id']);
         $classData = NULL;
+        // this shouldn't happen in normal conditions but still checking
         if ($studentData !== NULL) {
             $classData = getClass($PDO, $studentData['class_id']);
         }

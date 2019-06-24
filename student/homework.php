@@ -1,13 +1,18 @@
 <?php
+    /**
+     * This Page is used to fetch and show one homework specified with a ID
+    */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../helpers.php');
     session_start();
 
+    // logs out user if it's not a student
     if ($_SESSION['role'] !== 'student') {
         header('Location: ../404.html');
         return;
     }
 
+    // checks for logout variable in GET Request and if it's true logs out user
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
             session_destroy();
@@ -16,18 +21,24 @@
         }
     }
 
+    // Global $homework data for the response and server
     $homework = NULL;
-
     if (isset($_GET['homeworkId'])) {
         require(__DIR__ . '/../db/db.connection.php');
         $PDO = getConnection();
         if (is_null($PDO)) {
-            die("Can't connect to database");
+            die("Can't connect to database"); // still need to fix this
         }
         $homework = getHomework($PDO, $_GET['homeworkId']);
+        // Shreyans is assuming that every homework is attached to some class in `class` table
         $class = getClass($PDO, $homework['class_id']);
         if ($homework !== NULL) {
             if ($homework['student_id'] !== NULL) {
+                /**
+                 * this logic checks if the student id 
+                 * is actually associated with the student actually
+                 * logged in
+                */
                 if ($homework['student_id'] !== $_SESSION['data']['id']) {
                     if (isset($_SESSION)) {
                         header('Location: index.php');
@@ -41,6 +52,11 @@
                 }
             }
             if ($class !== NULL) {
+                /**
+                 * this logic checks if the student logged in
+                 * is actually associated with the class for which
+                 * the homework is fetched upon
+                */
                 if ($_SESSION['data']['class_id'] !== $class['id']) {
                     if (isset($_SESSION)) {
                         header('Location: index.php');
@@ -51,6 +67,7 @@
                 $homework['class'] = $class['class_name'] . ' - ' .$class['section'];
             }
             $teacher = getTeacherName($PDO, $homework['teacher_id']);
+            // this shouldn't happen in normal conditions but still checking in case of database inconsistency fed directly
             if ($teacher !== NULL) {
                 $homework['teacher'] = $teacher;
             }

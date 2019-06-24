@@ -2,15 +2,21 @@
     require(__DIR__.'/helpers.php');
     require(__DIR__.'/db/db.connection.php');
     session_start();
+
+    // if session already exists redirect
     if (isset($_SESSION['role'])) {
         header("Location: " . $_SESSION['role'] . "/");
+        exit();
     }
+
     /**
      * Login via Teacher Table's Username and Password
      *
-     * @param TeacherUsername $username TeacherPassword $password PDOObject $PDO
+     * @param String $username 
+     * @param String $password 
+     * @param PDOObject $PDO
      *
-     * @return TeacherClass $data
+     * @return Teacher $data
      *
      * @throws Exception //No Specefic Exception Defined
      *
@@ -35,8 +41,21 @@
         }
     }
 
+    /**
+     * Login via Students Table's Username and Password
+     *
+     * @param String $username 
+     * @param String $password 
+     * @param PDOObject $PDO
+     *
+     * @return Student $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+     *
+    */
     function checkStudent($username, $password, $PDO) {
         try {
+            // Get the mobile number by spliting the string from last 10 digits
             $pass = str_split($password);
             $admission_no = implode(array_slice($pass, 0, count($pass)-10));
             $mobile_no = implode(array_slice($pass, -10));
@@ -56,88 +75,60 @@
         }
     }
 
-    function checkAdmin($username, $password, $PDO) {
-        $password_hash = hash('sha256', $password);
-        try {
-            $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `username` = :username AND `date_deleted` IS NULL AND `role` != 'teacher'");
-            $stmt->execute([':username' => $username]);
-            if ($stmt->rowCount() === 0) {
-                return NULL;
-            }
-            $data = $stmt->fetch();
-            if (hash_equals($password_hash, $data['password'])) {
-                return $data;
-            } else {
-                return NULL;
-            }
-        } catch (Exception $e) {
-            print($e);
-            return NULL;
-        }
-    }
-
+    // checks if the request method is post to initiate the login process
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // to check if there are values inside $_POST variable
         if (isset($_POST)) {
-
+            // get database connection
             $PDO = getConnection();
             if (is_null($PDO)) {
                 die("Can't connect to database");
             }
-
-            // check admin before to make things faster and secure
-            // if (($_POST['username'] === "admin" && $_POST['password'] === "rainbow@123") || ($_POST['username'] === "incharge" && $_POST['password'] === "rainbow@1")) {
-            //     $_SESSION['role'] = 'admin';
-            //     header('Location: admin/');
-            // }
-
-            $user = str_split($_POST['username']);
-            if (implode(array_slice($user, 0, 5)) == 'admin') {
-                $adminData = checkAdmin($_POST['username'], $_POST['password'], $PDO);
-                if ($adminData != NULL) {
-                    if ($adminData['role'] == 'admin') {
-                        $_SESSION['role'] = 'admin';
-                        $PDO = NULL;
-                        header('Location: admin/');
-                        return;
-                    } else if ($adminData['role'] == 'super admin') {
-                        $_SESSION['role'] = 'super admin';
-                        $PDO = NULL;
-                        header('Location: super_admin/');
-                        return;
-                    } else if ($adminData['role'] == 'fee clerk') {
-                        $_SESSION['role'] = 'fee clerk';
-                        $PDO = NULL;
-                        header('Location: fee_clerk/');
-                        return;
-                    }
-                }
-            }
-
+            // check if it is the teacher that is trying to login else it is a student
             $teacherData = checkTeacher($_POST['username'], $_POST['password'], $PDO);
             if ($teacherData != NULL) {
-                $_SESSION['role'] = 'teacher';
-                $_SESSION['data'] = $teacherData;
-                addToLog($PDO, 'Teacher Logged in', $_SESSION['data']['id']);
-                $PDO = null;
-                header('Location: teacher/');
-                return;
-            }
-            else {
-
+                switch($teacherData['role']) {
+                    case 'teacher':
+                        $_SESSION['role'] = 'teacher';
+                        $_SESSION['data'] = $teacherData;
+                        addToLog($PDO, 'Teacher Logged in', $_SESSION['data']['id']);
+                        header('Location: teacher/');
+                        break;
+                    case 'super_admin':
+                        $_SESSION['role'] = 'super_admin';
+                        $_SESSION['data'] = $teacherData;
+                        header('Location: super_admin/');
+                        break;
+                    case 'fee_clerk':
+                        $_SESSION['role'] = 'fee_clerk';
+                        $_SESSION['data'] = $teacherData;
+                        header('Location: fee_clerk/');
+                        break;
+                    case 'admin':
+                        $_SESSION['role'] = 'admin';
+                        $_SESSION['data'] = $teacherData;
+                        header('Location: admin/');
+                        break;
+                }
+                $PDO = null; // remove this if want global db connection
+                exit();
+            } else {
+                // checks for the student else username or password is wrong
+                // no specific checking for username and password
                 $studentData = checkStudent($_POST['username'], $_POST['password'], $PDO);
                 if ($studentData != NULL) {
                     $_SESSION['role'] = 'student';
                     $_SESSION['data'] = $studentData;
-                    $PDO = null;
                     header('Location: student/');
-                    return;
+                    $PDO = null; // remove this if want global db connection
+                    exit();
                 } 
                 else {
                     $_SESSION['error'] = "Invalid username or password";
                     header('Location: index.php');
-                    return;
+                    $PDO = null; // remove this if want global db connection
+                    exit();
                 }
-
             }
         }
     }

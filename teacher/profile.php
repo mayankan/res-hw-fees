@@ -1,9 +1,23 @@
 <?php
+    /**
+     * This is page is used to view and update teacher profile
+    */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../helpers.php');
     require(__DIR__ . '/../db/db.connection.php');
     session_start();
 
+    /**
+     * Get data for a single Teacher
+     *
+     * @param PDOObject $PDO
+     * @param Number $id - Teacher Id
+     *
+     * @return Teacher $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+     *
+    */
     function getTeacherData($PDO, $id) {
         try {
             $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `id` = :id");
@@ -18,6 +32,17 @@
         }
     }
 
+    /**
+     * Change password of the teacher
+     *
+     * @param PDOObject $PDO
+     * @param String $newPass
+     *
+     * @return Teacher $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+     *
+    */
     function changePassword($PDO, $newPass) {
         $hashedPass = hash('sha256', $newPass);
         try {
@@ -32,6 +57,18 @@
         }
     }
 
+    /**
+     * Update name and email of the teacher
+     *
+     * @param PDOObject $PDO
+     * @param String $name
+     * @param String Email
+     *
+     * @return Teacher $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+     *
+    */
     function updateInformation($PDO, $name, $email) {
         try {
             $stmt = $PDO->prepare("UPDATE `teacher` SET `name` = :name, `email_address` = :email WHERE `id` = :id");
@@ -45,10 +82,12 @@
         }
     }
 
+    // logs out user if it's not a teacher
     if ($_SESSION['role'] !== 'teacher') {
         header('Location: ../404.html');
     }
 
+    // checks for logout variable in GET Request and if it's true logs out user
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
             $PDO = getConnection();
@@ -61,6 +100,7 @@
         }
     }
 
+    // Global setter for teacher data
     $teacherData = NULL;
     if ($_SESSION['data']['id']) {
         $PDO = getConnection();
@@ -72,7 +112,9 @@
         unset($PDO);
     }
 
+    // change password form
     if (isset($_POST['changePass'])) {
+        // check for required fields
         if (empty($_POST['old_pass']) || empty($_POST['new_pass']) || empty($_POST['confirm_pass'])) {
             $_SESSION['error'] = 'Please enter the required fields to change password.';
             header('Location: profile.php');
@@ -82,6 +124,7 @@
         $oldPass = $_POST['old_pass'];
         $confirmPass = $_POST['confirm_pass'];
 
+        // check for passwords
         if ($confirmPass !== $newPass) {
             $_SESSION['error'] = 'Passwords do not match! Please Try again.';
             header('Location: profile.php');
@@ -94,6 +137,7 @@
         }
         $teacherData = getTeacherData($PDO, $_SESSION['data']['id']);
         $hashedPass = hash('sha256', $oldPass);
+        // check if old password in the database is correctly provided by the teacher
         if (!hash_equals($hashedPass, $teacherData['password'])) {
             $_SESSION['error'] = 'Old Password is incorrect! Please Try again.';
             header('Location: profile.php');
@@ -105,13 +149,15 @@
             header('Location: profile.php');
             return;
         } else {
-            $_SESSION['success'] = "Something went wrong";
+            $_SESSION['error'] = "Something went wrong";
             header('Location: profile.php');
             return;
         }
     }
 
+    // update information form
     if (isset($_POST['changeInfo'])) {
+        // check for the required fields
         if (empty($_POST['full_name']) || empty($_POST['email'])) {
             $_SESSION['error'] = 'Please enter the required fields to update the information.';
             header('Location: profile.php');
@@ -121,6 +167,7 @@
         $name = $_POST['full_name'];
         $email = $_POST['email'];
 
+        // validate email for errors
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $_SESSION['error'] = 'Please Enter valid Email Address.';
             header('Location: profile.php');
