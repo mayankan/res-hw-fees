@@ -7,7 +7,7 @@
     require(__DIR__.'/../helpers.php');
     session_start();
 
-    // logs out user if it's not a super admin
+    // logs out user if it's not a fee clerk
     if ($_SESSION['role'] !== 'fee_clerk') {
         header('Location: ../404.html');
         return;

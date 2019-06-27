@@ -1,13 +1,13 @@
 <?php
     /**
-     * This is page is used to
+     * This is page is used to upload fee for a month
     */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../db/db.connection.php');
     require(__DIR__.'/../helpers.php');
     session_start();
 
-    // logs out user if it's not a super admin
+    // logs out user if it's not a fee clerk
     if ($_SESSION['role'] !== 'fee_clerk') {
         header('Location: ../404.html');
         return;
@@ -78,7 +78,11 @@
             $_SESSION['fee_data']['errors'] = $errorInFeeData;
             header('Location: errors_in_fee.php');
             exit();
-        };
+        } else {
+            $_SESSION['fee_data']['data'] = $feeData;
+            header('Location: fee_data.php');
+            exit();
+        }
         unset($PDO);
     }
     

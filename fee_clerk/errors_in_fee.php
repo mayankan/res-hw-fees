@@ -1,13 +1,13 @@
 <?php
     /**
-     * This is page is used to
+     * This is page is used to see errors found in uploaded csv for admission number
     */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../db/db.connection.php');
     require(__DIR__.'/../helpers.php');
     session_start();
 
-    // logs out user if it's not a super admin
+    // logs out user if it's not a fee clerk
     if ($_SESSION['role'] !== 'fee_clerk') {
         header('Location: ../404.html');
         return;
@@ -23,7 +23,13 @@
     }
 
     if (!isset($_SESSION['fee_data']['errors'])) {
-        header('Location: index.php');
+        header('Location: upload_fee.php');
+        exit();
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        unset($_SESSION['fee_data']);
+        header("Location: upload_fee.php");
         exit();
     }
 ?>
