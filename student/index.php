@@ -89,17 +89,17 @@
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item active">
                                 <a href="<?php echo $base_url ?>student/" class="nav-link">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i> Homeworks
+                                    Homeworks
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>student/profile.php" class="nav-link">
-                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> Profile
+                                    Profile
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
-                                    <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
+                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link ml-2 btn btn-primary text-white px-4">
+                                    <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
                                 </a>
                                 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
@@ -118,17 +118,17 @@
                         <div class="col-6 d-flex justify-content-start">
                             <?php if ($_SESSION['page_no'] <= 1): ?>
                             <a href="#" class="btn btn-outline-dark" disabled>
-                                <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
+                                <i class="fa mt-1 fa-arrow-left fa-1" aria-hidden="true"></i> Prev
                             </a>
                             <?php else: ?>
                             <a href="<?php echo $base_url ?>student/index.php?page_no=<?php echo $_SESSION['page_no'] - 1 ?>" class="btn btn-outline-dark">
-                                <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
+                                <i class="fa mt-1 fa-arrow-left fa-1" aria-hidden="true"></i> Prev
                             </a>
                             <?php endif ?>
                         </div>
                         <div class="col-6 d-flex justify-content-end">
                             <a href="<?php echo $base_url ?>student/index.php?page_no=<?php echo $_SESSION['page_no'] + 1 ?>" class="btn btn-outline-dark">
-                                Next <i class="fa fa-arrow-right fa-1" aria-hidden="true"></i>
+                                Next <i class="fa mt-1 fa-arrow-right fa-1" aria-hidden="true"></i>
                             </a>
                         </div>
                     </div>

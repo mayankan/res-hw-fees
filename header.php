@@ -16,6 +16,7 @@
         <!-- CSS
         ================================================== -->
         <link rel="stylesheet" href="<?php echo $base_url ?>static/css/zerogrid.css" />
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <link rel="stylesheet" href="<?php echo $base_url ?>static/css/style.css" />
 
         <script
@@ -63,31 +64,32 @@
         <title>Rainbow English Sr. Sec. School | Homework Login</title>
     </head>
     <body class="home-page">
-	<div class="wrap-body">
-		<header class="" style="background-color: red;">
-			<div class="logo">
-				<a href="#"><img src="<?php echo $base_url ?>static/images/logo.png" /></a>
-				<span></span>
-			</div>
-			<div id="cssmenu" class="align-center">
-				<ul>
-					<li class="active has-sub"><a href="#"><span>Home</span></a>
-					<ul>
-							<li><a href="http://www.rainbowonlinefees.com"><span>Pay Fees</span></a></li>
-							<li><a href="http://www.rainbowschooljp.com"><span>Back to Rainbow's Homepage</span></a></li>
-					</ul></li>
-					<li><a href="http://www.rainbowschooljp.com/admission"><span>Admission</span></a></li>
-					<li><a href="http://www.rainbowschooljp.com/post-your-resume"><span>Careers</span></a></li>
-					<li><a href="http://www.rainbowschooljp.com/download-links"><span>Downloads</span></a></li>
-					<li><a href="http://www.rainbowschooljp.com/school-management-login-page"><span>Student Login</span></a></li>
-					<li><a href="http://www.rainbowschooljp.com/event-gallery"><span>Events</span></a></li>
-					<li class="has-sub"><a href="#"><span>About Us</span></a>
-					<ul>
-							<li><a href="http://www.rainbowschooljp.com/history"><span>History</span></a></li>
-							<li><a href="http://www.rainbowschooljp.com/vision"><span>Vision and Mission</span></a></li>
-							<li><a href="http://www.rainbowschooljp.com/emblem"><span>Emblem</span></a></li>
-					</ul></li>
-					<li class="last"><a href="http://www.rainbowschooljp.com/contact"><span>Contact Us</span></a></li>
-				</ul>
-			</div>
-		</header>
+        <div class="wrap-body">
+            <header class="" style="background-color: red;">
+                <div class="logo">
+                    <a href="#"><img src="<?php echo $base_url ?>static/images/logo.png" /></a>
+                    <span></span>
+                </div>
+                <div id="cssmenu" class="align-center">
+                    <ul>
+                        <li class="active has-sub"><a href="#"><span>Home</span></a>
+                        <ul>
+                                <li><a href="http://www.rainbowonlinefees.com"><span>Pay Fees</span></a></li>
+                                <li><a href="http://www.rainbowschooljp.com"><span>Back to Rainbow's Homepage</span></a></li>
+                        </ul></li>
+                        <li><a href="http://www.rainbowschooljp.com/admission"><span>Admission</span></a></li>
+                        <li><a href="http://www.rainbowschooljp.com/post-your-resume"><span>Careers</span></a></li>
+                        <li><a href="http://www.rainbowschooljp.com/download-links"><span>Downloads</span></a></li>
+                        <li><a href="http://www.rainbowschooljp.com/school-management-login-page"><span>Student Login</span></a></li>
+                        <li><a href="http://www.rainbowschooljp.com/event-gallery"><span>Events</span></a></li>
+                        <li class="has-sub"><a href="#"><span>About Us</span></a>
+                        <ul>
+                                <li><a href="http://www.rainbowschooljp.com/history"><span>History</span></a></li>
+                                <li><a href="http://www.rainbowschooljp.com/vision"><span>Vision and Mission</span></a></li>
+                                <li><a href="http://www.rainbowschooljp.com/emblem"><span>Emblem</span></a></li>
+                        </ul></li>
+                        <li class="last"><a href="http://www.rainbowschooljp.com/contact"><span>Contact Us</span></a></li>
+                    </ul>
+                </div>
+            </header>
+        </div>

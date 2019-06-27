@@ -89,27 +89,27 @@
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item active">
                                 <a href="<?php echo $base_url ?>admin/" class="nav-link">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i> Logs
+                                    Logs
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>admin/create_teacher.php" class="nav-link">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i> Create Teacher
+                                    Create Teacher
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>admin/teachers.php" class="nav-link">
-                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> View/Edit Teachers
+                                    View/Edit Teachers
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>admin/students.php" class="nav-link">
-                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> View Students
+                                    View Students
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
-                                    <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
+                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link ml-2 btn btn-primary text-white px-4">
+                                    <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
                                 </a>
                                 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
@@ -128,51 +128,50 @@
                     <div class="col">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Teacher - <?php echo $log['teacher_name'] ?></h3>
+                                <h3 class="card-title m-0">Teacher - <?php echo $log['teacher_name'] ?></h3>
                             </div>
                             <div class="card-body">
                                 <ul class="list-group">
-                                    <li class="list-group-item">
+                                    <li class="list-group-item d-flex align-items-center">
                                         <?php $date = date_create($log['date_of_action']) ?>
-                                        <h5 class="d-inline-block">Date of Action - </h5>
+                                        <h5 class="d-inline-block">Date of Action&nbsp;-&nbsp;</h5>
                                         <span><?php echo date_format($date, 'd F Y'); ?></span>
                                     </li>
-                                    <li class="list-group-item">
-                                        <h5 class="d-inline-block">Action - </h5>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <h5 class="d-inline-block">Action&nbsp;-&nbsp;</h5>
                                         <span><?php echo $log['log_action'] ?></span>
                                     </li>
-                                    <li class="list-group-item">
-                                        <h5 class="d-inline-block">IP Address - </h5>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <h5 class="d-inline-block">IP Address&nbsp;-&nbsp;</h5>
                                         <span><?php echo $log['ip_address'] ?></span>
                                     </li>
                                 </ul>
                                 <?php if (!is_null($log['message_id'])): ?>
                                 <div class="card mt-3">
                                     <div class="card-header">
-                                        <h4 class="card-title">Homework Details</h4>
+                                        <h4 class="card-title m-0">Homework Details</h4>
                                     </div>
                                     <div class="card-body">
-                                        <h4 class="py-2">Details : </h4>
                                         <ul class="list-group">
-                                            <li class="list-group-item">
+                                            <li class="list-group-item d-flex align-items-center">
                                                 <?php $date = date_create($log['homework']['date_of_message']) ?>
-                                                <h5 class="d-inline-block">Date of Homework - </h5>
+                                                <h5 class="d-inline-block">Date of Homework&nbsp;-&nbsp;</h5>
                                                 <span><?php echo date_format($date, 'd F Y'); ?></span>
                                             </li>
-                                            <li class="list-group-item">
-                                                <h5 class="d-inline-block">For Class - </h5>
+                                            <li class="list-group-item d-flex align-items-center">
+                                                <h5 class="d-inline-block">For Class&nbsp;-&nbsp;</h5>
                                                 <span><?php echo $log['homework']['class']; ?></span>
                                             </li>
                                             <?php if ($log['homework']['student_id'] !== NULL): ?>
-                                            <li class="list-group-item">
-                                                <h5 class="d-inline-block">For Student - </h5>
+                                            <li class="list-group-item d-flex align-items-center">
+                                                <h5 class="d-inline-block">For Student&nbsp;-&nbsp;</h5>
                                                 <span><?php echo $log['homework']['student'] ?></span>
                                             </li>
                                             <?php endif ?>
                                         </ul>
                                         <div class="card mt-3">
                                             <div class="card-body">
-                                                <h5 class="d-inline-block">Homework : </h5>
+                                                <h5 class="d-inline-block">Homework: </h5>
                                                 <p><?php echo $log['homework']['message']; ?></p>
                                             </div>
                                         </div>

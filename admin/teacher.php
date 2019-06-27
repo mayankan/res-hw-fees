@@ -1,9 +1,29 @@
-<?php 
+<?php
+    /**
+     * This page is used to view a single Teacher
+    */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../helpers.php');
     require(__DIR__ . '/../db/db.connection.php');
     session_start();
 
+    // logs out user if it's not a admin
+    if ($_SESSION['role'] !== 'admin') {
+        header('Location: ../404.html');
+        exit();
+    }
+
+    /**
+     * Get a single teacher from `teacher` table with role assigned "teacher"
+     *
+     * @param PDOObject $PDO
+     * @param Number $id
+     *
+     * @return Teacher $data
+     *
+     * @throws Exception // No Specefic Exception Defined
+     *
+    */
     function getTeacherData($PDO, $id) {
         try {
             $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `id` = :id AND `role` = 'teacher'");
@@ -18,6 +38,18 @@
         }
     }
 
+    /**
+     * Change Password of a single teacher from `teacher` table with role assigned "teacher"
+     *
+     * @param PDOObject $PDO
+     * @param String $newPass
+     * @param Number $id
+     *
+     * @return Teacher $data
+     *
+     * @throws Exception // No Specefic Exception Defined
+     *
+    */
     function changePassword($PDO, $newPass, $id) {
         $hashedPass = hash('sha256', $newPass);
         try {
@@ -30,9 +62,22 @@
         }
     }
 
+    /**
+     * Update Information of a single teacher from `teacher` table with role assigned "teacher"
+     *
+     * @param PDOObject $PDO
+     * @param String $name
+     * @param String $email
+     * @param Number $id
+     *
+     * @return Teacher $data
+     *
+     * @throws Exception // No Specefic Exception Defined
+     *
+    */
     function updateInformation($PDO, $name, $email, $id) {
         try {
-            $stmt = $PDO->prepare("UPDATE `teacher` SET `name` = :name, `email_address` = :email WHERE `id` = :id");
+            $stmt = $PDO->prepare("UPDATE `teacher` SET `name` = :name, `email_address` = :email WHERE `id` = :id AND `role` = 'teacher'");
             $stmt->execute([':name' => $name, ':email' => $email,':id' => $id]);
             return $stmt->fetch();
         } catch (Exception $e) {
@@ -41,18 +86,17 @@
         }
     }
     
-    if ($_SESSION['role'] !== 'admin') {
-        header('Location: ../404.html');
-    }
-
+    // checks for logout variable in GET Request and if it's true logs out user
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
             session_destroy();
             header('Location: ../');
+            exit();
         }
     }
 
     if (isset($_POST['changePass'])) {
+        // check for empty fields
         if (empty($_POST['new_pass']) || empty($_POST['confirm_pass']) || empty($_POST['id'])) {
             $_SESSION['error'] = 'Please Enter the required fields to Update the password.';
             header('Location: teacher.php?id=' . $_SESSION['teacher_id']);
@@ -63,12 +107,14 @@
         $newPass = $_POST['new_pass'];
         $confirmPass = $_POST['confirm_pass'];
 
+        // if id doesn't match
         if ($_SESSION['teacher_id'] != $id) {
             $_SESSION['error'] = 'id is wrong';
             header('Location: teacher.php?id=' . $_SESSION['teacher_id']);
             return;
         }
 
+        // if new and confirm passwords do not match
         if ($confirmPass !== $newPass) {
             $_SESSION['error'] = 'Passwords do not match';
             header('Location: teacher.php?id=' . $_SESSION['teacher_id']);
@@ -85,13 +131,14 @@
             header('Location: teacher.php?id=' . $_SESSION['teacher_id']);
             return;
         } else {
-            $_SESSION['success'] = "Something went wrong";
+            $_SESSION['error'] = "Something went wrong";
             header('Location: teacher.php?id=' . $_SESSION['teacher_id']);
             return;
         }
     }
 
     if (isset($_POST['changeInfo'])) {
+        // check for required fields
         if (empty($_POST['full_name']) || empty($_POST['email']) || empty($_POST['id'])) {
             $_SESSION['error'] = 'Please Enter the required fields to Update the Information.';
             header('Location: teacher.php?id=' . $_SESSION['teacher_id']);
@@ -102,12 +149,14 @@
         $name = $_POST['full_name'];
         $email = $_POST['email'];
 
+        // if id doesn't match
         if ($_SESSION['teacher_id'] != $id) {
             $_SESSION['error'] = 'Teacher Id is invalid';
             header('Location: teacher.php?id=' . $_SESSION['teacher_id']);
             return;
         }
 
+        // validate email
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $_SESSION['error'] = 'Email Address is invalid';
             header('Location: teacher.php?id=' . $_SESSION['teacher_id']);            
@@ -138,6 +187,10 @@
             die("Can't connect to database");
         }
         $teacherData = getTeacherData($PDO, $_GET['id']);
+        if (is_null($teacherData)) {
+            header('Location: teachers.php');
+            exit();
+        }
         $_SESSION['teacher_id'] = $teacherData['id'];
         unset($PDO);
     } else {
@@ -161,27 +214,27 @@
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>admin/" class="nav-link">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i> Logs
+                                    Logs
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>admin/create_teacher.php" class="nav-link">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i> Create Teacher
+                                    Create Teacher
                                 </a>
                             </li>
                             <li class="nav-item active">
                                 <a href="<?php echo $base_url ?>admin/teachers.php" class="nav-link">
-                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> View/Edit Teachers
+                                    View/Edit Teachers
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>admin/students.php" class="nav-link">
-                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> View Students
+                                    View Students
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
-                                    <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
+                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link ml-2 btn btn-primary text-white px-4">
+                                    <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
                                 </a>
                                 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
@@ -220,57 +273,76 @@
             </div>
         </section>
 
-        <section id="profile" class="m-4">
-            <div class="container-fluid">
-                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" id="infoForm" method="POST">
-                    <input type="hidden" name="changeInfo" value="1">
-                    <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
-                    <div class="form-group row">
-                        <label for="name" class="col-form-label col-md-2">Full Name</label>
-                        <input type="text" name="full_name" class="form-control col-md-4" value="<?php echo $teacherData['name'] ?>" required>
-                    </div>
-                    <div class="form-group row">
-                        <label for="username" class="col-form-label col-md-2">Username</label>
-                        <input disabled type="text" name="username" class="form-control col-md-4" value="<?php echo $teacherData['username'] ?>">
-                    </div>
-                    <div class="form-group row">
-                        <label for="email" class="col-form-label col-md-2">email</label>
-                        <input type="email" name="email" class="form-control col-md-4" value="<?php echo $teacherData['email_address'] ?>" required>
-                    </div>
-                    <button type="submit" class="btn btn-success">Update Information</button>
-                    <button type="button" id="changePass" class="btn btn-info">Change Password</button>
-                </form>
-                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" id="passForm" style="display: none;" method="POST">
-                    <input type="hidden" name="changePass" value="1">
-                    <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
-                    <div class="form-group row">
-                        <label for="new_pass" class="col-form-label col-md-2">New Password</label>
-                        <input type="password" name="new_pass" class="form-control col-md-4" required>
-                    </div>
-                    <div class="form-group row">
-                        <label for="confirm_pass" class="col-form-label col-md-2">Confirm New Password</label>
-                        <input type="password" name="confirm_pass" class="form-control col-md-4" required>
-                    </div>
-                    <button type="submit" class="btn btn-success">Change Password</button>
-                    <button type="button" id="updateInfo" class="btn btn-info">Update Information</button>
-                </form>
+        <section id="profile" class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" id="infoForm" method="POST">
+                        <input type="hidden" name="changeInfo" value="1">
+                        <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
+                        <div class="form-group">
+                            <label for="name" class="col-form-label">
+                                Full Name<span class="text-danger">*</span>
+                            </label>
+                            <input type="text" name="full_name" class="form-control" value="<?php echo $teacherData['name'] ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="username" class="col-form-label">
+                                Username<span class="text-danger">*</span>
+                            </label>
+                            <input disabled type="text" name="username" class="form-control" value="<?php echo $teacherData['username'] ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-form-label">
+                                Email Address<span class="text-danger">*</span>
+                            </label>
+                            <input type="email" name="email" class="form-control" value="<?php echo $teacherData['email_address'] ?>" required>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-success btn-block">Update Information</button>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="button" id="changePass" class="btn btn-info btn-block" data-toggle="modal" data-target="#changePasswordModal">Change Password</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </section>
 
-        <script>
-            $(function() {
-                const UI_infoForm = $('#infoForm');
-                const UI_passForm = $('#passForm');
-                $('#changePass').click(function() {
-                    UI_passForm.show();
-                    UI_infoForm.hide();
-                });
-
-                $('#updateInfo').click(function() {
-                    UI_passForm.hide();
-                    UI_infoForm.show();
-                });
-            });
-        </script>
-            
+        <div class="modal fade" id="changePasswordModal" tabindex="-1" style="z-index: 99999999;" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <?php if ($teacherData['name']): ?>
+                            <h5 class="modal-title">Change Password of <?php echo $teacherData['name'] ?></h5>
+                        <?php else: ?>
+                            <h4 class="modal-title">Change Password of Teacher</h4>
+                        <?php endif ?>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+                        <div class="modal-body">
+                            <input type="hidden" name="changePass" value="1">
+                            <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
+                            <div class="form-group">
+                                <label for="new password" class="col-form-label">
+                                    New Password<span class="text-danger">*</span>
+                                </label>
+                                <input type="password" name="new_pass" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm_pass" class="col-form-label">
+                                    Confirm New Password<span class="text-danger">*</span>
+                                </label>
+                                <input type="password" name="confirm_pass" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary">Change Password</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 <?php require_once(__DIR__.'/../footer.php');

@@ -98,17 +98,17 @@
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item active">
                                 <a href="<?php echo $base_url ?>student/" class="nav-link">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i> Homeworks
+                                    Homeworks
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>student/profile.php" class="nav-link">
-                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> Profile
+                                    Profile
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
-                                    <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
+                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link ml-2 btn btn-primary text-white px-4">
+                                    <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
                                 </a>
                                 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
@@ -129,20 +129,20 @@
                                 <h3 class="card-title">By <?php echo $homework['teacher'] ?></h3>
                             </div>
                             <div class="card-body">
-                                <h4 class="py-2">Details : </h4>
+                                <h4 class="py-2">Details: </h4>
                                 <ul class="list-group">
-                                    <li class="list-group-item">
+                                    <li class="list-group-item d-flex align-items-center">
                                         <?php $date = date_create($homework['date_of_message']) ?>
-                                        <h5 class="d-inline-block">Date of Homework - </h5>
+                                        <h5 class="d-inline-block">Date of Homework&nbsp;-&nbsp;</h5>
                                         <span><?php echo date_format($date, 'd F Y'); ?></span>
                                     </li>
-                                    <li class="list-group-item">
-                                        <h5 class="d-inline-block">For Class - </h5>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <h5 class="d-inline-block">For Class&nbsp;-&nbsp;</h5>
                                         <span><?php echo $homework['class']; ?></span>
                                     </li>
                                     <?php if ($homework['student_id'] !== NULL): ?>
-                                    <li class="list-group-item">
-                                        <h5 class="d-inline-block">For Student - </h5>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <h5 class="d-inline-block">For Student&nbsp;-&nbsp;</h5>
                                         <span><?php echo $homework['student'] ?></span>
                                     </li>
                                     <?php endif ?>

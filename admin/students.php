@@ -1,14 +1,32 @@
 <?php
+    /**
+     * This page is used to read all students in the database
+    */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../db/db.connection.php');
     require(__DIR__.'/../helpers.php');
     session_start();
 
+    // logs out user if it's not a admin
     if ($_SESSION['role'] !== 'admin') {
         header('Location: ../404.html');
         return;
     }
 
+    /**
+     * Get data for students with some filters
+     *
+     * @param PDOObject $PDO
+     * @param Number $startLimit
+     * @param String $name
+     * @param String $admission_no
+     * @param String $class_id
+     *
+     * @return Student $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+     *
+    */
     function getStudents($PDO, $start_limit=0, $name="", $admission_no="", $class_id="") {
         $sql = "SELECT * FROM `student` WHERE 1=1 AND";
         $data = [];
@@ -24,10 +42,7 @@
             $sql .= "`class_id` = :class_id AND";
             $data[':class_id'] = $class_id;
         }
-        if (strpos($sql, "WHERE")) {
-            // echo substr($sql, 0, strlen($sql) - 4);
-            $sql = substr($sql, 0, strlen($sql) - 4);
-        }
+        $sql = substr($sql, 0, strlen($sql) - 4);
         $sql .= " LIMIT :start_limit,10;";
         $data[':start_limit'] = $start_limit;
         try {
@@ -43,6 +58,7 @@
         }
     }
 
+    // checks for logout variable in GET Request and if it's true logs out user
     if (isset($_GET['logout'])) {
         if ($_GET['logout'] === 'true') {
             session_destroy();
@@ -60,19 +76,21 @@
         $admission_no = isset($_GET['admission_no']) ? $_GET['admission_no'] : "";
         $name = isset($_GET['name']) ? $_GET['name'] : "";
         $class_id = isset($_GET['class_id']) ? $_GET['class_id'] : "";
-        // if (isset($_GET['name'])) {
-        //     if (isset($_GET['admission_no'])) {
-        //         $students = getStudents($PDO, $start_limit=0, $name=$_GET['name'], $admission_no=$_GET['admission_no']);
-        //     } else {
-        //         $students = getStudents($PDO, $start_limit=0, $name=$_GET['name']);
-        //     }
-        // } else {
-        //     if (isset($_GET['admission_no'])) {
-        //         $students = getStudents($PDO, $start_limit=0, $name="", $admission_no=$_GET['admission_no']);
-        //     } else {
-        //         $students = getStudents($PDO);
-        //     }
-        // }
+        /*
+        if (isset($_GET['name'])) {
+            if (isset($_GET['admission_no'])) {
+                $students = getStudents($PDO, $start_limit=0, $name=$_GET['name'], $admission_no=$_GET['admission_no']);
+            } else {
+                $students = getStudents($PDO, $start_limit=0, $name=$_GET['name']);
+            }
+        } else {
+            if (isset($_GET['admission_no'])) {
+                $students = getStudents($PDO, $start_limit=0, $name="", $admission_no=$_GET['admission_no']);
+            } else {
+                $students = getStudents($PDO);
+            }
+        }
+        */
         $students = getStudents($PDO, $start_limit=0, $name=$name, $admission_no=$admission_no, $class_id=$class_id);
         $_SESSION['page_no'] = 1;
     } else {
@@ -86,21 +104,23 @@
         $admission_no = isset($_GET['admission_no']) ? $_GET['admission_no'] : "";
         $name = isset($_GET['name']) ? $_GET['name'] : "";
         $class_id = isset($_GET['class_id']) ? $_GET['class_id'] : "";
-        // if (isset($_GET['name'])) {
-        //     if (isset($_GET['admission_no'])) {
-        //         $students = getStudents($PDO, $start_limit=$start_limit, $name=$_GET['name'], $admission_no=$_GET['admission_no']);
-        //     } else {
-        //         $students = getStudents($PDO, $start_limit=$start_limit, $name=$_GET['name']);
-        //     }
-        // } else {
-        //     if (isset($_GET['admission_no'])) {
-        //         $students = getStudents($PDO, $start_limit=$start_limit, $name="", $admission_no=$_GET['admission_no']);
-        //     } else {
-        //         $students = getStudents($PDO, $start_limit=$start_limit);
-        //     }
-        // }
+        /*
+        if (isset($_GET['name'])) {
+            if (isset($_GET['admission_no'])) {
+                $students = getStudents($PDO, $start_limit=$start_limit, $name=$_GET['name'], $admission_no=$_GET['admission_no']);
+            } else {
+                $students = getStudents($PDO, $start_limit=$start_limit, $name=$_GET['name']);
+            }
+        } else {
+            if (isset($_GET['admission_no'])) {
+                $students = getStudents($PDO, $start_limit=$start_limit, $name="", $admission_no=$_GET['admission_no']);
+            } else {
+                $students = getStudents($PDO, $start_limit=$start_limit);
+            }
+        }
+        */
         $students = getStudents($PDO, $start_limit=$start_limit, $name=$name, $admission_no=$admission_no, $class_id=$class_id);
-        if ($students === NULL) {
+        if ($students === NULL && $page_no !== 1) {
             header('Location: students.php?page_no=' . (((int)$_GET['page_no']) - 1));
             return;
         }
@@ -123,27 +143,27 @@
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>admin/" class="nav-link">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i> Logs
+                                    Logs
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>admin/create_teacher.php" class="nav-link">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i> Create Teacher
+                                    Create Teacher
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>admin/teachers.php" class="nav-link">
-                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> View/Edit Teachers
+                                    View/Edit Teachers
                                 </a>
                             </li>
                             <li class="nav-item active">
                                 <a href="<?php echo $base_url ?>admin/students.php" class="nav-link">
-                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> View Students
+                                    View Students
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
-                                    <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
+                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link ml-2 btn btn-primary text-white px-4">
+                                    <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
                                 </a>
                                 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
@@ -211,7 +231,7 @@
                     <div class="col-6 d-flex justify-content-start">
                         <?php if ($_SESSION['page_no'] <= 1): ?>
                         <a href="#" class="btn btn-outline-dark" disabled>
-                            <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
+                            <i class="fa fa-arrow-left fa-1 mt-1" aria-hidden="true"></i> Prev
                         </a>
                         <?php else: ?>
                             <?php $backUrl = $base_url . "admin/students.php?page_no=" . ((int)$_SESSION['page_no'] - 1); ?>
@@ -225,7 +245,7 @@
                                 <?php $backUrl .= "&class_id=" . $_GET['class_id']; ?>
                             <?php endif ?>
                             <a href="<?php echo $backUrl ?>" class="btn btn-outline-dark">
-                                <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
+                                <i class="fa fa-arrow-left fa-1 mt-1" aria-hidden="true"></i> Prev
                             </a>
                         <?php endif ?>
                     </div>
@@ -241,7 +261,7 @@
                             <?php $nextUrl .= "&class_id=" . $_GET['class_id']; ?>
                         <?php endif ?>
                         <a href="<?php echo $nextUrl ?>" class="btn btn-outline-dark">
-                            Next <i class="fa fa-arrow-right fa-1" aria-hidden="true"></i>
+                            Next <i class="fa fa-arrow-right fa-1 mt-1" aria-hidden="true"></i>
                         </a>
                     </div>
                 </div>

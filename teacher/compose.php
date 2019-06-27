@@ -210,7 +210,6 @@
 ?>
 
 <?php require_once(__DIR__.'/../header.php'); ?>
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <title>Teacher panel | Compose</title>
     </head>
     <body>
@@ -225,22 +224,22 @@
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>teacher/" class="nav-link">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i> Homeworks
+                                    Homeworks
                                 </a>
                             </li>
                             <li class="nav-item active">
                                 <a href="<?php echo $base_url ?>teacher/compose.php" class="nav-link">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i> Compose
+                                    Compose
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>teacher/profile.php" class="nav-link">
-                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> Profile
+                                    Profile
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
-                                    <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
+                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link ml-2 btn btn-primary text-white px-4">
+                                    <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
                                 </a>
                                 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
@@ -277,38 +276,47 @@
             </div>
         </section>
 
-        <section id="compose" class="m-4">
-            <div class="container-fluid">
-                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
-                    <div class="form-group row">
-                        <label for="date_of_homework" class="col-form-label col-md-2">Date of Homework*</label>
-                        <input type="text" name="date_of_homework" class="form-control col-md-4" id="datetime" required autocomplete="off">
-                    </div>
-                    <div class="form-group row">
-                        <label for="class" class="col-form-label col-md-2">Class*</label>
-                        <select name="class" id="class" class="form-control col-md-4" required>
-                            <option value="" selected>--</option>
-                            <?php while ($class = array_shift($classes)): ?>
-                                <option value="<?php echo $class['id'] ?>"><?php echo $class['class_name'] ?> - <?php echo $class['section'] ?></option>
-                            <?php endwhile ?>
-                        </select>
-                    </div>
-                    <div class="form-group row">
-                        <label for="student" class="col-form-label col-md-2">Student</label>
-                        <select name="student" id="students" class="form-control col-md-4">
-                            <option value="" selected>All</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="homework" class="col-form-label">Homework*</label>
-                        <textarea name="homework" autocomplete="off" cols="30" rows="10" class="form-control" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-success">Submit</button>
-                    </div>
-                </form>
+        <section id="compose" class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-8">
+                    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
+                        <div class="form-group">
+                            <label for="date_of_homework" class="col-form-label">
+                                Date of Homework<span class="text-danger">*</span>
+                            </label>
+                            <input type="text" name="date_of_homework" class="form-control" id="datetime" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="class" class="col-form-label">
+                                Class<span class="text-danger">*</span>
+                            </label>
+                            <select name="class" id="class" class="form-control" required>
+                                <option value="" selected>--</option>
+                                <?php while ($class = array_shift($classes)): ?>
+                                    <option value="<?php echo $class['id'] ?>"><?php echo $class['class_name'] ?> - <?php echo $class['section'] ?></option>
+                                <?php endwhile ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="student" class="col-form-label">Student</label>
+                            <select name="student" id="students" class="form-control">
+                                <option value="" selected>All</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="homework" class="col-form-label">
+                                Homework<span class="text-danger">*</span>
+                            </label>
+                            <textarea name="homework" autocomplete="off" cols="30" rows="10" class="form-control" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-block">Send Homework</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </section>
+
         <script>
             $(document).ready(function() {
                 $('#datetime').datepicker({dateFormat: "DD, d MM, yy"});

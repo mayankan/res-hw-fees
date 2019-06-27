@@ -87,27 +87,27 @@
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item active">
                                 <a href="<?php echo $base_url ?>admin/" class="nav-link">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i> Logs
+                                    Logs
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>admin/create_teacher.php" class="nav-link">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i> Create Teacher
+                                    Create Teacher
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>admin/teachers.php" class="nav-link">
-                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> View/Edit Teachers
+                                    View/Edit Teachers
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>admin/students.php" class="nav-link">
-                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> View Students
+                                    View Students
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
-                                    <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
+                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link ml-2 btn btn-primary text-white px-4">
+                                    <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
                                 </a>
                                 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
@@ -126,11 +126,11 @@
                     <div class="col-4 d-flex justify-content-start">
                         <?php if ($_SESSION['page_no'] <= 1): ?>
                         <a href="#" class="btn btn-outline-dark" disabled>
-                            <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
+                            <i class="fa fa-arrow-left fa-1 mt-1" aria-hidden="true"></i> Prev
                         </a>
                         <?php else: ?>
                         <a href="<?php echo $base_url ?>admin/index.php?page_no=<?php echo $_SESSION['page_no'] - 1 ?>" class="btn btn-outline-dark">
-                            <i class="fa fa-arrow-left fa-1" aria-hidden="true"></i> Prev
+                            <i class="fa fa-arrow-left fa-1 mt-1" aria-hidden="true"></i> Prev
                         </a>
                         <?php endif ?>
                     </div>
@@ -139,7 +139,7 @@
                     </div>
                     <div class="col-4 d-flex justify-content-end">
                         <a href="<?php echo $base_url ?>admin/index.php?page_no=<?php echo $_SESSION['page_no'] + 1 ?>" class="btn btn-outline-dark">
-                            Next <i class="fa fa-arrow-right fa-1" aria-hidden="true"></i>
+                            Next <i class="fa fa-arrow-right fa-1 mt-1" aria-hidden="true"></i>
                         </a>
                     </div>
                 </div>
@@ -199,21 +199,19 @@
 
                                         <?php if (isset($_GET['page_no'])): ?>
                                             <td>
-                                                <a href="
-                                                    <?php echo $base_url ?>
-                                                    admin/log.php?homeworkId=
-                                                    <?php echo $log['id'] ?>
-                                                    &page_no=<?php echo $_GET['page_no'] ?>" 
-                                                    class="btn btn-outline-warning btn-block">
+                                                <a 
+                                                    href="<?php echo $base_url ?>admin/log.php?homeworkId=<?php echo $log['id'] ?>&page_no=<?php echo $_GET['page_no'] ?>" 
+                                                    class="btn btn-outline-warning btn-block"
+                                                >
                                                         View
                                                 </a>
                                             </td>
                                             <?php else: ?>
                                             <td>
-                                                <a href="
-                                                    <?php echo $base_url ?>
-                                                    admin/log.php?homeworkId=<?php echo $log['id'] ?>" 
-                                                    class="btn btn-outline-warning btn-block">
+                                                <a 
+                                                    href="<?php echo $base_url ?>admin/log.php?homeworkId=<?php echo $log['id'] ?>" 
+                                                    class="btn btn-outline-warning btn-block"
+                                                >
                                                         View
                                                 </a>
                                             </td>

@@ -171,10 +171,17 @@
      *
      * @throws Exception //No Specefic Exception Defined
     */
-    function getStudent($PDO, $studentId) {
+    function getStudent($PDO, $studentId, $admissionNumber=NULL) {
+        if ($studentId !== NULL && $admissionNumber === NULL) {
+            $sql = "SELECT * FROM `student` WHERE `id` = :id";
+            $data = [':id' => $studentId];
+        } else if ($studentId === NULL && $admissionNumber !== NULL) {
+            $sql = "SELECT * FROM `student` WHERE `admission_no` = :adm_no";
+            $data = [':adm_no' => $admissionNumber];
+        }
         try {
-            $stmt = $PDO->prepare("SELECT * FROM `student` WHERE `id` = :id");
-            $stmt->execute([':id' => $studentId]);
+            $stmt = $PDO->prepare($sql);
+            $stmt->execute($data);
             if ($stmt->rowCount() == 0) {
                 return false;
             }

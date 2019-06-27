@@ -98,29 +98,29 @@
                     </button>
                     <div class="collapse navbar-collapse" id="teacher-nav">
                         <ul class="navbar-nav ml-auto">
-                            <li class="nav-item">
+                        <li class="nav-item">
                                 <a href="<?php echo $base_url ?>admin/" class="nav-link">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i> Logs
+                                    Logs
                                 </a>
                             </li>
                             <li class="nav-item active">
                                 <a href="<?php echo $base_url ?>admin/create_teacher.php" class="nav-link">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i> Create Teacher
+                                    Create Teacher
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>admin/teachers.php" class="nav-link">
-                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> View/Edit Teachers
+                                    View/Edit Teachers
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="<?php echo $base_url ?>admin/students.php" class="nav-link">
-                                    <i class="fa fa-envelope-open" aria-hidden="true"></i> View Students
+                                    View Students
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link">
-                                    <i class="fa fa-sign-in" aria-hidden="true"></i> Logout
+                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link ml-2 btn btn-primary text-white px-4">
+                                    <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
                                 </a>
                                 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
                                     <input type="hidden" name="logout" value="true">
@@ -157,29 +157,42 @@
                     </div>
                 </div>
             </section>
-
-            <section id="createTeacher" class="m-4">
-                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
-                    <div class="form-group row">
-                        <label for="full_name" class="col-form-label col-md-2">Full Name*</label>
-                        <input type="text" name="full_name" class="form-control col-md-6" required>
-                    </div>
-                    <div class="form-group row">
-                        <label for="username" class="col-form-label col-md-2">Username*</label>
-                        <input type="text" name="username" class="form-control col-md-6" required>
-                    </div>
-                    <div class="form-group row">
-                        <label for="password" class="col-form-label col-md-2">Password*</label>
-                        <input type="password" name="password" class="form-control col-md-6" required>
-                    </div>
-                    <div class="form-group row">
-                        <label for="email" class="col-form-label col-md-2">Email Address*</label>
-                        <input type="email" name="email" class="form-control col-md-6" required>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-success">Submit</button>
-                    </div>
-                </form>
-            </section>
         </header>
+
+        <section id="createTeacher" class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
+                        <div class="form-group">
+                            <label for="full name" class="col-form-label">
+                                Full Name<span class="text-danger">*</span>
+                            </label>
+                            <input type="text" name="full_name" id="" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="username" class="col-form-label">
+                                Username<span class="text-danger">*</span>
+                            </label>
+                            <input type="text" name="username" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="col-form-label">
+                                Password<span class="text-danger">*</span>
+                            </label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-form-label">
+                                Email Address<span class="text-danger">*</span>
+                            </label>
+                            <input type="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="form-group mt-2">
+                            <button type="submit" class="btn btn-success btn-block">Create Teacher</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
 <?php require_once(__DIR__.'/../footer.php'); ?>
