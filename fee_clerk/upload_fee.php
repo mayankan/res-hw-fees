@@ -192,4 +192,9 @@
                 });
             });
         </script>
+        <style>
+        .ui-datepicker-calendar {
+            display: none;
+        }
+        </style>
 <?php require_once(__DIR__.'/../footer.php'); ?>
