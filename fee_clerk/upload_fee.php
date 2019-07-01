@@ -153,6 +153,13 @@
                 <div class="col-md-8">
                     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST" enctype="multipart/form-data">
                         <div class="form-group">
+                            <label for="fields" class="col-form-label">
+                                Required Fields for uploading Fee Data<span class="text-danger">*</span>
+                            </label>
+                            <p>admission_no, ExaminationFee, TutionFee, RefreshmentAccFee, LabFee, ProjectFee, AnnualCharges, AdminCharges, SmartClassCharges, ComputerFeeYearly, ComputerFeeMonthly, DevelopmentChargesYearly, TransportFee, PortalCharges, LateFee, TotalFee</p>
+                            <p><a href="test_data.csv">Sample File</a></p>
+                        </div>
+                        <div class="form-group">
                             <label for="month and year" class="col-form-label">
                                 Month and Year<span class="text-danger">*</span>
                             </label>
