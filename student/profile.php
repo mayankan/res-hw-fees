@@ -106,7 +106,7 @@
                         </div>
                         <div class="form-group">
                             <label for="gender" class="col-form-label">Gender</label>
-                            <input disabled type="text" father="gender" class="form-control" value="<?php echo $studentData['gender'] ?>">
+                            <input disabled type="text" father="gender" class="form-control" value="<?php if ((int) $student['gender'] === 1): ?>Male<?php else: ?>Female<?php endif ?>">
                         </div>
                         <div class="form-group">
                             <label for="address" class="col-form-label">Address</label>

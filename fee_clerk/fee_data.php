@@ -64,7 +64,7 @@
 <?php require_once(__DIR__.'/../header.php'); ?>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark">
             <div class="container">
-                <a href="#" class="navbar-brand">Fee Clerk Panel</a>
+                <a href="#" class="navbar-brand">Fee Admin Panel</a>
                 <button class="navbar-toggler" data-toggle="collapse" data-target="#teacher-nav">
                     <span class="navbar-toggler-icon"></span>
                 </button>

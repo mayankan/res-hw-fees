@@ -92,7 +92,7 @@
 <?php require_once(__DIR__.'/../header.php'); ?>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark">
             <div class="container">
-                <a href="#" class="navbar-brand">Fee Clerk Panel</a>
+                <a href="#" class="navbar-brand">Fee Admin Panel</a>
                 <button class="navbar-toggler" data-toggle="collapse" data-target="#teacher-nav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -154,6 +154,13 @@
                 <div class="col-md-8">
                     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST" enctype="multipart/form-data">
                         <div class="form-group">
+                            <label for="fields" class="col-form-label">
+                                Required Fields for uploading Fee Data<span class="text-danger">*</span>
+                            </label>
+                            <p>admission_no, ExaminationFee, TutionFee, RefreshmentAccFee, LabFee, ProjectFee, AnnualCharges, AdminCharges, SmartClassCharges, ComputerFeeYearly, ComputerFeeMonthly, DevelopmentChargesYearly, TransportFee, PortalCharges, LateFee, TotalFee</p>
+                            <p><a href="test_data.csv">Sample File</a></p>
+                        </div>
+                        <div class="form-group">
                             <label for="month and year" class="col-form-label">
                                 Month and Year<span class="text-danger">*</span>
                             </label>
@@ -186,4 +193,9 @@
                 });
             });
         </script>
+        <style>
+        .ui-datepicker-calendar {
+            display: none;
+        }
+        </style>
 <?php require_once(__DIR__.'/../footer.php'); ?>
