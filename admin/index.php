@@ -106,6 +106,15 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a 
+                                    href="<?php echo $base_url ?>admin/db_update.php"
+                                    onclick="return window.confirm('Do you Really want to update the Database');"
+                                    class="nav-link"
+                                >
+                                    Update DB
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link ml-2 btn btn-primary text-white px-4">
                                     <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
                                 </a>
@@ -119,8 +128,35 @@
             </nav>
         </header>
 
+        <section id="error" class="mt-4">
+            <div class="container">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <?php if (isset($_SESSION['error'])): ?>
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <strong><?php echo $_SESSION['error'] ?></strong>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                        <?php unset($_SESSION['error']); ?>
+                        <?php endif ?> 
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <?php if (isset($_SESSION['success'])): ?>
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <strong><?php echo $_SESSION['success'] ?></strong>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                        <?php unset($_SESSION['success']); ?>
+                        <?php endif ?> 
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <?php if (!is_null($logs)): ?>
-        <section id="logs" class="mt-2">
+        <section id="logs" class="mb-2">
             <div class="container-fluid">
                 <div class="row pb-2">
                     <div class="col-4 d-flex justify-content-start">

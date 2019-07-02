@@ -100,4 +100,8 @@
         }
     }
 
+    $_SESSION['success'] = 'Database has been successfully updated.';
+    header('Location: index.php');
+    exit();
+
 ?>

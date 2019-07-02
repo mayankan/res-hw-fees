@@ -35,7 +35,68 @@
         }
 
         if (isset($_POST['confirm'])) {
-
+            $PDO = getConnection();
+            if (is_null($PDO)) {
+                die("Can't Connect to the Database");
+            }
+            foreach ($_SESSION['fee_data']['data'] as $studentData) {
+                if (!is_null(feeExists(
+                            $PDO, 
+                            $studentData['admission_no'], 
+                            $_SESSION['fee_data']['month'],
+                            $_SESSION['fee_data']['year']
+                ))) {
+                    updateFee(
+                        $PDO,
+                        $studentData['admission_no'],
+                        $_SESSION['fee_data']['month'],
+                        $_SESSION['fee_data']['year'],
+                        $studentData['portal_charges'],
+                        $studentData['examination_fee'],
+                        $studentData['tution_fee'],
+                        $studentData['refreshment_acc_fee'],
+                        $studentData['lab_fee'],
+                        $studentData['project_fee'],
+                        $studentData['annual_charges'],
+                        $studentData['admin_charges'],
+                        $studentData['smart_class_charges'],
+                        $studentData['computer_fee_yearly'],
+                        $studentData['computer_fee_monthly'],
+                        $studentData['development_charges_yearly'],
+                        $studentData['transport_fee'],
+                        $studentData['late_fee'],
+                        $studentData['total_fee'],
+                        $studentData['student_id']
+                    );
+                } else {
+                    insertFee(
+                        $PDO,
+                        $studentData['admission_no'],
+                        $_SESSION['fee_data']['month'],
+                        $_SESSION['fee_data']['year'],
+                        $studentData['portal_charges'],
+                        $studentData['examination_fee'],
+                        $studentData['tution_fee'],
+                        $studentData['refreshment_acc_fee'],
+                        $studentData['lab_fee'],
+                        $studentData['project_fee'],
+                        $studentData['annual_charges'],
+                        $studentData['admin_charges'],
+                        $studentData['smart_class_charges'],
+                        $studentData['computer_fee_yearly'],
+                        $studentData['computer_fee_monthly'],
+                        $studentData['development_charges_yearly'],
+                        $studentData['transport_fee'],
+                        $studentData['late_fee'],
+                        $studentData['total_fee'],
+                        $studentData['student_id']
+                    );
+                }
+            }
+            unset($_SESSION['fee_data']);
+            $_SESSION['success'] = 'Fee Data Successfully Uploaded.';
+            header('Location: upload_fee.php');
+            exit();
         }
     }
 

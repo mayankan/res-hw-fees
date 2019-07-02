@@ -35,6 +35,20 @@
             exit();
         }
 
+        $_POST['month_of_fee'] = explode(' ', $_POST['month_of_fee']);
+        $month = $_POST['month_of_fee'][0];
+        $year = $_POST['month_of_fee'][1];
+        if (date_parse($month)['month'] === false) {
+            $_SESSION['error'] = 'Month and Year of fee is required.';
+            header('Location: ' . $_SERVER['PHP_SELF']);
+            exit();
+        } else {
+            $month = (string) date_parse($month)['month'];
+            if ($month <= 10) {
+                $month = '0' . $month;
+            }
+        }
+
         $PDO = getConnection();
         if (is_null($PDO)) {
             die("Can't Connect to the Database");
@@ -43,7 +57,7 @@
         $feeData = [];
         $errorInFeeData = [];
         $csvFile = fopen($_FILES['fee_file']['tmp_name'], "r");
-        $feeData[] = fgetcsv($csvFile);
+        fgetcsv($csvFile);
 
         while (!feof($csvFile)) {
             $data = fgetcsv($csvFile, 0);
@@ -65,7 +79,7 @@
                     'admin_charges' => $data[7],
                     'smart_class_charges' => $data[8],
                     'computer_fee_yearly' => $data[9],
-                    'computer_fee_montly' => $data[10],
+                    'computer_fee_monthly' => $data[10],
                     'development_charges_yearly' => $data[11],
                     'transport_fee' => $data[12],
                     'portal_charges' => $data[13],
@@ -81,6 +95,8 @@
             exit();
         } else {
             $_SESSION['fee_data']['data'] = $feeData;
+            $_SESSION['fee_data']['month'] = $month;
+            $_SESSION['fee_data']['year'] = $year;
             header('Location: fee_data.php');
             exit();
         }
@@ -158,7 +174,7 @@
                                 Required Fields for uploading Fee Data<span class="text-danger">*</span>
                             </label>
                             <p>admission_no, ExaminationFee, TutionFee, RefreshmentAccFee, LabFee, ProjectFee, AnnualCharges, AdminCharges, SmartClassCharges, ComputerFeeYearly, ComputerFeeMonthly, DevelopmentChargesYearly, TransportFee, PortalCharges, LateFee, TotalFee</p>
-                            <p><a href="test_data.csv">Sample File</a></p>
+                            <p><a href="test_data.csv" class="btn btn-info btn-block" download>Sample File</a></p>
                         </div>
                         <div class="form-group">
                             <label for="month and year" class="col-form-label">

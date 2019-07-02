@@ -262,4 +262,155 @@
         }
     }
 
+    /**
+     * checks if fee already fee exists for given month and year
+     *
+     * @param PDOObject $PDO
+     * @param Number $admissionNumber
+     * @param Number $month
+     * @param Number $year
+     *
+     * @return Fee $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+    */
+    function feeExists($PDO, $admissionNumber, $month, $year) {
+        try {
+            $stmt = $PDO->prepare(
+                        "SELECT * FROM `fee` WHERE `admission_no` = :adm_no AND `month` LIKE :month;"
+                    );
+            $stmt->execute(
+                [
+                    ':adm_no' => $admissionNumber,
+                    ':month' => $year . '-' . $month . '-__'
+                ]
+            );
+            if ($stmt->rowCount() == 0) {
+                return NULL;
+            }
+            return $stmt->fetch();
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
+
+    function insertFee(
+        $PDO, $admissionNumber, $month, $year,
+        $portalCharge, $examinationFee, $tutionFee, $refreshmentAccFee,
+        $labFee, $projectFee, $annualCharges, $adminCharges,
+        $smartClassCharges, $computerFeeYearly, $computerFeeMonthly,
+        $developmentChargesYearly, $transportFee, $lateFee, $totalFee,
+        $studentId
+    ) {
+        $sql = "INSERT INTO `fee` (
+                    `admission_no`, `month`, `portal_charges`, `examination_fee`, `tution_fee`, `refreshment_acc_fee`,
+                    `lab_fee`, `project_fee`, `annual_charges`, `admin_charges`, `smart_class_charges`, `computer_fee_yearly`,
+                    `computer_fee_monthly`, `development_charges_yearly`, `transport_fee`, `late_fee`, `total_fee`, `student_id`,
+                    `date_updated`, `date_created`
+                ) VALUES (
+                    :adm_no, :month, :portal_charges, :examination_fee, :tution_fee, :refreshment_acc_fee, :lab_fee, 
+                    :project_fee, :annual_charges, :admin_charges, :smart_class_charges, :computer_fee_yearly,
+                    :computer_fee_monthly, :development_charges_yearly, :transport_fee, :late_fee, :total_fee, :student_id,
+                    :date_updated, :date_created
+                );";
+        $data = [
+            ':adm_no' => $admissionNumber,
+            ':month' => $year . '-' . $month . '-01',
+            ':portal_charges' => $portalCharge,
+            ':examination_fee' => $examinationFee,
+            ':tution_fee' => $tutionFee,
+            ':refreshment_acc_fee' => $refreshmentAccFee,
+            ':lab_fee' => $labFee,
+            ':project_fee' => $projectFee,
+            ':annual_charges' => $annualCharges,
+            ':admin_charges' => $adminCharges,
+            ':smart_class_charges' => $smartClassCharges,
+            ':computer_fee_yearly' => $computerFeeYearly,
+            ':computer_fee_monthly' => $computerFeeMonthly,
+            ':development_charges_yearly' => $developmentChargesYearly,
+            ':transport_fee' => $transportFee,
+            ':late_fee' => $lateFee,
+            ':total_fee' => $totalFee,
+            ':student_id' => $studentId,
+            ':date_updated' => date('Y-m-d h:i:s'),
+            ':date_created' => date('Y-m-d h:i:s')
+        ];
+
+        try {
+            $stmt = $PDO->prepare($sql);
+            $stmt->execute($data);
+            if ($stmt->rowCount() === 0) {
+                return false;
+            }
+            return true;
+        } catch (Exception $e) {
+            print($e);
+            return false;
+        }
+    }
+
+    function updateFee(
+        $PDO, $admissionNumber, $month, $year,
+        $portalCharge, $examinationFee, $tutionFee, $refreshmentAccFee,
+        $labFee, $projectFee, $annualCharges, $adminCharges,
+        $smartClassCharges, $computerFeeYearly, $computerFeeMonthly,
+        $developmentChargesYearly, $transportFee, $lateFee, $totalFee,
+        $studentId
+    ) {
+        $sql = "UPDATE `fee` SET
+                    `month` = :month,
+                    `portal_charges` = :portal_charges,
+                    `examination_fee` = :examination_fee,
+                    `tution_fee` = :tution_fee,
+                    `refreshment_acc_fee` = :refreshment_acc_fee,
+                    `lab_fee` = :lab_fee,
+                    `project_fee` = :project_fee,
+                    `annual_charges` = :annual_charges,
+                    `admin_charges` = :admin_charges,
+                    `smart_class_charges` = :smart_class_charges,
+                    `computer_fee_yearly` = :computer_fee_yearly,
+                    `computer_fee_monthly` = :computer_fee_monthly,
+                    `development_charges_yearly` = :development_charges_yearly,
+                    `transport_fee` = :transport_fee,
+                    `late_fee` = :late_fee,
+                    `total_fee` = :total_fee,
+                    `date_updated` = :date_updated
+                WHERE
+                    `student_id` = :student_id AND `admission_no` = :adm_no
+                ;";
+        $data = [
+            ':adm_no' => $admissionNumber,
+            ':month' => $year . '-' . $month . '-01',
+            ':portal_charges' => $portalCharge,
+            ':examination_fee' => $examinationFee,
+            ':tution_fee' => $tutionFee,
+            ':refreshment_acc_fee' => $refreshmentAccFee,
+            ':lab_fee' => $labFee,
+            ':project_fee' => $projectFee,
+            ':annual_charges' => $annualCharges,
+            ':admin_charges' => $adminCharges,
+            ':smart_class_charges' => $smartClassCharges,
+            ':computer_fee_yearly' => $computerFeeYearly,
+            ':computer_fee_monthly' => $computerFeeMonthly,
+            ':development_charges_yearly' => $developmentChargesYearly,
+            ':transport_fee' => $transportFee,
+            ':late_fee' => $lateFee,
+            ':total_fee' => $totalFee,
+            ':student_id' => $studentId,
+            ':date_updated' => date('Y-m-d h:i:s')
+        ];
+
+        try {
+            $stmt = $PDO->prepare($sql);
+            $stmt->execute($data);
+            if ($stmt->rowCount() === 0) {
+                return false;
+            }
+            return true;
+        } catch (Exception $e) {
+            print($e);
+            return false;
+        }
+    }
 ?>
