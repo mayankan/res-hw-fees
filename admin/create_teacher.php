@@ -119,6 +119,15 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a 
+                                    href="<?php echo $base_url ?>admin/db_update.php"
+                                    onclick="return window.confirm('Do you Really want to update the Database');"
+                                    class="nav-link"
+                                >
+                                    Update DB
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link ml-2 btn btn-primary text-white px-4">
                                     <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
                                 </a>
