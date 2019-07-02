@@ -42,6 +42,7 @@
     <ul>
         <li>View and change maintainence mode(Online, Month End, Custom Maintainence)</li>
         <li>Create and update Fee Data using CSV File</li>
+        <li>Delete Fee Data using Month Selector</li>
         <li>// Create Fee data using Form</li>
         <li>// add fee receipts using Form</li>
         <li>View Student users fetched from SQL Server Database</li>
