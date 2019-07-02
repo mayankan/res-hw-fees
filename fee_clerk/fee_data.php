@@ -27,6 +27,18 @@
         exit();
     }
 
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST['cancel'])) {
+            unset($_SESSION['fee_data']);
+            header('Location: upload_fee.php');
+            exit();
+        }
+
+        if (isset($_POST['confirm'])) {
+
+        }
+    }
+
     $start = 0;
     $end = 0;
     if (!isset($_GET['page_no'])) {
@@ -123,7 +135,7 @@
                                 <th>Total Fees</th>
                             </thead>
                             <tbody>
-                                <?php for ($i = $start; $i < $end; $i++): ?>
+                                <?php for ($i = $start; $i <= $end; $i++): ?>
                                     <?php if (isset($_SESSION['fee_data']['data'][$i])): ?>
                                     <tr>
                                         <td><?php echo $i; ?></td>

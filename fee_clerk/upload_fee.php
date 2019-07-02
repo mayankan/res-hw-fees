@@ -46,8 +46,8 @@
         $feeData[] = fgetcsv($csvFile);
 
         while (!feof($csvFile)) {
-            $data = fgetcsv($csvFile);
-            if ($data !== false) {
+            $data = fgetcsv($csvFile, 0);
+            if ($data !== false && $data[0] !== NULL) {
                 $studentData = getStudent($PDO, $studentId=NULL, $admissionNumber=$data[0]);
                 $data['student_id'] = $studentData !== false ? $studentData['id'] : NULL;
                 if ($data['student_id'] === NULL) {
@@ -76,6 +76,7 @@
         }
         if (!empty($errorInFeeData)) {
             $_SESSION['fee_data']['errors'] = $errorInFeeData;
+            var_dump($errorInFeeData);
             header('Location: errors_in_fee.php');
             exit();
         } else {

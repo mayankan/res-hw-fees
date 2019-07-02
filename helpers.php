@@ -172,6 +172,8 @@
      * @throws Exception //No Specefic Exception Defined
     */
     function getStudent($PDO, $studentId, $admissionNumber=NULL) {
+        $sql = "";
+        $data = [];
         if ($studentId !== NULL && $admissionNumber === NULL) {
             $sql = "SELECT * FROM `student` WHERE `id` = :id";
             $data = [':id' => $studentId];
