@@ -171,7 +171,10 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link ml-2 btn btn-primary text-white px-4">
+                                <a 
+                                    href="javascript:{document.getElementById('logout').submit()}" 
+                                    class="nav-link ml-2 btn btn-primary text-white px-4"
+                                >
                                     <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
                                 </a>
                                 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
@@ -192,7 +195,10 @@
                             <div class="form-group row d-flex justify-content-center">
                                 <!-- Filter for Name -->
                                 <?php if (isset($_GET['name'])): ?>
-                                <input type="text" name="name" class="form-control col-3 m-2" value="<?php echo $_GET['name'] ?>" placeholder="Name">
+                                <input type="text" name="name" 
+                                    class="form-control col-3 m-2" 
+                                    value="<?php echo $_GET['name'] ?>" placeholder="Name"
+                                >
                                 <?php else: ?>
                                 <input type="text" name="name" class="form-control col-3 m-2" placeholder="Name">
                                 <?php endif ?>
@@ -211,7 +217,9 @@
                                 <option value="">Classes</option>
                                 <?php while ($class = array_shift($classes)): ?>
                                     <?php if ($class['id'] == $_GET['class_id']): ?>
-                                    <option value="<?php echo $class['id'] ?>" selected><?php echo $class['class_name'] ?> - <?php echo $class['section'] ?></option>
+                                    <option value="<?php echo $class['id'] ?>" selected>
+                                        <?php echo $class['class_name'] ?> - <?php echo $class['section'] ?>
+                                    </option>
                                     <?php else: ?>
                                     <option value="<?php echo $class['id'] ?>"><?php echo $class['class_name'] ?> - <?php echo $class['section'] ?></option>
                                     <?php endif ?>
@@ -222,7 +230,9 @@
                                 <?php $classes = getAllClasses($PDO); ?>
                                 <option value="" selected>Classes</option>
                                 <?php while ($class = array_shift($classes)): ?>
-                                    <option value="<?php echo $class['id'] ?>"><?php echo $class['class_name'] ?> - <?php echo $class['section'] ?></option>
+                                    <option value="<?php echo $class['id'] ?>">
+                                        <?php echo $class['class_name'] ?> - <?php echo $class['section'] ?>
+                                    </option>
                                 <?php endwhile ?>
                                 </select>
                                 <?php endif ?>

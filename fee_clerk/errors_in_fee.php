@@ -54,7 +54,10 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link ml-2 btn btn-primary text-white px-4">
+                            <a 
+                                href="javascript:{document.getElementById('logout').submit()}" 
+                                class="nav-link ml-2 btn btn-primary text-white px-4"
+                            >
                                 <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
                             </a>
                             <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
@@ -78,7 +81,7 @@
                     <ul class="list-group">
                         <?php $errorsLength = count($_SESSION['fee_data']['errors']) ?>
                         <?php for ($i = 0; $i < $errorsLength; $i++): ?>
-                        <li class="list-group-item"><?php echo $_SESSION['fee_data']['errors'][0] ?></li>
+                        <li class="list-group-item"><?php echo $_SESSION['fee_data']['errors'][$i] ?></li>
                         <?php endfor ?>
                     </ul>
                     <div class="mt-4">

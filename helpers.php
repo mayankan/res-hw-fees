@@ -76,7 +76,8 @@
             ");
             try {
             $stmt->execute([
-                            ':log_action' => $message, 'message_id' => $message_id ,':teacher_id' => $teacherId, ':date_of_action' => date("Y/m/d h:i:s"), ':ip_address' => getRealIpAddr()
+                            ':log_action' => $message, 'message_id' => $message_id ,':teacher_id' => $teacherId, 
+                            ':date_of_action' => date("Y/m/d h:i:s"), ':ip_address' => getRealIpAddr()
                         ]);
             } catch (Exception $e) {
                 return false;
@@ -263,7 +264,8 @@
     }
 
     /**
-     * checks if fee already fee exists for given month and year
+     * Fetches data from `fee` table on the basis of admission number
+     * with month and year provided
      *
      * @param PDOObject $PDO
      * @param Number $admissionNumber
@@ -274,7 +276,7 @@
      *
      * @throws Exception //No Specefic Exception Defined
     */
-    function feeExists($PDO, $admissionNumber, $month, $year) {
+    function getFee($PDO, $admissionNumber, $month, $year) {
         try {
             $stmt = $PDO->prepare(
                         "SELECT * FROM `fee` WHERE `admission_no` = :adm_no AND `month` LIKE :month;"
@@ -295,6 +297,18 @@
         }
     }
 
+    /**
+     * inserts a fee row in `fee` Table
+     *
+     * @param PDOObject $PDO
+     * @param Number $admissionNumber
+     * @param Number $month
+     * @param Number $year
+     *
+     * @return Fee $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+    */
     function insertFee(
         $PDO, $admissionNumber, $month, $year,
         $portalCharge, $examinationFee, $tutionFee, $refreshmentAccFee,
@@ -350,6 +364,18 @@
         }
     }
 
+    /**
+     * updates a fee row in `fee` Table
+     *
+     * @param PDOObject $PDO
+     * @param Number $admissionNumber
+     * @param Number $month
+     * @param Number $year
+     *
+     * @return Fee $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+    */
     function updateFee(
         $PDO, $admissionNumber, $month, $year,
         $portalCharge, $examinationFee, $tutionFee, $refreshmentAccFee,
@@ -413,4 +439,5 @@
             return false;
         }
     }
+
 ?>

@@ -115,7 +115,10 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link ml-2 btn btn-primary text-white px-4">
+                                <a 
+                                    href="javascript:{document.getElementById('logout').submit()}" 
+                                    class="nav-link ml-2 btn btn-primary text-white px-4"
+                                >
                                     <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
                                 </a>
                                 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">

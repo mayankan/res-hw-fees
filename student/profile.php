@@ -62,7 +62,15 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link ml-2 btn btn-primary text-white px-4">
+                                <a href="<?php echo $base_url ?>student/fee.php" class="nav-link">
+                                    Pay Fees
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a 
+                                    href="javascript:{document.getElementById('logout').submit()}" 
+                                    class="nav-link ml-2 btn btn-primary text-white px-4"
+                                >
                                     <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
                                 </a>
                                 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
@@ -85,40 +93,54 @@
                         </div>
                         <div class="form-group">
                             <label for="admission_no" class="col-form-label">Admission Number</label>
-                            <input disabled type="text" name="admission_no" class="form-control" value="<?php echo $studentData['admission_no'] ?>">
+                            <input disabled type="text" name="admission_no" class="form-control" 
+                                value="<?php echo $studentData['admission_no'] ?>">
                         </div>
                         <div class="form-group">
                             <label for="name" class="col-form-label">Full Name</label>
-                            <input disabled type="text" name="full_name" class="form-control" value="<?php echo $studentData['name'] ?>">
+                            <input disabled type="text" name="full_name" class="form-control" 
+                                value="<?php echo $studentData['name'] ?>">
                         </div>
                         <div class="form-group">
                             <label for="father_name" class="col-form-label">Father's Name</label>
-                            <input disabled type="text" father="father_name" class="form-control" value="<?php echo $studentData['father_name'] ?>">
+                            <input disabled type="text" father="father_name" class="form-control"  
+                                value="<?php echo $studentData['father_name'] ?>">
                         </div>
                         <div class="form-group">
                             <label for="mother_name" class="col-form-label">Mother's Name</label>
-                            <input disabled type="text" father="mother_name" class="form-control" value="<?php echo $studentData['mother_name'] ?>">
+                            <input disabled type="text" father="mother_name" class="form-control" 
+                                value="<?php echo $studentData['mother_name'] ?>">
                         </div>
                         <div class="form-group">
                             <?php $date = date_create($studentData['dob']) ?>
                             <label for="dob" class="col-form-label">Date of Birth</label>
-                            <input disabled type="text" father="dob" class="form-control" value="<?php echo date_format($date, 'd F Y'); ?>">
+                            <input disabled type="text" father="dob" class="form-control" 
+                                value="<?php echo date_format($date, 'd F Y'); ?>">
                         </div>
                         <div class="form-group">
                             <label for="gender" class="col-form-label">Gender</label>
-                            <input disabled type="text" father="gender" class="form-control" value="<?php if ((int) $student['gender'] === 1): ?>Male<?php else: ?>Female<?php endif ?>">
+                            <input disabled type="text" father="gender" class="form-control" 
+                                value="<?php if ((int) $studentData['gender'] === 1): ?>Male<?php else: ?>Female<?php endif ?>">
                         </div>
                         <div class="form-group">
                             <label for="address" class="col-form-label">Address</label>
-                            <textarea name="address" class="form-control" disabled cols="30" rows="6"><?php echo $studentData['address'] ?></textarea>
+                            <textarea 
+                                name="address" 
+                                class="form-control" 
+                                disabled 
+                                cols="30" 
+                                rows="6"
+                            ><?php echo $studentData['address'] ?></textarea>
                         </div>
                         <div class="form-group">
                             <label for="mobile_number" class="col-form-label">Mobile Number</label>
-                            <input disabled type="number" name="mobile_number" class="form-control" value="<?php echo $studentData['mobile_number'] ?>">
+                            <input disabled type="number" name="mobile_number" class="form-control" 
+                                value="<?php echo $studentData['mobile_number'] ?>">
                         </div>
                         <div class="form-group">
                             <label for="class" class="col-form-label">Class & Section</label>
-                            <input disabled type="text" name="class" class="form-control" value="<?php echo $classData['class_name'] . ' - ' . $classData['section'] ?>">
+                            <input disabled type="text" name="class" class="form-control" 
+                                value="<?php echo $classData['class_name'] . ' - ' . $classData['section'] ?>">
                         </div>
                     </form>
                 </div>

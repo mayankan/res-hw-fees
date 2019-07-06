@@ -27,8 +27,15 @@
                 INSERT INTO `teacher` (`name`, `username`, `password`, `email_address`, `date_created`)
                             VALUES (:name, :username, :password, :email, :date_created)
             ");
-            $stmt->execute([':name' => $fullName, ':username' => $username, ':password' => $hashedPass, ':email' => $email
-                            , ':date_created' => ((string) date("Y-m-d"))]);
+            $stmt->execute(
+                [
+                    ':name' => $fullName,
+                    ':username' => $username,
+                    ':password' => $hashedPass,
+                    ':email' => $email,
+                    ':date_created' => ((string) date("Y-m-d"))
+                ]
+            );
             if ($stmt->rowCount() === 0) {
                 return false;
             }
@@ -128,7 +135,10 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link ml-2 btn btn-primary text-white px-4">
+                                <a 
+                                    href="javascript:{document.getElementById('logout').submit()}" 
+                                    class="nav-link ml-2 btn btn-primary text-white px-4"
+                                >
                                     <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
                                 </a>
                                 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">

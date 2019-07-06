@@ -99,7 +99,11 @@
     */
     function getStudentsByClass($PDO, $classId) {
         try {
-            $stmt = $PDO->prepare("SELECT `id`, `name`, `admission_no` FROM `student` WHERE `class_id` = :class_id AND `date_deleted` IS NULL");
+            $stmt = $PDO->prepare(
+                    "SELECT `id`, `name`, `admission_no` 
+                    FROM `student` 
+                    WHERE `class_id` = :class_id AND `date_deleted` IS NULL"
+                    );
             $stmt->execute([':class_id' => $classId]);
             if ($stmt->rowCount() === 0) {
                 return NULL;
@@ -238,7 +242,10 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link ml-2 btn btn-primary text-white px-4">
+                                <a 
+                                    href="javascript:{document.getElementById('logout').submit()}" 
+                                    class="nav-link ml-2 btn btn-primary text-white px-4"
+                                >
                                     <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
                                 </a>
                                 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">

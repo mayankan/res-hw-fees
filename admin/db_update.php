@@ -46,11 +46,12 @@
                             $date_created, $date_modified) {
         try {
             $stmt = $PDO->prepare("
-                                INSERT INTO `student` (`id`, `admission_no`, `name`, `father_name`, `mother_name`,
-                                                        `dob`, `gender`, `mobile_number`, `class_id`, `date_created`, `date_modified`)
-                                            VALUES (:id, :admission_no, :name, :father_name, :mother_name,
-                                                    :dob, :gender, :mobile_number, :class_id, :date_created, :date_modified);
-                                ");
+                                INSERT INTO `student` 
+                                (`id`, `admission_no`, `name`, `father_name`, `mother_name`,
+                                `dob`, `gender`, `mobile_number`, `class_id`, `date_created`, `date_modified`)
+                                VALUES (:id, :admission_no, :name, :father_name, :mother_name,
+                                :dob, :gender, :mobile_number, :class_id, :date_created, :date_modified);
+                    ");
             $stmt->execute([
                 ':id' => $id,
                 ':admission_no' => $admission_no,
@@ -79,7 +80,14 @@
     $originalClassData = $stmt->fetchAll();
     foreach ($originalClassData as $class) {
         $originalStudentData = NULL;
-        if (insertClass($mysqldb, $class['Id'], $class['Class'], $class['Section'], $class['DateCreated'], $class['DateModified'])) {
+        if (insertClass(
+                $mysqldb, 
+                $class['Id'], 
+                $class['Class'], 
+                $class['Section'], 
+                $class['DateCreated'], 
+                $class['DateModified'])
+        ) {
             try {
                 $stmt = $msdb->prepare('SELECT * FROM dbo.Student WHERE StudentCategoryId != 6 AND IsDeleted = 0 AND ClassId = :id');
                 $stmt->execute([':id' => $class['Id']]);
@@ -93,9 +101,11 @@
 
         if ($originalStudentData !== NULL) {
             foreach ($originalStudentData as $student) {
-                insertStudent($mysqldb, $student['Id'], $student['AdmissionNo'], $student['StudentName'],
-                                $student['FatherName'], $student['MotherName'], $student['DOB'], $student['Gender'], $student['Address'],
-                                $student['FatherMobileNumber'], $class['Id'], $student['DateCreated'], $student['DateModified']);
+                insertStudent(
+                    $mysqldb, $student['Id'], $student['AdmissionNo'], $student['StudentName'],
+                    $student['FatherName'], $student['MotherName'], $student['DOB'], $student['Gender'], $student['Address'],
+                    $student['FatherMobileNumber'], $class['Id'], $student['DateCreated'], $student['DateModified']
+                );
             }
         }
     }

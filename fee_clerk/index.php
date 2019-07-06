@@ -25,40 +25,37 @@
 ?>
 
 <?php require_once(__DIR__.'/../header.php'); ?>
-        <title>Fee Clerk Panel</title>
-    </head>
-    <body>
-        <header>
-            <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-                <div class="container">
-                    <a href="#" class="navbar-brand">Fee Admin Panel</a>
-                    <button class="navbar-toggler" data-toggle="collapse" data-target="#teacher-nav">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="teacher-nav">
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item active">
-                                <a href="<?php echo $base_url ?>fee_clerk/" class="nav-link">
-                                    View Fee
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="<?php echo $base_url ?>fee_clerk/upload_fee.php" class="nav-link">
-                                    Upload Fee
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="javascript:{document.getElementById('logout').submit()}" class="nav-link ml-2 btn btn-primary text-white px-4">
-                                    <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
-                                </a>
-                                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
-                                    <input type="hidden" name="logout" value="true">
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <div class="container">
+                <a href="#" class="navbar-brand">Fee Admin Panel</a>
+                <button class="navbar-toggler" data-toggle="collapse" data-target="#teacher-nav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="teacher-nav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a href="<?php echo $base_url ?>fee_clerk/" class="nav-link">
+                                View Fee
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo $base_url ?>fee_clerk/upload_fee.php" class="nav-link">
+                                Upload Fee
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a 
+                                href="javascript:{document.getElementById('logout').submit()}" 
+                                class="nav-link ml-2 btn btn-primary text-white px-4"
+                            >
+                                <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
+                            </a>
+                            <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
+                                <input type="hidden" name="logout" value="true">
+                            </form>
+                        </li>
+                    </ul>
                 </div>
-            </nav>
-        </header>
-    </body>
+            </div>
+        </nav>
 <?php require_once(__DIR__.'/../footer.php'); ?>
