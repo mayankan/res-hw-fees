@@ -3,10 +3,6 @@
     // https://auth-db13.hostinger.in/ - for checking PHPMyAdmin
 
     function getConnection() {
-        // $username = 'u281853335_hw';
-        // $password = 'ViKHubGJ7L1O';
-        // $host = 'sql7.main-hosting.eu';
-        // $db_name = 'u281853335_home';
         $username = 'u398111847_hw';
         $password = 'eSoIxZO39v9K';
         $host = 'sql7.main-hosting.eu';
