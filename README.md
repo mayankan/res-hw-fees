@@ -42,6 +42,7 @@
     <ul>
         <li>View and change maintainence mode(Online, Month End, Custom Maintainence)</li>
         <li>Create and update Fee Data using CSV File</li>
+        <li>View Paid and Unpaid Fee Data</li>
         <li>Delete Fee Data using Month Selector</li>
         <li>// Create Fee data using Form</li>
         <li>// add fee receipts using Form</li>
