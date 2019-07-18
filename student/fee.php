@@ -21,7 +21,16 @@
         }
     }
 
-    echo date('');
+    $PDO = getConnection();
+    if (is_null($PDO)) {
+        die("Can't Connect to the database");
+    }
+
+    $currentMonth = (int) date('m');
+    $feeData = [];
+    var_dump(
+        getFee($PDO, $_SESSION['data']['admission_no'])
+    );
 
 ?>
 

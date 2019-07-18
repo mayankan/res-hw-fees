@@ -111,6 +111,8 @@
     }
 
     $_SESSION['success'] = 'Database has been successfully updated.';
+    unset($msdb);
+    unset($mysqldb);
     header('Location: index.php');
     exit();
 

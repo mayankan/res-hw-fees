@@ -88,95 +88,91 @@
             header('Location: create_teacher.php');
             return;
         }
+        unset($PDO);
     }
 
 ?>
 
 <?php require_once(__DIR__.'/../header.php'); ?>
-        <title>Admin Panel | Create Teacher</title>
-    </head>
-    <body>
-        <header>
-            <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-                <div class="container">
-                    <a href="#" class="navbar-brand">Admin Panel</a>
-                    <button class="navbar-toggler" data-toggle="collapse" data-target="#teacher-nav">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="teacher-nav">
-                        <ul class="navbar-nav ml-auto">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <div class="container">
+                <a href="#" class="navbar-brand">Admin Panel</a>
+                <button class="navbar-toggler" data-toggle="collapse" data-target="#teacher-nav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="teacher-nav">
+                    <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                            <a href="<?php echo $base_url ?>admin/" class="nav-link">
+                                Logs
+                            </a>
+                        </li>
+                        <li class="nav-item active">
+                            <a href="<?php echo $base_url ?>admin/create_teacher.php" class="nav-link">
+                                Create Teacher
+                            </a>
+                        </li>
                         <li class="nav-item">
-                                <a href="<?php echo $base_url ?>admin/" class="nav-link">
-                                    Logs
-                                </a>
-                            </li>
-                            <li class="nav-item active">
-                                <a href="<?php echo $base_url ?>admin/create_teacher.php" class="nav-link">
-                                    Create Teacher
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="<?php echo $base_url ?>admin/teachers.php" class="nav-link">
-                                    View/Edit Teachers
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="<?php echo $base_url ?>admin/students.php" class="nav-link">
-                                    View Students
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a 
-                                    href="<?php echo $base_url ?>admin/db_update.php"
-                                    onclick="return window.confirm('Do you Really want to update the Database');"
-                                    class="nav-link"
-                                >
-                                    Update DB
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a 
-                                    href="javascript:{document.getElementById('logout').submit()}" 
-                                    class="nav-link ml-2 btn btn-primary text-white px-4"
-                                >
-                                    <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
-                                </a>
-                                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
-                                    <input type="hidden" name="logout" value="true">
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
+                            <a href="<?php echo $base_url ?>admin/teachers.php" class="nav-link">
+                                View/Edit Teachers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo $base_url ?>admin/students.php" class="nav-link">
+                                View Students
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a 
+                                href="<?php echo $base_url ?>admin/db_update.php"
+                                onclick="return window.confirm('Do you Really want to update the Database');"
+                                class="nav-link"
+                            >
+                                Update DB
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a 
+                                href="javascript:{document.getElementById('logout').submit()}" 
+                                class="nav-link ml-2 btn btn-primary text-white px-4"
+                            >
+                                <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
+                            </a>
+                            <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
+                                <input type="hidden" name="logout" value="true">
+                            </form>
+                        </li>
+                    </ul>
                 </div>
-            </nav>
+            </div>
+        </nav>
 
-            <section id="error" class="mt-4">
-                <div class="container">
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-md-6">
-                            <?php if (isset($_SESSION['error'])): ?>
-                            <div class="alert alert-danger alert-dismissible fade show">
-                                <strong><?php echo $_SESSION['error'] ?></strong>
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            </div>
-                            <?php unset($_SESSION['error']); ?>
-                            <?php endif ?>
+        <section id="error" class="mt-4">
+            <div class="container">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <?php if (isset($_SESSION['error'])): ?>
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <strong><?php echo $_SESSION['error'] ?></strong>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
                         </div>
-                    </div>
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-md-6">
-                            <?php if (isset($_SESSION['success'])): ?>
-                            <div class="alert alert-success alert-dismissible fade show">
-                                <strong><?php echo $_SESSION['success'] ?></strong>
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            </div>
-                            <?php unset($_SESSION['success']); ?>
-                            <?php endif ?>
-                        </div>
+                        <?php unset($_SESSION['error']); ?>
+                        <?php endif ?>
                     </div>
                 </div>
-            </section>
-        </header>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <?php if (isset($_SESSION['success'])): ?>
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <strong><?php echo $_SESSION['success'] ?></strong>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                        <?php unset($_SESSION['success']); ?>
+                        <?php endif ?>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <section id="createTeacher" class="container">
             <div class="row justify-content-center">
@@ -213,5 +209,4 @@
                 </div>
             </div>
         </section>
-
 <?php require_once(__DIR__.'/../footer.php'); ?>

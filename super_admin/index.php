@@ -15,9 +15,5 @@
 ?>
 
 <?php require_once(__DIR__.'/../header.php'); ?>
-        <title>Super Admin Panel</title>
-    </head>
-    <body>
         <h1>Super Admin</h1>
-    </body>
 <?php require_once(__DIR__.'/../footer.php'); ?>

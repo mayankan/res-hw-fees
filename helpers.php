@@ -276,7 +276,7 @@
      *
      * @throws Exception //No Specefic Exception Defined
     */
-    function getFee($PDO, $admissionNumber, $month, $year) {
+    function getFee($PDO, $admissionNumber, $month='__', $year='____') {
         try {
             $stmt = $PDO->prepare(
                         "SELECT * FROM `fee` WHERE `admission_no` = :adm_no AND `month` LIKE :month;"

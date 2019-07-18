@@ -79,5 +79,6 @@
     }   
 
     array_to_csv_download($PDO, getAllLogs($PDO), 'logs.csv');
+    unset($PDO);
 
 ?>

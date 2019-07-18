@@ -72,6 +72,7 @@
                 $homework['teacher'] = $teacher;
             }
         }
+        unset($PDO);
     } else {
         header('Location: index.php');
     }

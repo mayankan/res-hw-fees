@@ -200,54 +200,49 @@
 ?>
 
 <?php require_once(__DIR__.'/../header.php'); ?>
-        <title>Admin Panel | Teacher Profile</title>
-    </head>
-    <body>
-        <header>
-            <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-                <div class="container">
-                    <a href="#" class="navbar-brand">Admin Panel</a>
-                    <button class="navbar-toggler" data-toggle="collapse" data-target="#teacher-nav">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="teacher-nav">
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item">
-                                <a href="<?php echo $base_url ?>admin/" class="nav-link">
-                                    Logs
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="<?php echo $base_url ?>admin/create_teacher.php" class="nav-link">
-                                    Create Teacher
-                                </a>
-                            </li>
-                            <li class="nav-item active">
-                                <a href="<?php echo $base_url ?>admin/teachers.php" class="nav-link">
-                                    View/Edit Teachers
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="<?php echo $base_url ?>admin/students.php" class="nav-link">
-                                    View Students
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a 
-                                    href="javascript:{document.getElementById('logout').submit()}" 
-                                    class="nav-link ml-2 btn btn-primary text-white px-4"
-                                >
-                                    <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
-                                </a>
-                                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
-                                    <input type="hidden" name="logout" value="true">
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <div class="container">
+                <a href="#" class="navbar-brand">Admin Panel</a>
+                <button class="navbar-toggler" data-toggle="collapse" data-target="#teacher-nav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="teacher-nav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="<?php echo $base_url ?>admin/" class="nav-link">
+                                Logs
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo $base_url ?>admin/create_teacher.php" class="nav-link">
+                                Create Teacher
+                            </a>
+                        </li>
+                        <li class="nav-item active">
+                            <a href="<?php echo $base_url ?>admin/teachers.php" class="nav-link">
+                                View/Edit Teachers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo $base_url ?>admin/students.php" class="nav-link">
+                                View Students
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a 
+                                href="javascript:{document.getElementById('logout').submit()}" 
+                                class="nav-link ml-2 btn btn-primary text-white px-4"
+                            >
+                                <i class="fa fa-sign-in mt-1" aria-hidden="true"></i> Logout
+                            </a>
+                            <form action="<?php echo $_SERVER['PHP_SELF'] ?>" id="logout">
+                                <input type="hidden" name="logout" value="true">
+                            </form>
+                        </li>
+                    </ul>
                 </div>
-            </nav>
-        </header>
+            </div>
+        </nav>
         
         <section id="error" class="mt-4">
             <div class="container">
@@ -348,4 +343,4 @@
                 </div>
             </div>
         </div>
-<?php require_once(__DIR__.'/../footer.php');
+<?php require_once(__DIR__.'/../footer.php'); ?>

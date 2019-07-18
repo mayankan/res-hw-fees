@@ -107,6 +107,11 @@
 ?>
 
 <?php require_once(__DIR__.'/../header.php'); ?>
+        <style>
+        /* .ui-datepicker-calendar {
+            display: none;
+        } */
+        </style>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark">
             <div class="container">
                 <a href="#" class="navbar-brand">Fee Admin Panel</a>
@@ -213,9 +218,4 @@
                 });
             });
         </script>
-        <style>
-        .ui-datepicker-calendar {
-            display: none;
-        }
-        </style>
 <?php require_once(__DIR__.'/../footer.php'); ?>

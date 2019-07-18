@@ -22,11 +22,13 @@
         }
     }
 
+    // if there are any errors redirect to errors page
     if (!isset($_SESSION['fee_data']['errors'])) {
         header('Location: upload_fee.php');
         exit();
     }
 
+    // post reequest to this page deletes the data in session and returns to upload form
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         unset($_SESSION['fee_data']);
         header("Location: upload_fee.php");
