@@ -20,7 +20,8 @@
     */
     function getHomeworks($PDO, $teacherId, $startLimit=0) {
         try {
-            $stmt = $PDO->prepare("SELECT * FROM `message` WHERE teacher_id = :teacher_id AND date_deleted IS NULL LIMIT :start_limit, 10");
+            $date_of_message='date_of_message';
+            $stmt = $PDO->prepare("SELECT * FROM `message` WHERE teacher_id = :teacher_id AND date_deleted IS NULL ORDER BY date_of_message DESC LIMIT :start_limit, 10");
             $stmt->execute([':start_limit' => $startLimit, ':teacher_id' => $teacherId]);
             if ($stmt->rowCount() === 0) {
                 return NULL;
