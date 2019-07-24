@@ -65,7 +65,6 @@
                 $studentData = getStudent($PDO, $studentId=NULL, $admissionNumber=$data[0]);
                 $data['student_id'] = $studentData !== false ? $studentData['id'] : NULL;
                 if ($data['student_id'] === NULL) {
-                    echo $data[0] . "<br />";
                     $errorInFeeData[] = $data[0];
                 }
                 $feeData[] = [
@@ -91,7 +90,6 @@
         }
         if (!empty($errorInFeeData)) {
             $_SESSION['fee_data']['errors'] = $errorInFeeData;
-            var_dump($errorInFeeData);
             header('Location: errors_in_fee.php');
             exit();
         } else {
@@ -108,9 +106,9 @@
 
 <?php require_once(__DIR__.'/../header.php'); ?>
         <style>
-        /* .ui-datepicker-calendar {
+        .ui-datepicker-calendar {
             display: none;
-        } */
+        }
         </style>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark">
             <div class="container">

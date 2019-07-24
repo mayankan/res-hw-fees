@@ -31,7 +31,6 @@
     var_dump(
         getFee($PDO, $_SESSION['data']['admission_no'])
     );
-
 ?>
 
 <?php require_once(__DIR__.'/../header.php'); ?>

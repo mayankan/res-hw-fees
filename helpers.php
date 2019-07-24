@@ -279,7 +279,7 @@
     function getFee($PDO, $admissionNumber, $month='__', $year='____') {
         try {
             $stmt = $PDO->prepare(
-                        "SELECT * FROM `fee` WHERE `admission_no` = :adm_no AND `month` LIKE :month;"
+                        "SELECT * FROM `fee` WHERE `admission_no` = :adm_no AND `month` LIKE :month AND `date_deleted` IS NULL;"
                     );
             $stmt->execute(
                 [
@@ -403,7 +403,7 @@
                     `total_fee` = :total_fee,
                     `date_updated` = :date_updated
                 WHERE
-                    `student_id` = :student_id AND `admission_no` = :adm_no
+                    `student_id` = :student_id AND `admission_no` = :adm_no AND `deleted_at` IS NULL
                 ;";
         $data = [
             ':adm_no' => $admissionNumber,
