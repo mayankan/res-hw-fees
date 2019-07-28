@@ -1,6 +1,6 @@
 <?php
     /**
-     * This is page is used to
+     * This is page is used to 
     */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../db/db.connection.php');
@@ -41,6 +41,16 @@
                         <li class="nav-item">
                             <a href="<?php echo $base_url ?>fee_clerk/upload_fee.php" class="nav-link">
                                 Upload Fee
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo $base_url ?>fee_clerk/students.php" class="nav-link">
+                                View Students
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo $base_url ?>fee_clerk/delete_fee.php" class="nav-link">
+                                Delete Fee
                             </a>
                         </li>
                         <li class="nav-item">

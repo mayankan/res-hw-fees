@@ -135,8 +135,8 @@
     
 ?>
 <?php require_once(__DIR__.'/header.php'); ?>
-		<br />
-		<br />
+	<br />
+	<br />
         <div class="container">
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-6">
@@ -164,6 +164,6 @@
                 </div>
             </div>
         </div>
-		<br />
-		<br />
+	<br />
+	<br />
 <?php require_once(__DIR__.'/footer.php'); ?>

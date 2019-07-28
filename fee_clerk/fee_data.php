@@ -142,6 +142,16 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="<?php echo $base_url ?>fee_clerk/students.php" class="nav-link">
+                                View Students
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo $base_url ?>fee_clerk/delete_fee.php" class="nav-link">
+                                Delete Fee
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a 
                                 href="javascript:{document.getElementById('logout').submit()}" 
                                 class="nav-link ml-2 btn btn-primary text-white px-4"

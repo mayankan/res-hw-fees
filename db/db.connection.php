@@ -15,7 +15,7 @@
             // it fetches data in a associated array with column names as associated values
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             // PDO does not emulate prepare when provided with data
-        	PDO::ATTR_EMULATE_PREPARES => false
+        PDO::ATTR_EMULATE_PREPARES => false
         ];
 
         try {

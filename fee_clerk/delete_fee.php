@@ -1,6 +1,6 @@
-<?php
+  <?php
     /**
-     * This is page is used to see errors found in uploaded csv for admission number
+     * This is page is used to 
     */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../db/db.connection.php');
@@ -21,19 +21,7 @@
             return;
         }
     }
-
-    // if there are any errors redirect to errors page
-    if (!isset($_SESSION['fee_data']['errors'])) {
-        header('Location: upload_fee.php');
-        exit();
-    }
-
-    // post reequest to this page deletes the data in session and returns to upload form
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        unset($_SESSION['fee_data']);
-        header("Location: upload_fee.php");
-        exit();
-    }
+    
 ?>
 
 <?php require_once(__DIR__.'/../header.php'); ?>
@@ -50,7 +38,7 @@
                                 View Fee
                             </a>
                         </li>
-                        <li class="nav-item active">
+                        <li class="nav-item">
                             <a href="<?php echo $base_url ?>fee_clerk/upload_fee.php" class="nav-link">
                                 Upload Fee
                             </a>
@@ -60,7 +48,7 @@
                                 View Students
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item active">
                             <a href="<?php echo $base_url ?>fee_clerk/delete_fee.php" class="nav-link">
                                 Delete Fee
                             </a>
@@ -80,29 +68,4 @@
                 </div>
             </div>
         </nav>
-
-        <section id="error" class="mt-4">
-            <div class="container">
-                <h2 class="text-center">There are some errors in uploaded CSV listed below:</h2>
-            </div>
-        </section>
-
-        <section class="container mt-4">
-            <div class="row d-flex justify-content-center">
-                <div class="col-md-6">
-                    <ul class="list-group">
-                        <?php $errorsLength = count($_SESSION['fee_data']['errors']) ?>
-                        <?php for ($i = 0; $i < $errorsLength; $i++): ?>
-                        <li class="list-group-item"><?php echo $_SESSION['fee_data']['errors'][$i] ?></li>
-                        <?php endfor ?>
-                    </ul>
-                    <div class="mt-4">
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
-                            <input type="hidden" name="re_upload">
-                            <button type="submit" class="btn btn-info btn-block">Re-Upload File</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
 <?php require_once(__DIR__.'/../footer.php'); ?>
