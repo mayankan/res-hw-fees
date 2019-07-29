@@ -28,7 +28,7 @@
      *
     */
     function getStudents($PDO, $start_limit=0, $name="", $admission_no="", $class_id="") {
-        $sql = "SELECT * FROM `student` WHERE 1=1 AND";
+        $sql = "SELECT * FROM `student` WHERE 1=1 AND `date_deleted` IS NULL AND";
         $data = [];
         if ($name !== "") {
             $sql .= "`name` LIKE :name AND";

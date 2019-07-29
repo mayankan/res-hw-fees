@@ -28,7 +28,7 @@
      *
     */
     function getStudents($PDO, $start_limit=0, $name="", $admission_no="", $class_id="") {
-        $sql = "SELECT * FROM `student` WHERE 1=1 AND";
+        $sql = "SELECT * FROM `student` WHERE 1=1 AND `date_deleted` IS NULL";
         $data = [];
         if ($name !== "") {
             $sql .= "`name` LIKE :name AND";
@@ -96,8 +96,7 @@
     } else {
         $page_no = (int)$_GET['page_no'];
         if ($page_no <= 0) {
-            header("Location: students.php?page_no=1");
-            return;
+            $page_no = 1;
         }
         $end_limit = $page_no * 10;
         $start_limit = $end_limit - 10;
@@ -124,7 +123,7 @@
             header('Location: students.php?page_no=' . (((int)$_GET['page_no']) - 1));
             return;
         }
-        $_SESSION['page_no'] = $_GET['page_no'];
+        $_SESSION['page_no'] = $page_no;
     }
 ?>
 

@@ -25,6 +25,11 @@
 ?>
 
 <?php require_once(__DIR__.'/../header.php'); ?>
+        <style>
+        .ui-datepicker-calendar {
+            display: none;
+        }
+        </style>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark">
             <div class="container">
                 <a href="#" class="navbar-brand">Fee Admin Panel</a>
@@ -68,4 +73,68 @@
                 </div>
             </div>
         </nav>
+
+        <section id="error" class="mt-4">
+            <div class="container">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <?php if (isset($_SESSION['error'])): ?>
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <strong><?php echo $_SESSION['error']; ?></strong>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <?php unset($_SESSION['error']); ?>
+                        </div>
+                        <?php endif ?>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <?php if (isset($_SESSION['success'])): ?>
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <strong><?php echo $_SESSION['success']; ?></strong>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <?php unset($_SESSION['success']); ?>
+                        </div>
+                        <?php endif ?>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="uploadFee" class="container py-4">
+            <h1 class="text-center"><u>Delete Fee</u></h1>
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-8">
+                    <form 
+                        action="<?php echo $_SERVER['PHP_SELF'] ?>" 
+                        method="POST"
+                        onsubmit="return window.confirm('Do you really want to delete fees for the month?');"
+                    >
+                        <div class="form-group">
+                            <label for="month and year" class="col-form-label">
+                                Month and Year<span class="text-danger">*</span>
+                            </label>
+                            <input type="text" name="month_of_fee" class="form-control" id="datetime" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-block">Delete Fees for the Month</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            $(document).ready(function() {
+                $('#datetime').datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    showButtonPanel: true,
+                    dateFormat: 'MM yy',
+                    onClose: function(dateText, inst) { 
+                        $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+                    }
+                });
+            });
+        </script>
 <?php require_once(__DIR__.'/../footer.php'); ?>
