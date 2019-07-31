@@ -1,6 +1,6 @@
 <?php
     /**
-     * This Page is used to show students all the homeworks for them
+     * This Page is used to show remaining fees to student
     */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../db/db.connection.php');
@@ -26,11 +26,24 @@
         die("Can't Connect to the database");
     }
 
-    $currentMonth = (int) date('m');
-    $feeData = [];
-    var_dump(
-        getFee($PDO, $_SESSION['data']['admission_no'])
-    );
+    $maintenance = getLastMaintenance($PDO);
+    $feeData = NULL;
+    $currentMonthFeeData = NULL;
+    if (!is_null($maintenance)) {
+        if ($maintenance['offline'] === 0) {
+            $feeData = getFee($PDO, $_SESSION['data']['admission_no']);
+            // idk why just assuming that feedata will not be NULL #badProgrammer
+
+            // used to match for the current month and year
+            $regex = "/^".date('Y').'-'.date('m').'-\d\d$/';
+            for ($index = 0; $index < count($feeData); $index++) {
+                if (preg_match($regex, $feeData[$index]['month'])) {
+                    $currentMonthFeeData = $feeData[$index];
+                    array_splice($feeData, $index, 1);
+                }
+            }
+        }
+    }
 ?>
 
 <?php require_once(__DIR__.'/../header.php'); ?>
@@ -77,191 +90,238 @@
             <h1 class="text-center m-0">
                 <u>Fee Details</u>
             </h1>
-            <ul class="list-group mt-4">
-                <li class="list-group-item">
-                    Admission Number&nbsp;-&nbsp;
-                </li>
-                <li class="list-group-item">
-                    Student Name&nbsp;-&nbsp;
-                </li>
-                <li class="list-group-item">
-                    Mobile Number&nbsp;-&nbsp;
-                </li>
-            </ul>
-            <div class="row mt-4">
-                <div class="col">
-                    <table class="table table-responsive">
-                        <thead>
-                            <th class="border">April 2019</th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="border">&#8377; 2180831</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="row justify-content-center">
+            <div class="row d-flex justify-content-center">
                 <div class="col-md-6">
-                    <h3 class="text-center mb-4">July 2019</h3>
-                    <ul class="list-group">
-                        <li class="list-group-item list-group-item-primary">
-                            <div class="row">
-                                <div class="col-6">
-                                    Portal Charges&nbsp;-&nbsp;
-                                </div>
-                                <div class="col-6 d-flex justify-content-end">
-                                    &#8377;&nbsp;320
-                                </div>
-                            </div>
-                            
+                    <ul class="list-group mt-4">
+                        <li class="list-group-item">
+                            Admission Number&nbsp;-&nbsp;
+                            <?php echo $_SESSION['data']['admission_no']; ?>
                         </li>
-                        <li class="list-group-item list-group-item-primary">
-                            <div class="row">
-                                <div class="col-6">
-                                    Examination Fee&nbsp;-&nbsp;
-                                </div>
-                                <div class="col-6 justify-content-end">
-
-                                </div>
-                            </div>
-                            
+                        <li class="list-group-item">
+                            Student Name&nbsp;-&nbsp;
+                            <?php echo $_SESSION['data']['name']; ?>
                         </li>
-                        <li class="list-group-item list-group-item-primary">
-                            <div class="row">
-                                <div class="col-6">
-                                    Refreshment Account Fee&nbsp;-&nbsp;
-                                </div>
-                                <div class="col-6 justify-content-end">
-
-                                </div>
-                            </div>
-                            
-                        </li>
-                        <li class="list-group-item list-group-item-primary">
-                            <div class="row">
-                                <div class="col-6">
-                                    Lab Fee&nbsp;-&nbsp;
-                                </div>
-                                <div class="col-6 justify-content-end">
-
-                                </div>
-                            </div>
-                            
-                        </li>
-                        <li class="list-group-item list-group-item-primary">
-                            <div class="row">
-                                <div class="col-6">
-                                    Project Fee&nbsp;-&nbsp;
-                                </div>
-                                <div class="col-6 justify-content-end">
-
-                                </div>
-                            </div>
-                            
-                        </li>
-                        <li class="list-group-item list-group-item-primary">
-                            <div class="row">
-                                <div class="col-6">
-                                    Annual Charges&nbsp;-&nbsp;
-                                </div>
-                                <div class="col-6 justify-content-end">
-
-                                </div>
-                            </div>
-                            
-                        </li>
-                        <li class="list-group-item list-group-item-primary">
-                            <div class="row">
-                                <div class="col-6">
-                                    Admin Charges&nbsp;-&nbsp;
-                                </div>
-                                <div class="col-6 justify-content-end">
-
-                                </div>
-                            </div>
-                            
-                        </li>
-                        <li class="list-group-item list-group-item-primary">
-                            <div class="row">
-                                <div class="col-6">
-                                    Smart Classes Charges&nbsp;-&nbsp;
-                                </div>
-                                <div class="col-6 justify-content-end">
-
-                                </div>
-                            </div>
-                            
-                        </li>
-                        <li class="list-group-item list-group-item-primary">
-                            <div class="row">
-                                <div class="col-6">
-                                    Computer Fee Yearly&nbsp;-&nbsp;
-                                </div>
-                                <div class="col-6 justify-content-end">
-
-                                </div>
-                            </div>
-                            
-                        </li>
-                        <li class="list-group-item list-group-item-primary">
-                            <div class="row">
-                                <div class="col-6">
-                                    Computer Fee Monthly&nbsp;-&nbsp;
-                                </div>
-                                <div class="col-6 justify-content-end">
-
-                                </div>
-                            </div>
-                            
-                        </li>
-                        <li class="list-group-item list-group-item-primary">
-                            <div class="row">
-                                <div class="col-6">
-                                    Development Charges Yearly&nbsp;-&nbsp;
-                                </div>
-                                <div class="col-6 justify-content-end">
-
-                                </div>
-                            </div>
-                            
-                        </li>
-                        <li class="list-group-item list-group-item-primary">
-                            <div class="row">
-                                <div class="col-6">
-                                    Transport Fee&nbsp;-&nbsp;
-                                </div>
-                                <div class="col-6 justify-content-end">
-
-                                </div>
-                            </div>
-                            
-                        </li>
-                        <li class="list-group-item list-group-item-primary">
-                            <div class="row">
-                                <div class="col-6">
-                                    Late Fee&nbsp;-&nbsp;
-                                </div>
-                                <div class="col-6 justify-content-end">
-
-                                </div>
-                            </div>
-                            
-                        </li>
-                        <li class="list-group-item list-group-item-info mt-2">
-                            <div class="row">
-                                <div class="col-6">
-                                    Total Fee&nbsp;-&nbsp;
-                                </div>
-                                <div class="col-6 justify-content-end">
-
-                                </div>
-                            </div>
-                            
+                        <li class="list-group-item">
+                            Mobile Number&nbsp;-&nbsp;
+                            <?php echo $_SESSION['data']['mobile_number']; ?>
                         </li>
                     </ul>
                 </div>
             </div>
+
+            <?php if (!is_null($maintenance)): ?>
+                <?php switch ($maintenance['offline']): case 0: ?>
+                    <?php if (!is_null($feeData)): ?>
+                    <div class="row mt-4">
+                        <?php foreach ($feeData as $fee): ?>
+                            <div class="col">
+                                <table class="table table-responsive">
+                                    <thead>
+                                        <th class="border">
+                                            <?php echo getYearAndMonth($fee['month']) ?>
+                                        </th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="border">
+                                                &#8377;&nbsp;<?php echo $fee['total_fee'] ?>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php endforeach ?>
+                    </div>
+                    <?php if (!is_null($currentMonthFeeData)): ?>
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <h3 class="text-center mb-4">
+                                    <?php echo date('F Y'); ?>
+                                </h3>
+                                <ul class="list-group">
+                                    <li class="list-group-item list-group-item-primary">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                Portal Charges&nbsp;-&nbsp;
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end">
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['portal_charges'] ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item list-group-item-primary">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                Examination Fee&nbsp;-&nbsp;
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end">
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['examination_fee'] ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item list-group-item-primary">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                Tuition Fee&nbsp;-&nbsp;
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end">
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['tution_fee'] ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item list-group-item-primary">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                Refreshment Account Fee&nbsp;-&nbsp;
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end">
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['refreshment_acc_fee'] ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item list-group-item-primary">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                Lab Fee&nbsp;-&nbsp;
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end">
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['lab_fee'] ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item list-group-item-primary">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                Project Fee&nbsp;-&nbsp;
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end">
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['project_fee'] ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item list-group-item-primary">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                Annual Charges&nbsp;-&nbsp;
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end">
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['annual_charges'] ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item list-group-item-primary">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                Admin Charges&nbsp;-&nbsp;
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end">
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['admin_charges'] ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item list-group-item-primary">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                Smart Classes Charges&nbsp;-&nbsp;
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end">
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['smart_class_charges'] ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item list-group-item-primary">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                Computer Fee Yearly&nbsp;-&nbsp;
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end">
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['computer_fee_yearly'] ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item list-group-item-primary">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                Computer Fee Monthly&nbsp;-&nbsp;
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end">
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['computer_fee_monthly'] ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item list-group-item-primary">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                Development Charges Yearly&nbsp;-&nbsp;
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end">
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['development_charges_yearly'] ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item list-group-item-primary">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                Transport Fee&nbsp;-&nbsp;
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end">
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['transport_fee'] ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item list-group-item-primary">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                Late Fee&nbsp;-&nbsp;
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end">
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['late_fee'] ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item list-group-item-info mt-2">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                Total Fee&nbsp;-&nbsp;
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end">
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['total_fee'] ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <!-- NOTE -->
+                                <h3 class="mt-4 text-center">NOTE:- <?php echo $maintenance['bottom_message']; ?></h3>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <button class="btn btn-info btn-block">Pay Online</button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-info btn-block">Pay Through RTGS</button>
+                            </div>
+                        </div>
+                        <?php endif ?>
+                    <?php endif ?>
+                <?php break; case 1: ?>
+                <div class="row m-4 p-4">
+                    <div class="col-12">
+                        <h1 class="text-center font-weight-bold">Rainbow Online Fees Submission is down for maintenance.</h1>
+                        <br>
+                        <h2 class="text-center font-weight-bold">Please Check back again soon.</h2>
+                    </div>
+                </div>
+                <?php break; case -1: ?>
+                <div class="row m-4 p-4">
+                    <div class="col-12">
+                        <h1 class="text-center font-weight-bold">
+                            <?php echo htmlentities($maintenance['custom_message']); ?>
+                        </h1>
+                    </div>
+                </div>
+                <?php endswitch ?>
+            <?php endif ?>
         </section>
 <?php require_once(__DIR__.'/../footer.php'); ?>

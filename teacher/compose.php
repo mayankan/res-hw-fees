@@ -178,6 +178,15 @@
     // for submiting a homework to the database
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST)) {
+            if (
+                (!isset($_POST['class']))
+                ||
+                $_POST['class'] === ""
+            ) {
+                $error = 'Class is required.';
+                header('Location: compose.php');
+                exit();
+            }
             $dateSubmitted = $_POST['date_of_homework'];
             // for checking if class id is INT or not
             $classId = filter_var($_POST['class'], FILTER_SANITIZE_NUMBER_INT);
@@ -190,23 +199,30 @@
                 $date = (string) date('Y-m-d', $date);
             } catch (Exception $e) {
                 $error = "Entered Date is invalid. Please try entering again.";
-                return;
+                header('Location: compose.php');
+                exit();
             }
             if (empty($studentId)) {
                 $data = ['message' => $homework, 'date_of_message' => $date, 'class_id' => $classId];
                 if (!is_null(submitHomework($PDO, $data))) {
                     $success = 'Homework Sent successfully. The page will refresh in 5 seconds.';
                     header("refresh:5;url=compose.php");
+                    exit();
                 } else {
                     $error = 'Something Sent wrong.. Try again';
+                    header('Location: compose.php');
+                    exit();
                 }
             } else {
                 $data = ['message' => $homework, 'date_of_message' => $date, 'class_id' => $classId];
                 if (!is_null(submitHomework($PDO, $data, $studentId=$studentId))) {
                     $success = 'Homework sent successfully. The page will refresh in 5 seconds.';
                     header("refresh:5;url=compose.php");
+                    exit();
                 } else {
                     $error = 'Something went wrong. Try again';
+                    header('Location: compose.php');
+                    exit();
                 }
             }
         }
@@ -295,7 +311,7 @@
                                 Class<span class="text-danger">*</span>
                             </label>
                             <select name="class" id="class" class="form-control" required>
-                                <option value="" selected>--</option>
+                                <option value="" selected disabled>--</option>
                                 <?php while ($class = array_shift($classes)): ?>
                                     <option value="<?php echo $class['id'] ?>"><?php echo $class['class_name'] ?> - <?php echo $class['section'] ?></option>
                                 <?php endwhile ?>

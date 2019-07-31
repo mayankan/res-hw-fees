@@ -1,6 +1,6 @@
 <?php
     /**
-     * This is page is used to 
+     * This is page is used to view fees
     */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../db/db.connection.php');
@@ -22,16 +22,35 @@
         }
     }
 
-    function getFees($PDO, $startLimit=0) {
-        $data = [
-            ':start_limit' => $startLimit
-        ];
+    function getFees($PDO, $startLimit=0, $admissionNumber="", $isPaid="", $monthAndYear="") {
+        $sql = "SELECT * FROM `fee` WHERE `deleted_at` IS NULL AND";
+        if ($admissionNumber !== "") {
+            $sql .= " `admission_no` LIKE :adm_no AND";
+            $data[':adm_no'] = '%' . $admissionNumber . '%';
+        }
+        if ($isPaid !== "") {
+            if ($isPaid === "0") {
+                $sql .= " `paid_at` IS NULL AND";
+            } else if ($isPaid === "1") {
+                $sql .= " `paid_at` IS NOT NULL AND";
+            }
+        }
+        if ($monthAndYear !== "") {
+            $monthAndYear = explode(' ', $monthAndYear);
+            $month = (string) date_parse($monthAndYear[0])['month'];
+            if ($month <= 10) {
+                $month = '0' . $month;
+            }
+            $sql .= " `month` LIKE :month AND";
+            $data[':month'] = $monthAndYear[1] . '-' . $month . '-__';
+        }
+        $sql = substr($sql, 0, strlen($sql) - 4);
+        if ($startLimit !== NULL) {
+            $sql .= " LIMIT :start_limit, 10";
+            $data[':start_limit'] = $startLimit;
+        }
         try {
-            $stmt = $PDO->prepare("SELECT 
-                                    `admission_no`,
-                                     `total_fee`,
-                                     `date_created`,
-                                     `paid_at` FROM `fee` WHERE `deleted_at` IS NULL LIMIT :start_limit, 10");
+            $stmt = $PDO->prepare($sql);
             $stmt->execute($data);
             if ($stmt->rowCount() == 0) {
                 return NULL;
@@ -43,31 +62,67 @@
         }
     }
 
+    function addClassAndName($PDO, &$feeData) {
+        if (!is_null($feeData)) {
+            for ($index = 0; $index < count($feeData); $index++) {
+                $studentData = getStudent($PDO, NULL, $feeData[$index]['admission_no']);
+                $classData = getClass($PDO, $studentData['class_id']);
+                $feeData[$index]['name'] = $studentData['name'];
+                $feeData[$index]['class'] = $classData['class_name'] . ' - ' . $classData['section'];
+            }
+        }
+    }
+
     $PDO = getConnection();
     if (is_null($PDO)) {
         die("Can't connect to the database");
     }
 
     $feedata = NULL;
+    $monthAndYear = isset($_GET['month_of_fee']) ? $_GET['month_of_fee'] : "";
+    $admissionNumber = isset($_GET['admission_no']) ? $_GET['admission_no'] : "";
+    $isPaid = isset($_GET['paid']) ? $_GET['paid'] : "";
+
+    if (isset($_GET['export'])) {
+        $feeDataForExport = getFees($PDO, 
+                                        $startLimit=NULL, 
+                                        $admissionNumber=$admissionNumber, 
+                                        $isPaid=$isPaid, 
+                                        $monthAndYear=$monthAndYear
+                                    );
+        addClassAndName($PDO, $feeDataForExport);
+        $_SESSION['feeData'] = $feeDataForExport;
+        header('Location: export_fee.php');
+        exit();
+    }
+
     if (!isset($_GET['page_no'])) {
-        $feeData = getFees($PDO, $startLimit=0);
+        $feeData = getFees($PDO, $startLimit=0, $admissionNumber=$admissionNumber, $isPaid=$isPaid, $monthAndYear=$monthAndYear);
+        $_SESSION['page_no'] = 1;
     } else {
         $page_no = (int)$_GET['page_no'];
         if ($page_no <= 0) {
             $page_no = 1;
         }
         $startLimit = ($page_no * 10) - 10;
-        $feeData = getFees($PDO, $startLimit=$startLimit);
+        $feeData = getFees($PDO, $startLimit=$startLimit, $admissionNumber=$admissionNumber, $isPaid=$isPaid, $monthAndYear=$monthAndYear);
         if ($feeData === NULL && $page_no !== 1) {
             header('Location: index.php?page_no=' . (((int)$_GET['page_no']) - 1));
             return;
         }
         $_SESSION['page_no'] = $page_no;
     }
+
+    addClassAndName($PDO, $feeData);
     
 ?>
 
 <?php require_once(__DIR__.'/../header.php'); ?>
+        <style>
+        .ui-datepicker-calendar {
+            display: none;
+        }
+        </style>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark">
             <div class="container">
                 <a href="#" class="navbar-brand">Fee Admin Panel</a>
@@ -87,7 +142,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo $base_url ?>fee_clerk/index.php" class="nav-link">
+                            <a href="<?php echo $base_url ?>fee_clerk/maintenance.php" class="nav-link">
+                                Maintenance
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo $base_url ?>fee_clerk/students.php" class="nav-link">
                                 View Students
                             </a>
                         </li>
@@ -114,11 +174,80 @@
 
         <section id="filters" class="mt-2">
             <div class="container">
+                <div class="row d-flex justify-content-center my-2">
+                    <div class="col-4">
+                        <?php $exportUrl = $base_url . "fee_clerk/index.php?export=1"; ?>
+                            <?php if (isset($_GET['admission_no'])): ?>
+                                <?php $exportUrl .= "&admission_no=" . $_GET['admission_no']; ?>
+                            <?php endif ?>
+                            <?php if (isset($_GET['month_of_fee'])): ?>
+                                <?php $exportUrl .= "&month_of_fee=" . $_GET['month_of_fee']; ?>
+                            <?php endif ?>
+                            <?php if (isset($_GET['paid'])): ?>
+                                <?php $exportUrl .= "&paid=" . $_GET['paid']; ?>
+                            <?php endif ?>
+                            <a href="<?php echo $exportUrl ?>" class="btn btn-info btn-block">
+                                Export Fee Data
+                            </a>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-12">
-                        <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="get">
-                            <div class="form-group row d-flex justify-content-center">
-                                
+                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="GET">
+                            <div class="form-group row d-flex align-items-center justify-content-center">
+                                <!-- Filter For Month of Fee -->
+                                <?php if (isset($_GET['month_of_fee'])): ?>
+                                <input type="text" name="month_of_fee" 
+                                        class="form-control col-3 m-2" id="datetime" 
+                                        autocomplete="off"
+                                        value="<?php echo $_GET['month_of_fee'] ?>"
+                                        placeholder="Month of Fee"
+                                >
+                                <?php else: ?>
+                                <input type="text" name="month_of_fee" 
+                                        class="form-control col-3 m-2" id="datetime" 
+                                        autocomplete="off"
+                                        placeholder="Month of Fee"
+                                >
+                                <?php endif ?>
+
+                                <!-- Filter for Admission Number -->
+                                <?php if (isset($_GET['admission_no'])): ?>
+                                <input type="text" name="admission_no" 
+                                        class="form-control col-3 m-2" 
+                                        value="<?php echo $_GET['admission_no'] ?>" 
+                                        placeholder="Admission Number"
+                                >
+                                <?php else: ?>
+                                <input type="text" name="admission_no" 
+                                        class="form-control col-3 m-2" 
+                                        placeholder="Admission Number"
+                                >
+                                <?php endif ?>
+
+                                <!-- Filter for if paid or not? -->
+                                <?php if (isset($_GET['paid'])): ?>
+                                    <?php if ($_GET['paid'] === "0"): ?>
+                                    <select name="paid" class="form-control col-3 m-2">
+                                        <option value="" disabled>Paid?</option>
+                                        <option value="1">Yes</option>
+                                        <option value="0" selected>No</option>
+                                    </select>
+                                    <?php elseif ($_GET['paid'] === "1"): ?>
+                                    <select name="paid" class="form-control col-3 m-2">
+                                        <option value="" disabled>Paid?</option>
+                                        <option value="1" selected>Yes</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                    <?php endif ?>
+                                <?php else: ?>
+                                <select name="paid" class="form-control col-3 m-2">
+                                    <option value="" selected disabled>Paid?</option>
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                                <?php endif ?>
+                                <button class="btn btn-success col-3 m-2">Filter</button>
                             </div>
                         </form>
                     </div>
@@ -136,6 +265,15 @@
                         </a>
                         <?php else: ?>
                             <?php $backUrl = $base_url . "fee_clerk/index.php?page_no=" . ((int)$_SESSION['page_no'] - 1); ?>
+                            <?php if (isset($_GET['admission_no'])): ?>
+                                <?php $backUrl .= "&admission_no=" . $_GET['admission_no']; ?>
+                            <?php endif ?>
+                            <?php if (isset($_GET['month_of_fee'])): ?>
+                                <?php $backUrl .= "&month_of_fee=" . $_GET['month_of_fee']; ?>
+                            <?php endif ?>
+                            <?php if (isset($_GET['paid'])): ?>
+                                <?php $backUrl .= "&paid=" . $_GET['paid']; ?>
+                            <?php endif ?>
                             <a href="<?php echo $backUrl ?>" class="btn btn-outline-dark">
                                 <i class="fa fa-arrow-left fa-1 mt-1" aria-hidden="true"></i> Prev
                             </a>
@@ -143,6 +281,15 @@
                     </div>
                     <div class="col-6 d-flex justify-content-end">
                         <?php $nextUrl = $base_url . "fee_clerk/index.php?page_no=" . ((int)$_SESSION['page_no'] + 1); ?>
+                        <?php if (isset($_GET['admission_no'])): ?>
+                            <?php $nextUrl .= "&admission_no=" . $_GET['admission_no']; ?>
+                        <?php endif ?>
+                        <?php if (isset($_GET['month_of_fee'])): ?>
+                            <?php $nextUrl .= "&month_of_fee=" . $_GET['month_of_fee']; ?>
+                        <?php endif ?>
+                        <?php if (isset($_GET['paid'])): ?>
+                            <?php $nextUrl .= "&paid=" . $_GET['paid']; ?>
+                        <?php endif ?>
                         <a href="<?php echo $nextUrl ?>" class="btn btn-outline-dark">
                             Next <i class="fa fa-arrow-right fa-1 mt-1" aria-hidden="true"></i>
                         </a>
@@ -157,6 +304,7 @@
                                     <th>Date</th>
                                     <th>Admission Number</th>
                                     <th>Name</th>
+                                    <th>Class & Section</th>
                                     <th>Total Fees</th>
                                     <th>Paid</th>
                                 </tr>
@@ -165,14 +313,16 @@
                                 <?php foreach ($feeData as $fee): ?>
                                 <tr>
                                     <td>
-                                        <?php echo date_format(date_create($fee['date_created']), 'd F y'); ?>
+                                        <?php echo date_format(date_create($fee['month']), 'd F y'); ?>
                                     </td>
                                     <td>
                                         <?php echo $fee['admission_no']; ?>
                                     </td>
                                     <td>
-                                        <?php $studentData = getStudent($PDO, $studentId=NULL, $admissionNumber=$fee['admission_no']); ?>
-                                        <?php echo $studentData['name']; ?>
+                                        <?php echo $fee['name']; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $fee['class']; ?>
                                     </td>
                                     <td>
                                         <?php echo $fee['total_fee']; ?>
@@ -190,8 +340,23 @@
                         </table>
                     </div>
                 </div>
+                <?php else: ?>
+                    <h2 class="text-center">No Data Available</h2>
                 <?php endif ?>
             </div>
         </div>
+        <script>
+            $(document).ready(function() {
+                $('#datetime').datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    showButtonPanel: true,
+                    dateFormat: 'MM yy',
+                    onClose: function(dateText, inst) { 
+                        $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+                    }
+                });
+            });
+        </script>
 <?php require_once(__DIR__.'/../footer.php'); ?>
 <?php unset($POD); ?>

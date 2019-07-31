@@ -142,6 +142,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="<?php echo $base_url ?>fee_clerk/maintenance.php" class="nav-link">
+                                Maintenance
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="<?php echo $base_url ?>fee_clerk/students.php" class="nav-link">
                                 View Students
                             </a>

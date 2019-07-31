@@ -290,7 +290,26 @@
             if ($stmt->rowCount() == 0) {
                 return NULL;
             }
-            return $stmt->fetch();
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
+
+    function deleteFee($PDO, $month, $year) {
+        try {
+            $stmt = $PDO->prepare(
+                "UPDATE `fee` SET `deleted_at` = :current_date WHERE `month` LIKE :month_and_year"
+            );
+            $stmt->execute([
+                ':current_date' => (string) date('Y-m-d h:i:s'),
+                ':month_and_year' => $year . '-' . $month . '-__'
+            ]);
+            if ($stmt->rowCount() == 0) {
+                return NULL;
+            }
+            return $stmt->fetchAll();
         } catch (Exception $e) {
             print($e);
             return NULL;
@@ -305,7 +324,7 @@
      * @param Number $month
      * @param Number $year
      *
-     * @return Fee $data
+     * @return Boolean
      *
      * @throws Exception //No Specefic Exception Defined
     */
@@ -372,7 +391,7 @@
      * @param Number $month
      * @param Number $year
      *
-     * @return Fee $data
+     * @return Boolean
      *
      * @throws Exception //No Specefic Exception Defined
     */
@@ -440,4 +459,66 @@
         }
     }
 
+    /**
+     * Get last updated maintenance row
+     *
+     * @param PDOObject $PDO
+     *
+     * @return Maintenance $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+    */
+    function getLastMaintenance($PDO) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `maintenance_fee` ORDER BY `id` DESC LIMIT 1");
+            $stmt->execute();
+            if ($stmt->rowCount() === 0) {
+                return NULL;
+            }
+            return $stmt->fetch();
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
+
+    /**
+     * insert to update maintenance mode
+     *
+     * @param PDOObject $PDO
+     * @param String maintenaceMode
+     * @param String customMessage
+     * @param String bottomMessage
+     *
+     * @return Boolean
+     *
+     * @throws Exception //No Specefic Exception Defined
+    */
+    function updateMaintenance($PDO, $maintenanceMode, $customMessage, $bottomMessage) {
+        try {
+            $stmt = $PDO->prepare(
+                "INSERT INTO `maintenance_fee` (`bottom_message`, `offline`, `custom_message`, `date_created`, `date_updated`) VALUES (:bottom_message, :mode, :custom_message, :date_created, :date_updated)"
+            );
+            $stmt->execute([
+                ':bottom_message' => $bottomMessage,
+                ':mode' => $maintenanceMode,
+                ':custom_message' => $customMessage,
+                ':date_created' => date('Y-m-d h:i:s'),
+                ':date_updated' => date('Y-m-d h:i:s'),
+            ]);
+            if ($stmt->rowCount() === 0) {
+                return false;
+            }
+            return true;
+        } catch (Exception $e) {
+            print($e);
+            return false;
+        }
+    }
+
+
+    function getYearAndMonth($date) {
+        $dateArray = explode('-', $date);
+        return date('F', mktime(0, 0, 0, $dateArray[1], 0, 0)) . ' ' . $dateArray[0];
+    }
 ?>

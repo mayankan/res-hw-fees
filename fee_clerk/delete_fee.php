@@ -21,6 +21,40 @@
             return;
         }
     }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST)) {
+            // checking for the required fields
+            if (empty($_POST['month_of_fee'])) {
+                $_SESSION['error'] = 'Month and Year of fee is Required.';
+                header("Location: " . $_SERVER['PHP_SELF']);
+                exit();
+            }
+
+            $PDO = getConnection();
+            if (is_null($PDO)) {
+                die("Can't connect to the database");
+            }
+            $_POST['month_of_fee'] = explode(' ', $_POST['month_of_fee']);
+            $month = (string) date_parse($_POST['month_of_fee'][0])['month'];
+            if ($month <= 10) {
+                $month = '0' . $month;
+            }
+            if (
+                !is_null(
+                    deleteFee($PDO, $month, $_POST['month_of_fee'][1])
+                )
+            ) {
+                $_SESSION['success'] = 'Successfully deleted Fee for ' . $_POST['month_of_fee'][0] . ' ' . $_POST['month_of_fee'][1];
+                header('Location: delete_fee.php');
+                exit();
+            } else {
+                $_SESSION['error'] = 'Something went wrong';
+                header('Location: delete_fee.php');
+                exit();
+            }
+        }
+    }
     
 ?>
 
@@ -46,6 +80,11 @@
                         <li class="nav-item">
                             <a href="<?php echo $base_url ?>fee_clerk/upload_fee.php" class="nav-link">
                                 Upload Fee
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo $base_url ?>fee_clerk/maintenance.php" class="nav-link">
+                                Maintenance
                             </a>
                         </li>
                         <li class="nav-item">
@@ -112,7 +151,7 @@
                     >
                         <div class="form-group">
                             <label for="month and year" class="col-form-label">
-                                Month and Year<span class="text-danger">*</span>
+                                Month and Year&nbsp;<span class="text-danger">*</span>
                             </label>
                             <input type="text" name="month_of_fee" class="form-control" id="datetime" required autocomplete="off">
                         </div>

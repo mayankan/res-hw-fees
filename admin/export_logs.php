@@ -33,7 +33,7 @@
         header('Content-Type: application/csv');
         header('Content-Disposition: attachment; filename="'.$filename.'";');
 
-        $f = fopen('php://memory', 'w');
+        $f = fopen('php://output', 'w');
         fputcsv($f, array(
             "Date of Log",
             "Action",
@@ -76,6 +76,7 @@
             }
             fputcsv($f, $string);
         }
+        fclose($f);
     }   
 
     array_to_csv_download($PDO, getAllLogs($PDO), 'logs.csv');
