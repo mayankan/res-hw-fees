@@ -34,7 +34,7 @@
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $maintenanceMode = isset($_POST['mode']) ? $_POST['mode'] : "";
-        $customMessage = isset($_POST['custom_message']) ? convertString($_POST['custom_message']) : "";
+        $customMessage = isset($_POST['custom_message']) ? $_POST['custom_message'] : "";
         $bottomMessage = isset($_POST['bottom_message']) ? $_POST['bottom_message'] : "";
 
         if (
