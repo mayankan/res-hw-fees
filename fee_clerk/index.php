@@ -313,7 +313,7 @@
                                 <?php foreach ($feeData as $fee): ?>
                                 <tr>
                                     <td>
-                                        <?php echo date_format(date_create($fee['month']), 'd F y'); ?>
+                                        <?php echo date_format(date_create($fee['month']), 'F Y'); ?>
                                     </td>
                                     <td>
                                         <?php echo $fee['admission_no']; ?>
@@ -331,7 +331,7 @@
                                         <?php if (is_null($fee['paid_at'])): ?>
                                             Not paid
                                         <?php else: ?>
-                                            <?php echo date_format(date_create($fee['paid_at']), 'd F y'); ?>
+                                            <?php echo date_format(date_create($fee['paid_at']), 'd F y H:i:s'); ?>
                                         <?php endif ?>
                                     </td>
                                 </tr>

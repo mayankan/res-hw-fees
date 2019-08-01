@@ -1,11 +1,11 @@
-  <?php
+<?php
     /**
-     * This is page is used to 
+     * This is page is used to delete fees
     */
-    session_start();
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../db/db.connection.php');
     require(__DIR__.'/../helpers.php');
+    session_start();
 
     // logs out user if it's not a fee clerk
     if ($_SESSION['role'] !== 'fee_clerk') {
