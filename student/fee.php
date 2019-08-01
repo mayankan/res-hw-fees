@@ -90,31 +90,13 @@
             <h1 class="text-center m-0">
                 <u>Fee Details</u>
             </h1>
-            <div class="row d-flex justify-content-center">
-                <div class="col-md-6">
-                    <ul class="list-group mt-4">
-                        <li class="list-group-item">
-                            Admission Number&nbsp;-&nbsp;
-                            <?php echo $_SESSION['data']['admission_no']; ?>
-                        </li>
-                        <li class="list-group-item">
-                            Student Name&nbsp;-&nbsp;
-                            <?php echo $_SESSION['data']['name']; ?>
-                        </li>
-                        <li class="list-group-item">
-                            Mobile Number&nbsp;-&nbsp;
-                            <?php echo $_SESSION['data']['mobile_number']; ?>
-                        </li>
-                    </ul>
-                </div>
-            </div>
 
             <?php if (!is_null($maintenance)): ?>
                 <?php switch ($maintenance['offline']): case 0: ?>
                     <?php if (!is_null($feeData)): ?>
-                    <div class="row mt-4">
+                    <div class="row mt-4 justify-content-center">
                         <?php foreach ($feeData as $fee): ?>
-                            <div class="col">
+                            <div class="col-md-6 ">
                                 <table class="table table-responsive">
                                     <thead>
                                         <th class="border">
@@ -142,10 +124,10 @@
                                     <li class="list-group-item list-group-item-primary">
                                         <div class="row">
                                             <div class="col-6">
-                                                Portal Charges&nbsp;-&nbsp;
+                                                Tuition Fee&nbsp;-&nbsp;
                                             </div>
                                             <div class="col-6 d-flex justify-content-end">
-                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['portal_charges'] ?>
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['tution_fee'] ?>
                                             </div>
                                         </div>
                                     </li>
@@ -156,16 +138,6 @@
                                             </div>
                                             <div class="col-6 d-flex justify-content-end">
                                                 &#8377;&nbsp;<?php echo $currentMonthFeeData['examination_fee'] ?>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item list-group-item-primary">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                Tuition Fee&nbsp;-&nbsp;
-                                            </div>
-                                            <div class="col-6 d-flex justify-content-end">
-                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['tution_fee'] ?>
                                             </div>
                                         </div>
                                     </li>
@@ -272,6 +244,16 @@
                                     <li class="list-group-item list-group-item-primary">
                                         <div class="row">
                                             <div class="col-6">
+                                                Portal Charges&nbsp;-&nbsp;
+                                            </div>
+                                            <div class="col-6 d-flex justify-content-end">
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['portal_charges'] ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item list-group-item-primary">
+                                        <div class="row">
+                                            <div class="col-6">
                                                 Late Fee&nbsp;-&nbsp;
                                             </div>
                                             <div class="col-6 d-flex justify-content-end">
@@ -290,6 +272,8 @@
                                         </div>
                                     </li>
                                 </ul>
+                            </div>
+                            <div class="col-md-12">
                                 <!-- NOTE -->
                                 <h3 class="mt-4 text-center">NOTE:- <?php echo $maintenance['bottom_message']; ?></h3>
                             </div>
