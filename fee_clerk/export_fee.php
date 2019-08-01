@@ -46,7 +46,7 @@
         foreach ($array as $fee) {
             if (is_null($fee['paid_at'])) {
                 fputcsv($f, array(
-                    date_format(date_create($fee['month']), 'd F y'),
+                    date_format(date_create($fee['month']), 'F y'),
                     $fee['admission_no'],
                     $fee['name'],
                     $fee['class'],
@@ -55,12 +55,12 @@
                 ));
             } else {
                 fputcsv($f, array(
-                    date_format(date_create($fee['month']), 'd F y'),
+                    date_format(date_create($fee['month']), 'F y'),
                     $fee['admission_no'],
                     $fee['name'],
                     $fee['class'],
                     $fee['total_fee'],
-                    date_format(date_create($fee['paid_at']), 'd F y')
+                    date_format(date_create($fee['paid_at']), 'd F y H:i:s')
                 ));
             }
         }
