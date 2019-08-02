@@ -62,8 +62,8 @@
         //     Total Fees - $totalFees\n
         // ";
 
-        $headers = "From: Payment Admin <payment-no-reply@rainbowschooljp.com>\r\n";
-        if (mail('feepayment@rainbowschooljp.com', $subject, $body, implode("\r\n", $headers))) {
+        $headers = "From: Payment Admin <payment-no-reply@rainbowschooljp.com>";
+        if (mail('feepayment@rainbowschooljp.com', $subject, $body, $headers)) {
             $_SESSION['success'] = "Your Response has been sent and recorded";
             header('Location: rtgs.php');
             exit();
