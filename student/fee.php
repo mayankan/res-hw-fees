@@ -49,7 +49,7 @@
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://www.instamojo.com/api/1.1/payment-requests/');
-        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+        curl_setopt($ch, CURLOPT_HEADER, TRUE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
         curl_setopt($ch, CURLOPT_HTTPHEADER,
@@ -62,6 +62,7 @@
             'buyer_name' => $_SESSION['data']['name'],
             'redirect_url' => 'http://www.example.com/redirect/',
             'webhook' => 'http://www.example.com/webhook/',
+            'send_sms' => false,
             'allow_repeated_payments' => false
         );
         curl_setopt($ch, CURLOPT_POST, true);

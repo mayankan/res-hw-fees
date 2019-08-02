@@ -54,20 +54,21 @@
 
         $to = 'shreyansjain68@gmail.com'; // Real email - feepayment@rainbowschooljp.com
         $subject = 'Mail Regarding Fee Payment';
-        $body = "
-            UTR Number - $utrNumber\n
-            Student Admission Number - $admissionNumber\n
-            Student Name - $name\n
-            Total Fees - $totalFees\n
-        ";
+        $body = "$admissionNumber";
+        // $body = "
+        //     UTR Number - $utrNumber\n
+        //     Student Admission Number - $admissionNumber\n
+        //     Student Name - $name\n
+        //     Total Fees - $totalFees\n
+        // ";
 
-        $headers = "From: Payment Rainbow English School <payment-no-reply@rainbowschooljp.com>\r\n";
+        $headers = "From: Payment Admin <payment-no-reply@rainbowschooljp.com>\r\n";
         if (mail('feepayment@rainbowschooljp.com', $subject, $body, implode("\r\n", $headers))) {
             $_SESSION['success'] = "Your Response has been sent and recorded";
             header('Location: rtgs.php');
             exit();
         } else {
-            $errorMessage = error_get_last()['message'];
+            $errorMessage = 'Something went wrong....try again';
             $_SESSION['error'] = $errorMessage;
             header("Location: rtgs.php");
             exit();
