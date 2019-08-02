@@ -48,11 +48,8 @@
             exit();
         }
 
-        $headers = array(
-            'From' => 'feepayment@rainbowschooljp.com',
-        );
-
-        if (mail('shreyansjain68@gmail.com', 'Test Mail', 'Test message', $headers)) {
+        $headers = "From: Shreyans <shreyansjain68@gmail.com>\r\n";
+        if (mail('shreyansjain68@gmail.com', 'Test Mail', 'Test message', implode("\r\n", $headers))) {
             $_SESSION['success'] = "Your Response has been sent and recorded";
             header('Location: rtgs.php');
             exit();
