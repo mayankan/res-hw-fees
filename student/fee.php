@@ -29,14 +29,21 @@
     $maintenance = getLastMaintenance($PDO);
     $feeData = NULL;
     $currentMonthFeeData = NULL;
+    $ifAllPaid = 0;
+    $totalFeeData = 0;
     if (!is_null($maintenance)) {
         if ($maintenance['offline'] === 0) {
             $feeData = getFee($PDO, $_SESSION['data']['admission_no']);
             // idk why just assuming that feedata will not be NULL #badProgrammer
 
+            $totalFeeData = count($feeData);
             // used to match for the current month and year
             $regex = "/^".date('Y').'-'.date('m').'-\d\d$/';
             for ($index = 0; $index < count($feeData); $index++) {
+                if (!is_null($feeData[$index]['paid_at'])) {
+                    $ifAllPaid += 1;
+                    continue;
+                }
                 if (preg_match($regex, $feeData[$index]['month'])) {
                     $currentMonthFeeData = $feeData[$index];
                     array_splice($feeData, $index, 1);
@@ -123,6 +130,7 @@
             </div>
         </nav>
 
+        <?php if ($totalFeeData !== $ifAllPaid): ?>
         <section id="details" class="container mt-4">
             <h1 class="text-center m-0">
                 <u>Fee Details</u>
@@ -351,4 +359,9 @@
                 <?php endswitch ?>
             <?php endif ?>
         </section>
+        <?php else: ?>
+            <div class="m-4">
+                <h1 class="text-center">Your Fees is all paid.</h1>
+            </div>
+        <?php endif ?>
 <?php require_once(__DIR__.'/../footer.php'); ?>

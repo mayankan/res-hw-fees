@@ -501,14 +501,12 @@
     */
     function markPaidFee($PDO, $admissionNumber) {
         try {
-            $stmt = $PDO->prepare("
-                UPDATE `fee` SET `paid_at` = :current_date WHERE `admission_no` = :adm_no
-            ");
+            $stmt = $PDO->prepare("UPDATE `fee` SET `paid_at` = :current_date WHERE `admission_no` = :adm_no");
             $stmt->execute([
                 ':current_date' => (string) date('Y-m-d h:i:s'),
                 ':adm_no' => $admissionNumber
             ]);
-            if ($stmt->rowCount() === 0) {
+            if ($stmt->rowCount() == 0) {
                 return false;
             }
             return true;

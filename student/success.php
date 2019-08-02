@@ -26,9 +26,24 @@
         die("Can't Connect to the database");
     }
 
-    var_dump($_GET['payment_id']);
-    var_dump($_GET['payment_request_id']);
-    var_dump($_GET['payment_status']);
+    $paymentId = isset($_GET['payment_id']) ? $_GET['payment_id'] : "";
+    $paymentRequestId = isset($_GET['payment_request_id']) ? $_GET['payment_request_id'] : "";
+    $status = isset($_GET['payment_status']) ? $_GET['payment_status'] : "";
+    $totalAmount = 0;
+
+    if ($paymentId === "" || $paymentRequestId === "" || $status === "") {
+        header('Location: index.php');
+        exit();
+    }
+
+    if ($status === 'Credit') {
+        $feeData = getFee($PDO, $_SESSION['data']['admission_no']);
+        foreach ($feeData as $fee) {
+            if (!is_null($fee['paid_at'])) {
+                $totalAmount += $fee['total_fee'];
+            }
+        }
+    }
 ?>
 
 <?php require_once(__DIR__.'/../header.php'); ?>
@@ -71,5 +86,11 @@
             </div>
         </nav>
 
-        <section id="payment-message" class="container mt-4"></section>
+        <section id="payment-message" class="container-fluid mt-4">
+            <?php if ($_GET['payment_status'] === 'Credit'): ?>
+                <h1 class="text-center">Your fee amounting to ₹ <?php echo $totalAmount ?> has been successfully deposited with Payment ID - <?php echo $paymentId ?>.</h1>
+            <?php else: ?>
+                <h1 class="text-center">Your fee payment has failed. <br>Kindly notedown the following Payment ID for reference - <?php echo $paymentId ?>.</h1>
+            <?php endif ?>
+        </section>
 <?php require_once(__DIR__.'/../footer.php'); ?>

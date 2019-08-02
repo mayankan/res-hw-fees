@@ -28,23 +28,23 @@
                 $studentData = getAdmissionNumber($PDO, substr($data['buyer_phone'], -10), $data['buyer_name']);
                 if (is_null($studentData)) {
                     http_response_code(400);
-		    exit();
+		            exit();
                 }
                 if (!markPaidFee($PDO, $studentData['admission_no'])) {
                     http_response_code(400);
-		    exit();
+		            exit();
                 }
                 http_response_code(200);
             } else {
                 // Payment was unsuccessful, mark it as failed in your database.
                 // You can acess payment_request_id, purpose etc here.
                 http_response_code(200);
-		exit();
+		        exit();
             }
         } else {
             echo "MAC mismatch";
             http_response_code(200);
-	    exit();
+	        exit();
         }
     } else {
 	    http_response_code(404);
