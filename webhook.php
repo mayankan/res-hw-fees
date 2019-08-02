@@ -20,6 +20,7 @@
         // Pass the 'salt' without <>
         $mac_calculated = hash_hmac("sha1", implode("|", $data), "846ae3004a174e1894893a19e6dd304a");
         if ($mac_provided == $mac_calculated) {
+            http_response_code(300);
             if ($data['status'] == "Credit") {
                 // Payment was successful, mark it as successful in your database.
                 // You can acess payment_request_id, purpose etc here.
