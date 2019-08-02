@@ -18,7 +18,7 @@
         }
         // You can get the 'salt' from Instamojo's developers page(make sure to log in first): https://www.instamojo.com/developers
         // Pass the 'salt' without <>
-        $mac_calculated = hash_hmac("sha1", implode("|", $data), "b79b7a36cf424ad2ad6996747df4b63e");
+        $mac_calculated = hash_hmac("sha1", implode("|", $data), "846ae3004a174e1894893a19e6dd304a");
         if ($mac_provided == $mac_calculated) {
             if ($data['status'] == "Credit") {
                 // Payment was successful, mark it as successful in your database.

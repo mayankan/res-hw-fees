@@ -30,12 +30,6 @@
         $email = isset($_POST['email']) ? $_POST['email'] : "";
         $utrNumber = isset($_POST['utr_number']) ? $_POST['utr_number'] : "";
 
-        if ($email === "") {
-            $_SESSION['error'] = "Email address is required.";
-            header("Location: rtgs.php");
-            exit();
-        }
-
         if ($utrNumber === "") {
             $_SESSION['error'] = "UTR Number is required.";
             header("Location: rtgs.php");
@@ -55,6 +49,10 @@
         $to = 'feepayment@rainbowschooljp.com'; // Real email - feepayment@rainbowschooljp.com
         $subject = 'Mail Regarding Fee Payment';
         $body = " UTR Number - $utrNumber\n Student Admission Number - $admissionNumber\n Student Name - $name\n Total Fees - $totalFees\n";
+
+        if ($email !== "") {
+            $body = " UTR Number - $utrNumber\n Student Admission Number - $admissionNumber\n Student Name - $name\n Total Fees - $totalFees\n Email - $email\n";
+        }
 
         $headers = "From: Payment Admin <payment-no-reply@rainbowschooljp.com>";
         if (mail($to, $subject, $body, $headers)) {
@@ -149,9 +147,9 @@
                     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
                         <div class="form-group">
                             <label for="email" class="col-form-label">
-                                Email Address&nbsp;<span class="text-danger">*</span>
+                                Email Address
                             </label>
-                            <input type="email" name="email" id="email" class="form-control" required>
+                            <input type="email" name="email" id="email" class="form-control">
                         </div>
                         <div class="form-group">
                             <label for="utr_number" class="col-form-label">

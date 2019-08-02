@@ -48,20 +48,20 @@
 
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://www.instamojo.com/api/1.1/payment-requests/');
+        curl_setopt($ch, CURLOPT_URL, 'https://www.test.instamojo.com/api/1.1/payment-requests/');
         curl_setopt($ch, CURLOPT_HEADER, TRUE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
         curl_setopt($ch, CURLOPT_HTTPHEADER,
-                    array("X-Api-Key:74daa5061b049d6cdc8540a79cfd7a1a",
-                        "X-Auth-Token:a1ff98eeb01b5358e479494464b62849"));
+                    array("X-Api-Key:test_7afc61bfde0049035de34445ae9",
+                        "X-Auth-Token:test_f5bbfe4df819f8b14418d08496f"));
         $payload = Array(
             'purpose' => 'Fee Payment',
             'amount' => round($currentMonthFeeData['total_fee']/ (1 - 1.18 * 1.9 / 100), 2),
             'phone' => $_SESSION['data']['mobile_number'],
             'buyer_name' => $_SESSION['data']['name'],
-            'redirect_url' => 'http://www.example.com/redirect/',
-            'webhook' => 'http://www.example.com/webhook/',
+            'redirect_url' => 'http://test.rainbowhomework.com/student/success.php',
+            'webhook' => 'http://test.rainbowhomework.com/webhook.php',
             'send_sms' => false,
             'allow_repeated_payments' => false
         );
