@@ -1,4 +1,5 @@
 <?php
+    require(__DIR__.'/../db/db.connection.php');
     require(__DIR__.'/helpers.php');
 
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
@@ -43,7 +44,7 @@
             http_response_code(200);
         }
     } else {
-	http_response_code(404);
+	    http_response_code(404);
         header("Location: 404.html");
         exit();
     }
