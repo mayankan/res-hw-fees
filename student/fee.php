@@ -53,18 +53,15 @@
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
         curl_setopt($ch, CURLOPT_HTTPHEADER,
-                    array("X-Api-Key:d82016f839e13cd0a79afc0ef5b288b3",
-                        "X-Auth-Token:3827881f669c11e8dad8a023fd1108c2"));
+                    array("X-Api-Key:74daa5061b049d6cdc8540a79cfd7a1a",
+                        "X-Auth-Token:a1ff98eeb01b5358e479494464b62849"));
         $payload = Array(
             'purpose' => 'Fee Payment',
             'amount' => $currentMonthFeeData['total_fee'],
-            'phone' => $_SESSION['data']['mobile_no'],
-            'buyer_name' => 'John Doe',
+            'phone' => $_SESSION['data']['mobile_number'],
+            'buyer_name' => $_SESSION['data']['name'],
             'redirect_url' => 'http://www.example.com/redirect/',
-            'send_email' => true,
             'webhook' => 'http://www.example.com/webhook/',
-            'send_sms' => true,
-            'email' => $_SESSION['data']['email'],
             'allow_repeated_payments' => false
         );
         curl_setopt($ch, CURLOPT_POST, true);
@@ -72,7 +69,8 @@
         $response = curl_exec($ch);
         curl_close($ch); 
 
-        echo $response;
+        $response = json_decode($response, true);
+        header('Location: ' . $response['payment_request']['longurl']);
     }
 ?>
 
@@ -297,6 +295,7 @@
                                                 Total Fee&nbsp;-&nbsp;
                                             </div>
                                             <div class="col-6 d-flex justify-content-end">
+                                                <?php $_SESSION['feeData']['totalFee'] = $currentMonthFeeData['total_fee']; ?>
                                                 &#8377;&nbsp;<?php echo $currentMonthFeeData['total_fee'] ?>
                                             </div>
                                         </div>
@@ -314,7 +313,9 @@
 
                         <div class="row mt-4">
                             <div class="col-md-6">
-                                <a href="#" class="btn btn-info btn-block">Pay Online</a>
+                                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                                    <button type="submit" class="btn btn-info btn-block">Pay Fee Online</button>
+                                </form>
                             </div>
                             <div class="col-md-6">
                                 <a href="<?php echo $base_url ?>student/rtgs.php" class="btn btn-info btn-block">Pay Through RTGS/NEFT</a>

@@ -48,10 +48,16 @@
             exit();
         }
 
-        $subject = 'Test Mail';
-        $body = 'Test Message';
+        $to = 'shreyansjain68@gmail.com'; // Real email - feepayment@rainbowschooljp.com
+        $subject = 'Mail Regarding Fee Payment';
+        $body = "
+            UTR Number - $utrNumber\n
+            Student Admission Number - $_SESSION['data']['admission_no']\n
+            Student Name - $_SESSION['data']['name']\n
+            Total Fees - $_SESSION['feeData']['totalFee']
+        ";
 
-        $headers = "From: Rainbow English School <feepayment@rainbowschooljp.com>\r\n";
+        $headers = "From: Payment Rainbow English School <payment-no-reply@rainbowschooljp.com>\r\n";
         if (mail('feepayment@rainbowschooljp.com', $subject, $body, implode("\r\n", $headers))) {
             $_SESSION['success'] = "Your Response has been sent and recorded";
             header('Location: rtgs.php');
@@ -63,6 +69,7 @@
             exit();
         }
     }
+
 ?>
 
 <?php require_once(__DIR__.'/../header.php'); ?>
