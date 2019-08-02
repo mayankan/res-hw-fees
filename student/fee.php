@@ -40,16 +40,22 @@
                 if (preg_match($regex, $feeData[$index]['month'])) {
                     $currentMonthFeeData = $feeData[$index];
                     array_splice($feeData, $index, 1);
+                } else {
+                    $totalDues += $feeData[$index]['total_fee'];
                 }
             }
         }
     }
 
-
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
+        $totalDues = 0;
+        foreach ($feeData as $fee) {
+            $totalDues += $fee['total_fee'];
+        }
+        $feeAmount = round(($currentMonthFeeData['total_fee'] + $totalDues)/ (1 - 1.18 * 1.9 / 100), 2);
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://www.test.instamojo.com/api/1.1');
-        curl_setopt($ch, CURLOPT_HEADER, TRUE);
+        curl_setopt($ch, CURLOPT_URL, 'https://test.instamojo.com/api/1.1/payment-requests/');
+        curl_setopt($ch, CURLOPT_HEADER, FALSE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
         curl_setopt($ch, CURLOPT_HTTPHEADER,
@@ -57,21 +63,20 @@
                         "X-Auth-Token:test_f5bbfe4df819f8b14418d08496f"));
         $payload = Array(
             'purpose' => 'Fee Payment',
-            'amount' => round($currentMonthFeeData['total_fee']/ (1 - 1.18 * 1.9 / 100), 2),
+            'amount' => $feeAmount,
             'phone' => $_SESSION['data']['mobile_number'],
             'buyer_name' => $_SESSION['data']['name'],
             'redirect_url' => 'http://test.rainbowhomework.com/student/success.php',
             'webhook' => 'http://test.rainbowhomework.com/webhook.php',
+            'email' => 'mail@rainbowschooljp.com',
+            'send_email' => false,
             'send_sms' => false,
             'allow_repeated_payments' => false
         );
-        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POST, TRUE);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($payload));
         $response = curl_exec($ch);
         curl_close($ch); 
-
-	var_dump($response);
-	exit();
 
         $response = json_decode($response, true);
         header('Location: ' . $response['payment_request']['longurl']);
@@ -128,7 +133,7 @@
                     <?php if (!is_null($feeData)): ?>
                     <div class="row mt-4 justify-content-center">
                         <?php foreach ($feeData as $fee): ?>
-                            <div class="col">
+                            <div class="col-md-6">
                                 <table class="table table-responsive">
                                     <thead>
                                         <th class="border">
@@ -269,7 +274,7 @@
                                                 Transport Fee&nbsp;-&nbsp;
                                             </div>
                                             <div class="col-6 d-flex justify-content-end">
-                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['transport_fee'] ?>
+                                                &#8377;&nbsp;<?php echo $currentMonthFeeData['transport_fee']; ?>
                                             </div>
                                         </div>
                                     </li>

@@ -196,6 +196,36 @@
     }
 
     /**
+     * Get a student data
+     *
+     * @param PDOObject $PDO
+     * @param Number $mobileNumber
+     * @param String $name
+     *
+     * @return Student $data
+     *
+     * @throws Exception //No Specefic Exception Defined
+    */
+    function getAdmissionNumber($PDO, $mobileNumber, $name) {
+        try {
+            $stmt = $PDO->prepare(
+                "SELECT * FROM `student` WHERE `mobile_number` = :mobile_no AND `name` = :name"
+            );
+            $stmt->execute([
+                ':mobile_no' => $mobileNumber,
+                ':name' => $name
+            ]);
+            if ($stmt->rowCount() === 0) {
+                return NULL;
+            }
+            return $stmt->fetch();
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
+
+    /**
      * Get a class data
      *
      * @param PDOObject $PDO
@@ -449,6 +479,35 @@
         try {
             $stmt = $PDO->prepare($sql);
             $stmt->execute($data);
+            if ($stmt->rowCount() === 0) {
+                return false;
+            }
+            return true;
+        } catch (Exception $e) {
+            print($e);
+            return false;
+        }
+    }
+
+    /**
+     * updates a fee row in `fee` Table
+     *
+     * @param PDOObject $PDO
+     * @param Number $admissionNumber
+     *
+     * @return Boolean
+     *
+     * @throws Exception //No Specefic Exception Defined
+    */
+    function markPaidFee($PDO, $admissionNumber) {
+        try {
+            $stmt = $PDO->prepare("
+                UPDATE `fee` SET `paid_at` = :current_date WHERE `admission_no` = :adm_no
+            ");
+            $stmt->execute([
+                ':current_date' => (string) date('Y-m-d h:i:s'),
+                ':adm_no' => $admissionNumber
+            ]);
             if ($stmt->rowCount() === 0) {
                 return false;
             }
