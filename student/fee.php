@@ -48,7 +48,7 @@
 
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://www.test.instamojo.com/api/1.1/payment-requests/');
+        curl_setopt($ch, CURLOPT_URL, 'https://www.test.instamojo.com/api/1.1');
         curl_setopt($ch, CURLOPT_HEADER, TRUE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
@@ -69,6 +69,9 @@
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($payload));
         $response = curl_exec($ch);
         curl_close($ch); 
+
+	var_dump($response);
+	exit();
 
         $response = json_decode($response, true);
         header('Location: ' . $response['payment_request']['longurl']);
