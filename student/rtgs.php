@@ -57,7 +57,8 @@
             header('Location: rtgs.php');
             exit();
         } else {
-            $_SESSION['error'] = "Something went wrong...Try again.";
+            $errorMessage = error_get_last()['message'];
+            $_SESSION['error'] = $errorMessage;
             header("Location: rtgs.php");
             exit();
         }
