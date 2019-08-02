@@ -202,7 +202,7 @@
                             <label for="month and year" class="col-form-label">
                                 Month and Year<span class="text-danger">*</span>
                             </label>
-                            <input type="text" name="month_of_fee" class="form-control" id="datetime" required autocomplete="off">
+                            <input type="text" name="month_of_fee" class="form-control" id="datetime" readonly required autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label for="csv File" class="col-form-label">

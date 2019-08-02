@@ -60,14 +60,14 @@
                                 Homeworks
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="<?php echo $base_url ?>student/profile.php" class="nav-link">
-                                Profile
-                            </a>
-                        </li>
                         <li class="nav-item active">
                             <a href="<?php echo $base_url ?>student/fee.php" class="nav-link">
                                 Pay Fees
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo $base_url ?>student/profile.php" class="nav-link">
+                                Profile
                             </a>
                         </li>
                         <li class="nav-item">
@@ -96,7 +96,7 @@
                     <?php if (!is_null($feeData)): ?>
                     <div class="row mt-4 justify-content-center">
                         <?php foreach ($feeData as $fee): ?>
-                            <div class="col-md-6 ">
+                            <div class="col">
                                 <table class="table table-responsive">
                                     <thead>
                                         <th class="border">
@@ -273,18 +273,21 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="col-md-12">
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-12">
                                 <!-- NOTE -->
-                                <h3 class="mt-4 text-center">NOTE:- <?php echo $maintenance['bottom_message']; ?></h3>
+                                <h3 class="mt-4 text-center">NOTE : </h3>
+                                <p class="font-weight-bold"><?php echo nl2br($maintenance['bottom_message']); ?></p>
                             </div>
                         </div>
 
                         <div class="row mt-4">
                             <div class="col-md-6">
-                                <button class="btn btn-info btn-block">Pay Online</button>
+                                <a href="#" class="btn btn-info btn-block">Pay Online</a>
                             </div>
                             <div class="col-md-6">
-                                <button class="btn btn-info btn-block">Pay Through RTGS</button>
+                                <a href="<?php echo $base_url ?>student/rtgs.php" class="btn btn-info btn-block">Pay Through RTGS/NEFT</a>
                             </div>
                         </div>
                         <?php endif ?>

@@ -53,14 +53,14 @@
                                 Homeworks
                             </a>
                         </li>
-                        <li class="nav-item active">
-                            <a href="<?php echo $base_url ?>student/profile.php" class="nav-link">
-                                Profile
-                            </a>
-                        </li>
                         <li class="nav-item">
                             <a href="<?php echo $base_url ?>student/fee.php" class="nav-link">
                                 Pay Fees
+                            </a>
+                        </li>
+                        <li class="nav-item active">
+                            <a href="<?php echo $base_url ?>student/profile.php" class="nav-link">
+                                Profile
                             </a>
                         </li>
                         <li class="nav-item">

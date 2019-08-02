@@ -304,7 +304,7 @@
                             <label for="date_of_homework" class="col-form-label">
                                 Date of Homework<span class="text-danger">*</span>
                             </label>
-                            <input type="text" name="date_of_homework" class="form-control" id="datetime" required autocomplete="off">
+                            <input type="text" name="date_of_homework" class="form-control" id="datetime" readonly required autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label for="class" class="col-form-label">

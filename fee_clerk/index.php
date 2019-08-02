@@ -176,19 +176,7 @@
             <div class="container">
                 <div class="row d-flex justify-content-center my-2">
                     <div class="col-4">
-                        <?php $exportUrl = $base_url . "fee_clerk/index.php?export=1"; ?>
-                            <?php if (isset($_GET['admission_no'])): ?>
-                                <?php $exportUrl .= "&admission_no=" . $_GET['admission_no']; ?>
-                            <?php endif ?>
-                            <?php if (isset($_GET['month_of_fee'])): ?>
-                                <?php $exportUrl .= "&month_of_fee=" . $_GET['month_of_fee']; ?>
-                            <?php endif ?>
-                            <?php if (isset($_GET['paid'])): ?>
-                                <?php $exportUrl .= "&paid=" . $_GET['paid']; ?>
-                            <?php endif ?>
-                            <a href="<?php echo $exportUrl ?>" class="btn btn-info btn-block">
-                                Export Fee Data
-                            </a>
+                        
                     </div>
                 </div>
                 <div class="row">
@@ -202,12 +190,14 @@
                                         autocomplete="off"
                                         value="<?php echo $_GET['month_of_fee'] ?>"
                                         placeholder="Month of Fee"
+                                        readonly
                                 >
                                 <?php else: ?>
                                 <input type="text" name="month_of_fee" 
                                         class="form-control col-3 m-2" id="datetime" 
                                         autocomplete="off"
                                         placeholder="Month of Fee"
+                                        readonly
                                 >
                                 <?php endif ?>
 
@@ -248,8 +238,22 @@
                                 </select>
                                 <?php endif ?>
                                 <button class="btn btn-success col-3 m-2">Filter</button>
+                                <?php $exportUrl = $base_url . "fee_clerk/index.php?export=1"; ?>
+                                <?php if (isset($_GET['admission_no'])): ?>
+                                    <?php $exportUrl .= "&admission_no=" . $_GET['admission_no']; ?>
+                                <?php endif ?>
+                                <?php if (isset($_GET['month_of_fee'])): ?>
+                                    <?php $exportUrl .= "&month_of_fee=" . $_GET['month_of_fee']; ?>
+                                <?php endif ?>
+                                <?php if (isset($_GET['paid'])): ?>
+                                    <?php $exportUrl .= "&paid=" . $_GET['paid']; ?>
+                                <?php endif ?>
+                                <a href="<?php echo $exportUrl ?>" class="btn btn-info">
+                                    Export Fee Data
+                                </a>
                             </div>
                         </form>
+                       
                     </div>
                 </div>
             </div>
@@ -301,7 +305,7 @@
                         <table class="table table-hover table-responsive-sm table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Date</th>
+                                    <th>Month</th>
                                     <th>Admission Number</th>
                                     <th>Name</th>
                                     <th>Class & Section</th>
