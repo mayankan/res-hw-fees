@@ -52,7 +52,7 @@
             'From' => 'feepayment@rainbowschooljp.com',
         );
 
-        if (mail('feepayment@rainbowschooljp.com', 'Test Mail', 'Test message', $headers)) {
+        if (mail('shreyansjain68@gmail.com', 'Test Mail', 'Test message', $headers)) {
             $_SESSION['success'] = "Your Response has been sent and recorded";
             header('Location: rtgs.php');
             exit();
