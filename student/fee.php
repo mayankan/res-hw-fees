@@ -307,7 +307,7 @@
                         <div class="row mt-4">
                             <div class="col-12">
                                 <!-- NOTE -->
-                                <h3 class="mt-4 text-center">NOTE : </h3>
+                                <h3 class="mt-4">NOTE : </h3>
                                 <p class="font-weight-bold"><?php echo nl2br($maintenance['bottom_message']); ?></p>
                             </div>
                         </div>
