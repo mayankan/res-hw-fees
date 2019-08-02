@@ -35,6 +35,7 @@
             http_response_code(200);
         }
     } else {
+	http_response_code(404);
         header("Location: 404.html");
         exit();
     }
