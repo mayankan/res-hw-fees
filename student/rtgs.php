@@ -48,13 +48,17 @@
             exit();
         }
 
+        $admissionNumber = $_SESSION['data']['admission_no'];
+        $name = $_SESSION['data']['name'];
+        $totalFees = $_SESSION['feeData']['totalFee'];
+
         $to = 'shreyansjain68@gmail.com'; // Real email - feepayment@rainbowschooljp.com
         $subject = 'Mail Regarding Fee Payment';
         $body = "
             UTR Number - $utrNumber\n
-            Student Admission Number - $_SESSION['data']['admission_no']\n
-            Student Name - $_SESSION['data']['name']\n
-            Total Fees - $_SESSION['feeData']['totalFee']
+            Student Admission Number - $admissionNumber\n
+            Student Name - $name\n
+            Total Fees - $totalFees\n
         ";
 
         $headers = "From: Payment Rainbow English School <payment-no-reply@rainbowschooljp.com>\r\n";
