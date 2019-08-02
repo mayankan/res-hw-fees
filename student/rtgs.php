@@ -52,18 +52,12 @@
         $name = $_SESSION['data']['name'];
         $totalFees = $_SESSION['feeData']['totalFee'];
 
-        $to = 'shreyansjain68@gmail.com'; // Real email - feepayment@rainbowschooljp.com
+        $to = 'feepayment@rainbowschooljp.com'; // Real email - feepayment@rainbowschooljp.com
         $subject = 'Mail Regarding Fee Payment';
-        $body = "$admissionNumber";
-        // $body = "
-        //     UTR Number - $utrNumber\n
-        //     Student Admission Number - $admissionNumber\n
-        //     Student Name - $name\n
-        //     Total Fees - $totalFees\n
-        // ";
+        $body = " UTR Number - $utrNumber\n Student Admission Number - $admissionNumber\n Student Name - $name\n Total Fees - $totalFees\n";
 
         $headers = "From: Payment Admin <payment-no-reply@rainbowschooljp.com>";
-        if (mail('feepayment@rainbowschooljp.com', $subject, $body, $headers)) {
+        if (mail($to, $subject, $body, $headers)) {
             $_SESSION['success'] = "Your Response has been sent and recorded";
             header('Location: rtgs.php');
             exit();
