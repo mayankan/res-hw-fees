@@ -57,7 +57,7 @@
                         "X-Auth-Token:a1ff98eeb01b5358e479494464b62849"));
         $payload = Array(
             'purpose' => 'Fee Payment',
-            'amount' => $currentMonthFeeData['total_fee']/ (1 - 1.18 * 1.9 / 100),
+            'amount' => round($currentMonthFeeData['total_fee']/ (1 - 1.18 * 1.9 / 100), 2),
             'phone' => $_SESSION['data']['mobile_number'],
             'buyer_name' => $_SESSION['data']['name'],
             'redirect_url' => 'http://www.example.com/redirect/',
