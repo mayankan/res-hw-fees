@@ -33,8 +33,9 @@
         $db_name = 'rainbowjanakpuri';
         $mssqldriver = '{SQL Server}';
         $dsn = "odbc:Driver=$mssqldriver;Server=$host;Database=$db_name";
+        $sqlsrv= "sqlsrv:Server=$host;Database=$db_name";
         try {
-        	$PDO = new PDO($dsn, $username, $password);
+        	$PDO = new PDO($sqlsrv, $username, $password);
         	return $PDO;
         } catch(PDOException $e) {
             print($e);
