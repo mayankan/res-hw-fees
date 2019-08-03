@@ -32,10 +32,11 @@
         $host = '182.50.133.109';
         $db_name = 'rainbowjanakpuri';
         $mssqldriver = '{SQL Server}';
-        $dsn = "odbc:Driver=$mssqldriver;Server=$host;Database=$db_name";
+        $mssqldriver2 = '{SQL Server Native Client 11.0}';
+        $dsn = "odbc:Driver=$mssqldriver2;Server=$host;Database=$db_name";
         $sqlsrv= "sqlsrv:Server=$host;Database=$db_name";
         try {
-        	$PDO = new PDO($sqlsrv, $username, $password);
+        	$PDO = new PDO($dsn, $username, $password);
         	return $PDO;
         } catch(PDOException $e) {
             print($e);
