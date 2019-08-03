@@ -38,7 +38,6 @@
 
     if ($status === 'Credit') {
         $feeData = getFee($PDO, $_SESSION['data']['admission_no']);
-        markPaidFee($PDO, $_SESSION['data']['admission_no']);
         foreach ($feeData as $fee) {
             $totalAmount += $fee['total_fee'];
             
