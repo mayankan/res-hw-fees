@@ -32,7 +32,9 @@
         $host = '182.50.133.109';
         $db_name = 'rainbowjanakpuri';
         $mssqldriver = '{SQL Server}';
+        $mssqldriver2 = '{FreeTDS}';
         $dsn = "odbc:Driver=$mssqldriver;Server=$host;Database=$db_name";
+        $dblib= "dblib:host=$host;dbname=$db_name";
         try {
         	$PDO = new PDO($dsn, $username, $password);
         	return $PDO;
