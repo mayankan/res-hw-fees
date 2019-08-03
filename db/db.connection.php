@@ -36,7 +36,7 @@
         $dsn = "odbc:Driver=$mssqldriver;Server=$host;Database=$db_name";
         $dblib= "dblib:host=$host;dbname=$db_name";
         try {
-        	$PDO = new PDO($dblib, $username, $password);
+        	$PDO = new PDO($dsn, $username, $password);
         	return $PDO;
         } catch(PDOException $e) {
             print($e);
