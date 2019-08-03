@@ -8,7 +8,8 @@
 
     // logs out user if it's not a teacher
     if ($_SESSION['role'] !== 'teacher') {
-		header('Location: ../404.html');
+        header('Location: ../404.html');
+        exit();
     }
 
     require(__DIR__.'/../db/db.connection.php');
@@ -23,6 +24,7 @@
             addToLog($PDO, 'Teacher Logged out', $_SESSION['data']['id']);
             session_destroy();
             header('Location: ../');
+            exit();
         }
     }
 

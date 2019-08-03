@@ -9,7 +9,7 @@
     // logs out user if it's not a admin
     if ($_SESSION['role'] !== 'fee_clerk') {
         header('Location: ../404.html');
-        return;
+        exit();
     }
 
     $PDO = getConnection();

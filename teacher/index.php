@@ -64,6 +64,7 @@
     // logs out user if it's not a teacher
     if ($_SESSION['role'] !== 'teacher') {
         header('Location: ../404.html');
+        exit();
     }
 
     // checks for logout variable in GET Request and if it's true logs out user
@@ -77,6 +78,7 @@
             addToLog($PDO, 'Teacher Logged out', $_SESSION['data']['id']);
             session_destroy();
             header('Location: ../');
+            exit();
         }
     }
 

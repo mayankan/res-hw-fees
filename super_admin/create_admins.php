@@ -10,7 +10,7 @@
     // logs out user if it's not a fee clerk
     if ($_SESSION['role'] !== 'super_admin') {
         header('Location: ../404.html');
-        return;
+        exit();
     }
 
     // checks for logout variable in GET Request and if it's true logs out user
@@ -18,7 +18,7 @@
         if ($_GET['logout'] === 'true') {
             session_destroy();
             header('Location: ../');
-            return;
+            exit();
         }
     }
 

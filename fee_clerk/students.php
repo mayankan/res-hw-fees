@@ -10,7 +10,7 @@
     // logs out user if it's not a admin
     if ($_SESSION['role'] !== 'fee_clerk') {
         header('Location: ../404.html');
-        return;
+        exit();
     }
 
     /**
@@ -63,7 +63,7 @@
         if ($_GET['logout'] === 'true') {
             session_destroy();
             header('Location: ../');
-            return;
+            exit();
         }
     }
 
@@ -97,7 +97,7 @@
         $page_no = (int)$_GET['page_no'];
         if ($page_no <= 0) {
             header("Location: students.php?page_no=1");
-            return;
+            exit();
         }
         $end_limit = $page_no * 10;
         $start_limit = $end_limit - 10;
@@ -122,7 +122,7 @@
         $students = getStudents($PDO, $start_limit=$start_limit, $name=$name, $admission_no=$admission_no, $class_id=$class_id);
         if ($students === NULL && $page_no !== 1) {
             header('Location: students.php?page_no=' . (((int)$_GET['page_no']) - 1));
-            return;
+            exit();
         }
         $_SESSION['page_no'] = $_GET['page_no'];
     }

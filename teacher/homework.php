@@ -66,6 +66,7 @@
     if ($_SESSION['role'] !== 'teacher') {
         session_destroy();
         header('Location: ../');
+        exit();
     }
 
     // checks for logout variable in GET Request and if it's true logs out user
@@ -79,6 +80,7 @@
             session_destroy();
             unset($PDO);
             header('Location: ../');
+            exit();
         }
     }
 
