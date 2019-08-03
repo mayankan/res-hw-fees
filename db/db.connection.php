@@ -34,9 +34,9 @@
         $mssqldriver = '{SQL Server}';
         $mssqldriver2 = '{FreeTDS}';
         $dsn = "odbc:Driver=$mssqldriver;Server=$host;Database=$db_name";
-        $sqlsrv= "sqlsrv:Server=$host;Database=$db_name";
+        $dblib= "dblib:host=$host;dbname=$db_name";
         try {
-        	$PDO = new PDO($dsn, $username, $password);
+        	$PDO = new PDO($dblib, $username, $password);
         	return $PDO;
         } catch(PDOException $e) {
             print($e);
