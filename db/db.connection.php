@@ -32,7 +32,7 @@
         $host = '182.50.133.109';
         $db_name = 'rainbowjanakpuri';
         $mssqldriver = '{SQL Server}';
-        $mssqldriver2 = '{SQL Server Native Client 11.0}';
+        $mssqldriver2 = '{FreeTDS}';
         $dsn = "odbc:Driver=$mssqldriver2;Server=$host;Database=$db_name";
         $sqlsrv= "sqlsrv:Server=$host;Database=$db_name";
         try {
