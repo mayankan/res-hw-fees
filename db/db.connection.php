@@ -33,7 +33,7 @@
         $db_name = 'rainbowjanakpuri';
         $mssqldriver = '{SQL Server}';
         $mssqldriver2 = '{FreeTDS}';
-        $dsn = "odbc:Driver=$mssqldriver2;Server=$host;Database=$db_name";
+        $dsn = "odbc:Driver=$mssqldriver;Server=$host;Database=$db_name";
         $sqlsrv= "sqlsrv:Server=$host;Database=$db_name";
         try {
         	$PDO = new PDO($dsn, $username, $password);
