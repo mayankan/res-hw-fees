@@ -189,7 +189,7 @@
                                     <li class="list-group-item list-group-item-primary">
                                         <div class="row">
                                             <div class="col-6">
-                                                Refreshment Account Fee&nbsp;-&nbsp;
+                                                Refreshment Fee&nbsp;-&nbsp;
                                             </div>
                                             <div class="col-6 d-flex justify-content-end">
                                                 &#8377;&nbsp;<?php echo $currentMonthFeeData['refreshment_acc_fee'] ?>
