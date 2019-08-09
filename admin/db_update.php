@@ -48,9 +48,9 @@
             $stmt = $PDO->prepare("
                                 INSERT INTO `student` 
                                 (`id`, `admission_no`, `name`, `father_name`, `mother_name`,
-                                `dob`, `gender`, `mobile_number`, `class_id`, `date_created`, `date_modified`)
+                                `dob`, `gender`, `address`, `mobile_number`, `class_id`, `date_created`, `date_modified`)
                                 VALUES (:id, :admission_no, :name, :father_name, :mother_name,
-                                :dob, :gender, :mobile_number, :class_id, :date_created, :date_modified);
+                                :dob, :gender, :address, :mobile_number, :class_id, :date_created, :date_modified);
                     ");
             $stmt->execute([
                 ':id' => $id,
@@ -59,6 +59,7 @@
                 ':father_name' => $father_name,
                 ':mother_name' => $mother_name,
                 ':dob' => $dob,
+                ':address' => $address,
                 ':gender' => $gender,
                 ':mobile_number' => $mobile_number,
                 ':class_id' => $class_id,
