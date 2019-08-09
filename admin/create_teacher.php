@@ -33,7 +33,7 @@
                     ':username' => $username,
                     ':password' => $hashedPass,
                     ':email' => $email,
-                    ':date_created' => ((string) date("Y-m-d"))
+                    ':date_created' => ((string) date("Y-m-d h:i:s"))
                 ]
             );
             if ($stmt->rowCount() === 0) {
@@ -68,7 +68,7 @@
         $email = $_POST['email'];
 
         // check required fields
-        if ($fullName === '' && $username === '' && $password === '' && $email === '') {
+        if ($fullName === '' || $username === '' || $password === '' || $email === '') {
             $_SESSION['error'] = 'You forgot to enter the required fields';
             header('Location: create_teacher.php');
             return;

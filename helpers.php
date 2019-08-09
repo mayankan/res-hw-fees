@@ -573,6 +573,31 @@
         }
     }
 
+    /**
+     * Get logs from `maintenance_fee` table
+     *
+     * @param PDOObject $PDO
+     * @param Number $start_limit
+     *
+     * @return Teacher $data
+     *
+     * @throws Exception // No Specefic Exception Defined
+     *
+    */
+    function getMaintenanceLogs($PDO, $start_limit=0) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `maintenance_fee` LIMIT :start_limit,10");
+            $stmt->execute([':start_limit' => $start_limit]);
+            if ($stmt->rowCount() == 0) {
+                return NULL;
+            }
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
+    }
+
 
     function getYearAndMonth($date) {
         $dateArray = explode('-', $date);

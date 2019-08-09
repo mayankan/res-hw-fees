@@ -147,6 +147,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="<?php echo $base_url ?>super_admin/view_admins.php" class="nav-link">
+                                View Admins
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="<?php echo $base_url ?>super_admin/create_admins.php" class="nav-link">
                                 Create Admins
                             </a>

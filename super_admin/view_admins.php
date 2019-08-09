@@ -4,13 +4,37 @@
     */
     require(__DIR__.'/../config.php');
     require(__DIR__.'/../db/db.connection.php');
-    require(__DIR__.'/../helpers.php');
     session_start();
 
     // logs out user if it's not a admin
     if ($_SESSION['role'] !== 'super_admin') {
         header('Location: ../404.html');
-        exit();
+        return;
+    }
+
+    /**
+     * Get users from `teacher` table with role not assigned "teacher" and "super_admin"
+     *
+     * @param PDOObject $PDO
+     * @param Number $start_limit
+     *
+     * @return Teacher $data
+     *
+     * @throws Exception // No Specefic Exception Defined
+     *
+    */
+    function getUsers($PDO, $start_limit=0) {
+        try {
+            $stmt = $PDO->prepare("SELECT * FROM `teacher` WHERE `role` NOT IN ('teacher', 'super_admin') LIMIT :start_limit,10");
+            $stmt->execute([':start_limit' => $start_limit]);
+            if ($stmt->rowCount() == 0) {
+                return NULL;
+            }
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            print($e);
+            return NULL;
+        }
     }
 
     // checks for logout variable in GET Request and if it's true logs out user
@@ -18,7 +42,7 @@
         if ($_GET['logout'] === 'true') {
             session_destroy();
             header('Location: ../');
-            exit();
+            return;
         }
     }
 
@@ -26,9 +50,9 @@
     if (is_null($PDO)) {
         die("Can't connect to the database");
     }
-    $maintenanceLogs = NULL;
+    $users = NULL;
     if (!isset($_GET['page_no'])) {
-        $maintenanceLogs = getMaintenanceLogs($PDO);
+        $users = getUsers($PDO);
         $_SESSION['page_no'] = 1;
     } else {
         $page_no = (int)$_GET['page_no'];
@@ -37,10 +61,10 @@
         }
         $end_limit = $page_no * 10;
         $start_limit = $end_limit - 10;
-        $maintenanceLogs = getMaintenanceLogs($PDO, $start_limit=$start_limit);
-        if ($maintenanceLogs === NULL && $page_no !== 1) {
-            header('Location: maintenance_logs.php?page_no=' . (((int)$_GET['page_no']) - 1));
-            exit();
+        $users = getUsers($PDO, $start_limit=$start_limit);
+        if ($users === NULL && $page_no !== 1) {
+            header('Location: admin.php?page_no=' . (((int)$_GET['page_no']) - 1));
+            return;
         }
         $_SESSION['page_no'] = $_GET['page_no'];
     }
@@ -67,12 +91,12 @@
                                 View Teacher Logs
                             </a>
                         </li>
-                        <li class="nav-item active">
+                        <li class="nav-item">
                             <a href="<?php echo $base_url ?>super_admin/maintenance_logs.php" class="nav-link">
                                 View Maintenance Logs
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item active">
                             <a href="<?php echo $base_url ?>super_admin/view_admins.php" class="nav-link">
                                 View Admins
                             </a>
@@ -108,7 +132,7 @@
                         </a>
                         <?php else: ?>
                         <a 
-                            href="<?php echo $base_url ?>super_admin/maintenance_logs.php?page_no=<?php echo $_SESSION['page_no'] - 1 ?>" 
+                            href="<?php echo $base_url ?>super_admin/admin.php?page_no=<?php echo $_SESSION['page_no'] - 1 ?>" 
                             class="btn btn-outline-dark"
                         >
                             <i class="fa fa-arrow-left fa-1 mt-1" aria-hidden="true"></i> Prev
@@ -117,40 +141,41 @@
                     </div>
                     <div class="col-6 d-flex justify-content-end">
                         <a 
-                            href="<?php echo $base_url ?>super_admin/maintenance_logs.php?page_no=<?php echo $_SESSION['page_no'] + 1 ?>" 
+                            href="<?php echo $base_url ?>super_admin/admin.php?page_no=<?php echo $_SESSION['page_no'] + 1 ?>" 
                             class="btn btn-outline-dark"
                         >
                             Next <i class="fa fa-arrow-right fa-1 mt-1" aria-hidden="true"></i>
                         </a>
                     </div>
                 </div>
-                <?php if (!is_null($maintenanceLogs)): ?>
+                <?php if (!is_null($users)): ?>
                 <div class="row">
                     <div class="col-md-12">
                         <table class="table table-hover table-responsive-sm table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Bottom Message</th>
-                                    <th>Custom Message</th>
+                                    <th>Name</th>
+                                    <th>Username</th>
+                                    <th>Email Address</th>
+                                    <th>Role</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($maintenanceLogs as $user): ?>
+                                <?php foreach ($users as $user): ?>
                                 <tr>
-                                    <td><?php echo date_format(date_create($user['date_created']), 'd F y'); ?></td>
+                                    <td><?php echo $user['name'] ?></td>
+                                    <td><?php echo $user['username'] ?></td>
+                                    <td><?php echo $user['email_address'] ?></td>
+                                    <td><?php echo ucfirst(join(' ', explode('_', $user['role']))); ?></td>
                                     <td>
-                                        <?php if ($user['offline'] === -1): ?>
-                                        Offline with Custom Message
-                                        <?php elseif ($user['offline'] === 1): ?>
-                                        Offline
-                                        <?php elseif ($user['offline'] === 0): ?>
-                                        Online
-                                        <?php endif ?>
+                                        <a 
+                                            href="<?php echo $base_url ?>super_admin/admin.php?id=<?php echo $user['id'] ?>" 
+                                            class="btn btn-outline-warning btn-block"
+                                        >
+                                            Edit
+                                        </a>
                                     </td>
-                                    <td><?php echo nl2br($user['bottom_message']); ?></td>
-                                    <td><?php echo nl2br($user['custom_message']); ?></td>
                                 </tr>
                                 <?php endforeach ?>
                             </tbody>
