@@ -69,7 +69,7 @@
                     array("X-Api-Key:74daa5061b049d6cdc8540a79cfd7a1a",
                         "X-Auth-Token:a1ff98eeb01b5358e479494464b62849"));
         $payload = Array(
-            'purpose' => 'Fee Payment',
+            'purpose' => 'Online Fee Payment',
             'amount' => $feeAmount,
             'phone' => $_SESSION['data']['mobile_number'],
             'buyer_name' => $_SESSION['data']['name'],
