@@ -26,6 +26,11 @@
     if (is_null($PDO)) {
         die("Can't Connect to the database");
     }
+    
+    if (!markPaidFee($PDO, $_SESSION['data']['admission_no'])) {
+        header("Location: 404.html");
+        exit();
+    }
 
     $paymentId = isset($_GET['payment_id']) ? $_GET['payment_id'] : "";
     $paymentRequestId = isset($_GET['payment_request_id']) ? $_GET['payment_request_id'] : "";
@@ -41,7 +46,6 @@
         $feeData = getFee($PDO, $_SESSION['data']['admission_no']);
         foreach ($feeData as $fee) {
             $totalAmount += $fee['total_fee'];
-            
         }
     }
 ?>
