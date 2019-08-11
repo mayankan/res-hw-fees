@@ -43,7 +43,7 @@
             }
         } else {
             echo "MAC mismatch";
-            http_response_code(200);
+            http_response_code(400);
 	        exit();
         }
     } else {
