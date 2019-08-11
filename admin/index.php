@@ -24,10 +24,13 @@
      * @throws Exception //No Specefic Exception Defined
      *
     */
-    function getLogs($PDO, $startLimit=0) {
+    function getLogs($PDO, $classId="", $startLimit=0) {
+        $sql = "SELECT * FROM `log` ORDER BY `date_of_action` DESC LIMIT :start_limit, 10";
+        $data = [];
+        $data[':start_limit'] = $startLimit;
         try {
-            $stmt = $PDO->prepare("SELECT * FROM `log` ORDER BY `date_of_action` DESC LIMIT :start_limit, 10");
-            $stmt->execute([':start_limit' => $startLimit]);
+            $stmt = $PDO->prepare($sql);
+            $stmt->execute($data);
             if ($stmt->rowCount() === 0) {
                 return NULL;
             }
@@ -186,6 +189,7 @@
                                     <th>Action</th>
                                     <th>Homework</th>
                                     <th>Date of Homework</th>
+                                    <th>Class & Section</th>
                                     <th>Student Sent to</th>
                                     <th>Teacher Assigned</th>
                                     <th>IP Address</th>
@@ -206,6 +210,7 @@
                                         <?php if (is_null($log['message_id'])): ?>
                                             <td></td>
                                             <td></td>
+                                            <td></td>
                                         <?php else: ?>
                                             <?php $homework = getAllHomework($PDO, $log['message_id']) ?>
                                             <td>
@@ -213,6 +218,10 @@
                                             </td>
                                             <td>
                                                 <?php echo $homework['date_of_message'] ?>
+                                            </td>
+                                            <td>
+                                                <?php $class = getClass($PDO, $homework['class_id']); ?>
+                                                <?php echo $class['class_name'] . ' - ' . $class['section']; ?>
                                             </td>
                                         <?php endif ?>
 

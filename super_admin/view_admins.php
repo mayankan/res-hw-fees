@@ -63,7 +63,7 @@
         $start_limit = $end_limit - 10;
         $users = getUsers($PDO, $start_limit=$start_limit);
         if ($users === NULL && $page_no !== 1) {
-            header('Location: admin.php?page_no=' . (((int)$_GET['page_no']) - 1));
+            header('Location: view_admins.php?page_no=' . (((int)$_GET['page_no']) - 1));
             return;
         }
         $_SESSION['page_no'] = $_GET['page_no'];
@@ -132,7 +132,7 @@
                         </a>
                         <?php else: ?>
                         <a 
-                            href="<?php echo $base_url ?>super_admin/admin.php?page_no=<?php echo $_SESSION['page_no'] - 1 ?>" 
+                            href="<?php echo $base_url ?>super_admin/view_admins.php?page_no=<?php echo $_SESSION['page_no'] - 1 ?>" 
                             class="btn btn-outline-dark"
                         >
                             <i class="fa fa-arrow-left fa-1 mt-1" aria-hidden="true"></i> Prev
@@ -141,7 +141,7 @@
                     </div>
                     <div class="col-6 d-flex justify-content-end">
                         <a 
-                            href="<?php echo $base_url ?>super_admin/admin.php?page_no=<?php echo $_SESSION['page_no'] + 1 ?>" 
+                            href="<?php echo $base_url ?>super_admin/view_admins.php?page_no=<?php echo $_SESSION['page_no'] + 1 ?>" 
                             class="btn btn-outline-dark"
                         >
                             Next <i class="fa fa-arrow-right fa-1 mt-1" aria-hidden="true"></i>
