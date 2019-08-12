@@ -32,7 +32,7 @@
     $ifAllPaid = 0;
     $totalFeeData = 0;
     if (!is_null($maintenance)) {
-        if ($maintenance['offline'] !== 0) {
+        if ($maintenance['offline'] === 0) {
             $feeData = getFee($PDO, $_SESSION['data']['admission_no']);
             // idk why just assuming that feedata will not be NULL #badProgrammer
 
