@@ -32,7 +32,7 @@
     $ifAllPaid = 0;
     $totalFeeData = 0;
     if (!is_null($maintenance)) {
-        if ($maintenance['offline'] === 0) {
+        if ($maintenance['offline'] !== 0) {
             $feeData = getFee($PDO, $_SESSION['data']['admission_no']);
             // idk why just assuming that feedata will not be NULL #badProgrammer
 
@@ -88,6 +88,19 @@
         $response = json_decode($response, true);
         header('Location: ' . $response['payment_request']['longurl']);
     }
+
+    if (!is_null($currentMonthFeeData)) {
+        $currentDay = (int) date('d');
+        if ($currentDay > 10) {
+            $currentMonthFeeData['late_fee'] = 20;
+            $_SESSION['late_fee'] = 20;
+        } else if ($currentDay > 20) {
+            $currentMonthFeeData['late_fee'] = 30;
+            $_SESSION['late_fee'] = 30;
+        }
+        $currentMonthFeeData['total_fee'] = $currentMonthFeeData['late_fee'] + $currentMonthFeeData['total_fee'];
+    }
+
 ?>
 
 <?php require_once(__DIR__.'/../header.php'); ?>
@@ -360,8 +373,26 @@
             <?php endif ?>
         </section>
         <?php else: ?>
+            <?php switch ($maintenance['offline']): case 0: ?>
             <div class="m-4">
                 <h1 class="text-center">Your Fees is all paid.</h1>
             </div>
+            <?php break; case 1: ?>
+            <div class="row m-4 p-4">
+                <div class="col-12">
+                    <h1 class="text-center font-weight-bold">Rainbow Online Fees Submission is down for maintenance.</h1>
+                    <br>
+                    <h2 class="text-center font-weight-bold">Please Check back again soon.</h2>
+                </div>
+            </div>
+            <?php break; case -1: ?>
+            <div class="row m-4 p-4">
+                <div class="col-12">
+                    <h1 class="text-center font-weight-bold">
+                        <?php echo htmlentities($maintenance['custom_message']); ?>
+                    </h1>
+                </div>
+            </div>
+            <?php endswitch ?>
         <?php endif ?>
 <?php require_once(__DIR__.'/../footer.php'); ?>

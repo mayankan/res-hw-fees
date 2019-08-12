@@ -30,11 +30,21 @@
                     http_response_code(400);
 		            exit();
                 }
-                if (!markPaidFee($PDO, $studentData['admission_no'])) {
+
+                $currentDay = (int) date('d');
+                $lateFee = 0;
+                if ($currentDay > 10) {
+                    $lateFee = 20;
+                } else if ($currentDay > 20) {
+                    $lateFee = 30;
+                }
+
+                if (!markPaidFee($PDO, $studentData['admission_no'], $lateFee)) {
                     http_response_code(400);
 		            exit();
                 }
                 http_response_code(200);
+                exit();
             } else {
                 // Payment was unsuccessful, mark it as failed in your database.
                 // You can acess payment_request_id, purpose etc here.
