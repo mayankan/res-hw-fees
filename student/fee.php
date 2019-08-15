@@ -54,6 +54,18 @@
         }
     }
 
+    if (!is_null($currentMonthFeeData)) {
+        $currentDay = (int) date('d');
+        if ($currentDay > 10) {
+            $currentMonthFeeData['late_fee'] = 20;
+            $_SESSION['late_fee'] = 20;
+        } else if ($currentDay > 20) {
+            $currentMonthFeeData['late_fee'] = 30;
+            $_SESSION['late_fee'] = 30;
+        }
+        $currentMonthFeeData['total_fee'] = $currentMonthFeeData['late_fee'] + $currentMonthFeeData['total_fee'];
+    }
+
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $totalDues = 0;
         foreach ($feeData as $fee) {
@@ -87,18 +99,6 @@
 
         $response = json_decode($response, true);
         header('Location: ' . $response['payment_request']['longurl']);
-    }
-
-    if (!is_null($currentMonthFeeData)) {
-        $currentDay = (int) date('d');
-        if ($currentDay > 10) {
-            $currentMonthFeeData['late_fee'] = 20;
-            $_SESSION['late_fee'] = 20;
-        } else if ($currentDay > 20) {
-            $currentMonthFeeData['late_fee'] = 30;
-            $_SESSION['late_fee'] = 30;
-        }
-        $currentMonthFeeData['total_fee'] = $currentMonthFeeData['late_fee'] + $currentMonthFeeData['total_fee'];
     }
 
 ?>
