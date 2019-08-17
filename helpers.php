@@ -505,7 +505,8 @@
             $stmt->execute([
                 ':current_date' => (string) date('Y-m-d h:i:s'),
                 ':adm_no' => $admissionNumber,
-                ':late_fee' => $lateFee
+                ':late_fee' => $lateFee,
+                //':total_fee' => ':total_fee'+$lateFee (Please check and tell if correct or not)
             ]);
             if ($stmt->rowCount() == 0) {
                 return false;

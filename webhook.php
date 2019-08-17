@@ -34,8 +34,6 @@
                 $currentDay = (int) date('d');
                 $lateFee = 0;
                 if ($currentDay > 10) {
-                    $lateFee = 20;
-                } else if ($currentDay > 20) {
                     $lateFee = 30;
                 }
 

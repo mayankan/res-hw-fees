@@ -55,6 +55,20 @@
         foreach ($feeData as $fee) {
             $totalAmount += $fee['total_fee'];
         }
+        $studentData = getAdmissionNumber($PDO, substr($data['buyer_phone'], -10), $data['buyer_name']);
+        if (is_null($studentData)) {
+            header('Location: 404.html');
+        }
+
+        $currentDay = (int) date('d');
+        $lateFee = 0;
+        if ($currentDay > 10) {
+            $lateFee = 30;
+        }
+
+        if (!markPaidFee($PDO, $studentData['admission_no'], $lateFee)) {
+            header('Location: 404.html');
+        }
     }
 ?>
 
