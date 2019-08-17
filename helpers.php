@@ -501,12 +501,18 @@
     */
     function markPaidFee($PDO, $admissionNumber, $lateFee) {
         try {
+            $query = $PDO->prepare("SELECT total_fee from `fee` WHERE `admission_no` = :adm_no");
+            $query->execute();
+            if ($query->rowCount() === 0) {
+            }
+            else {
+                $total_fee = $query->fetch();
+            }
             $stmt = $PDO->prepare("UPDATE `fee` SET `paid_at` = :current_date, `late_fee` = :late_fee WHERE `admission_no` = :adm_no");
             $stmt->execute([
                 ':current_date' => (string) date('Y-m-d h:i:s'),
-                ':adm_no' => $admissionNumber,
                 ':late_fee' => $lateFee,
-                //':total_fee' => ':total_fee'+$lateFee (Please check and tell if correct or not)
+                //':total_fee' => $total_fee+$lateFee (Please check and tell if correct or not)
             ]);
             if ($stmt->rowCount() == 0) {
                 return false;
