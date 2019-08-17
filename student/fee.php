@@ -57,7 +57,7 @@
     if (!is_null($currentMonthFeeData)) {
         $currentDay = (int) date('d');
         if ($currentDay > 10) {
-            $currentMonthFeeData['late_fee'] = 20;
+            $currentMonthFeeData['late_fee'] = 30;
             $_SESSION['late_fee'] = 30;
         }
         $currentMonthFeeData['total_fee'] = $currentMonthFeeData['late_fee'] + $currentMonthFeeData['total_fee'];

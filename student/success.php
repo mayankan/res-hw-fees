@@ -30,10 +30,8 @@
     $currentDay = (int) date('d');
     $lateFee = 0;
     if ($currentDay > 10) {
-        $lateFee = 20;
-    } else if ($currentDay > 20) {
         $lateFee = 30;
-    }
+    } 
 
     if (!markPaidFee($PDO, $_SESSION['data']['admission_no'], $lateFee)) {
         header("Location: 404.html");
