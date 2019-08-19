@@ -39,6 +39,7 @@
             "Action",
             "Homework",
             "Date of Homework",
+            "Class & Section",
             "Student Sent To",
             "Teacher Assigned",
             "IP Address"
@@ -49,6 +50,7 @@
             if (!is_null($log['message_id'])) {
                 $homework = getAllHomework($PDO, $log['message_id']);
                 $teacherName = getTeacherName($PDO, $log['teacher_id']);
+                $class = getClass($PDO, $homework['class_id']);
                 $student = "";
                 if (!is_null($homework['student_id'])) {
                     $student = getStudent($PDO, $homework['student_id']);
@@ -58,6 +60,7 @@
                     $log['log_action'],
                     trim(preg_replace('/\s+/', ' ', $homework['message'])),
                     $homework['date_of_message'],
+                    $class['class_name'] . ' - ' . $class['section'],
                     $student,
                     $teacherName,
                     $log['ip_address']
@@ -67,6 +70,7 @@
                 $string = array(
                     date_format($date, 'd F Y'),
                     $log['log_action'],
+                    "",
                     "",
                     "",
                     "",
