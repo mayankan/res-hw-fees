@@ -3,10 +3,18 @@
     // https://auth-db13.hostinger.in/ - for checking PHPMyAdmin
 
     function getConnection() {
-        $username = 'u398111847_hw';
-        $password = 'eSoIxZO39v9K';
+        // main db
+        // $username = 'u398111847_hw';
+        // $password = 'eSoIxZO39v9K';
+        // $host = 'sql7.main-hosting.eu';
+        // $db_name = 'u398111847_home';
+
+        // testing db
+        $username = 'u398111847_test';
+        $password = 'test@123';
         $host = 'sql7.main-hosting.eu';
-        $db_name = 'u398111847_home';
+        $db_name = 'u398111847_test';
+
         $dsn = "mysql:host=$host;dbname=$db_name";
         $options = [
             // instead of throwing error PDO throws an exception
