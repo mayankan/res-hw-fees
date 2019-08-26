@@ -27,16 +27,6 @@
         die("Can't Connect to the database");
     }
     
-    $currentDay = (int) date('d');
-    $lateFee = 0;
-    if ($currentDay > 10) {
-        $lateFee = 30;
-    } 
-
-    if (!markPaidFee($PDO, $_SESSION['data']['admission_no'], $lateFee)) {
-        header("Location: 404.html");
-        exit();
-    }
 
     $paymentId = isset($_GET['payment_id']) ? $_GET['payment_id'] : "";
     $paymentRequestId = isset($_GET['payment_request_id']) ? $_GET['payment_request_id'] : "";
@@ -55,7 +45,7 @@
         }
         $studentData = getAdmissionNumber($PDO, substr($data['buyer_phone'], -10), $data['buyer_name']);
         if (is_null($studentData)) {
-            header('Location: 404.html');
+            header('Location: ../404.html');
         }
 
         $currentDay = (int) date('d');
@@ -63,9 +53,11 @@
         if ($currentDay > 10) {
             $lateFee = 30;
         }
-
-        if (!markPaidFee($PDO, $studentData['admission_no'], $lateFee)) {
-            header('Location: 404.html');
+        var_dump(!markPaidFee($PDO, $studentData['admission_no'], $lateFee, $_SESSION['total_fee']));
+        exit();
+        if (!markPaidFee($PDO, $studentData['admission_no'], $lateFee, $_SESSION['total_fee'])) {
+            header('Location: ../404.html');
+            exit();
         }
     }
 ?>
@@ -111,7 +103,7 @@
         </nav>
 
         <section id="payment-message" class="container-fluid mt-4">
-            <?php if ($_GET['payment_status'] === 'Credit'): ?>
+            <?php if ($_GET['payment_status'] == 'Credit'): ?>
                 <h1 class="text-center">Your fee amounting to ₹ <?php echo $totalAmount ?> has been successfully deposited with Payment ID - <?php echo $paymentId ?>.</h1>
             <?php else: ?>
                 <h1 class="text-center">Your fee payment has failed. <br>Kindly notedown the following Payment ID for reference - <?php echo $paymentId ?>.</h1>

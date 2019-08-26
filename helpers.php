@@ -499,13 +499,14 @@
      *
      * @throws Exception //No Specefic Exception Defined
     */
-    function markPaidFee($PDO, $admissionNumber, $lateFee) {
+    function markPaidFee($PDO, $admissionNumber, $lateFee, $totalFee) {
         try {
-            $stmt = $PDO->prepare("UPDATE `fee` SET `paid_at` = :current_date, `late_fee` = :late_fee WHERE `admission_no` = :adm_no");
+            $stmt = $PDO->prepare("UPDATE `fee` SET `paid_at` = :current_date, `late_fee` = :late_fee, `total_fee` = :total_fee WHERE `admission_no` = :adm_no");
             $stmt->execute([
                 ':current_date' => (string) date('Y-m-d h:i:s'),
                 ':late_fee' => $lateFee,
-                ':total_fee' => ':total_fee'+$lateFee,
+                ':total_fee' => $totalFee,
+                ':adm_no' => $admissionNumber
             ]);
             if ($stmt->rowCount() == 0) {
                 return false;

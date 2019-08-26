@@ -62,6 +62,7 @@
         }
         $currentMonthFeeData['total_fee'] = $currentMonthFeeData['late_fee'] + $currentMonthFeeData['total_fee'];
     }
+    $_SESSION['total_fee'] = $currentMonthFeeData['total_fee'];
 
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $totalDues = 0;
@@ -70,7 +71,7 @@
         }
         $feeAmount = round(($currentMonthFeeData['total_fee'] + $totalDues)/ (1 - 1.18 * 1.9 / 100), 2);
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://www.test.instamojo.com/api/1.1/payment-requests/');
+        curl_setopt($ch, CURLOPT_URL, 'https://test.instamojo.com/api/1.1/payment-requests/');
         curl_setopt($ch, CURLOPT_HEADER, FALSE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
@@ -82,7 +83,7 @@
             'amount' => $feeAmount,
             'phone' => $_SESSION['data']['mobile_number'],
             'buyer_name' => $_SESSION['data']['name'],
-            'redirect_url' => 'http://rainbowhomework.com/student/success.php',
+            'redirect_url' => 'http://localhost:8080/student/success.php',
             'webhook' => 'http://rainbowhomework.com/webhook.php',
             'email' => 'mail@rainbowschooljp.com',
             'send_email' => false,
