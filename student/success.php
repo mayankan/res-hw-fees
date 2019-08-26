@@ -44,19 +44,19 @@
             $totalAmount += $fee['total_fee'];
         }
         
-        $studentData = getAdmissionNumber($PDO, substr($data['buyer_phone'], -10), $data['buyer_name']);
-        if (is_null($studentData)) {
-            header('Location: ../404.html');
-        }
+        // $studentData = getAdmissionNumber($PDO, substr($data['buyer_phone'], -10), $data['buyer_name']);
+        // if (is_null($studentData)) {
+        //     header('Location: ../404.html');
+        // }
 
         $currentDay = (int) date('d');
         $lateFee = 0;
         if ($currentDay > 10) {
             $lateFee = 30;
         }
-        var_dump(!markPaidFee($PDO, $studentData['admission_no'], $lateFee, $_SESSION['total_fee']));
+        var_dump(!markPaidFee($PDO, $_SESSION['data']['admission_no'], $lateFee, $_SESSION['total_fee']));
         exit();
-        if (!markPaidFee($PDO, $studentData['admission_no'], $lateFee, $_SESSION['total_fee'])) {
+        if (!markPaidFee($PDO, $_SESSION['data']['admission_no'], $lateFee, $_SESSION['total_fee'])) {
             header('Location: ../404.html');
             exit();
         }

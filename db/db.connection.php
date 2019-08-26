@@ -30,6 +30,7 @@
         	$PDO = new PDO($dsn, $username, $password, $options);
         	return $PDO;
         } catch(PDOException $e) {
+            print($e);
         	return null;
         }
     }
