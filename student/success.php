@@ -54,8 +54,6 @@
         if ($currentDay > 10) {
             $lateFee = 30;
         }
-        var_dump(!markPaidFee($PDO, $_SESSION['data']['admission_no'], $lateFee, $_SESSION['total_fee']));
-        exit();
         if (!markPaidFee($PDO, $_SESSION['data']['admission_no'], $lateFee, $_SESSION['total_fee'])) {
             header('Location: ../404.html');
             exit();
