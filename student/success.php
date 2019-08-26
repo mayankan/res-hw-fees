@@ -43,6 +43,7 @@
         foreach ($feeData as $fee) {
             $totalAmount += $fee['total_fee'];
         }
+        
         $studentData = getAdmissionNumber($PDO, substr($data['buyer_phone'], -10), $data['buyer_name']);
         if (is_null($studentData)) {
             header('Location: ../404.html');
