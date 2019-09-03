@@ -2,66 +2,79 @@
     /**
      * This Page is used to show remaining fees to student
     */
-    require(__DIR__.'/../config.php');
-    require(__DIR__.'/../db/db.connection.php');
-    require(__DIR__.'/../helpers.php');
+    require(__DIR__.'/config.php');
+    require(__DIR__.'/db/db.connection.php');
+    require(__DIR__.'/helpers.php');
     session_start();
-
-    // logs out user if it's not a student
-    if ($_SESSION['role'] !== 'student') {
-        header('Location: ../404.html');
-        exit();
-    }
-
-    // checks for logout variable in GET Request and if it's true logs out user
-    if (isset($_GET['logout'])) {
-        if ($_GET['logout'] === 'true') {
-            session_destroy();
-            header('Location: ../');
-            exit();
-        }
-    }
 
     $PDO = getConnection();
     if (is_null($PDO)) {
         die("Can't Connect to the database");
     }
-    
 
     $paymentId = isset($_GET['payment_id']) ? $_GET['payment_id'] : "";
     $paymentRequestId = isset($_GET['payment_request_id']) ? $_GET['payment_request_id'] : "";
-    $status = isset($_GET['payment_status']) ? $_GET['payment_status'] : "";
-    $totalAmount = 0;
+    
+    $ch = curl_init();
 
-    if ($paymentId === "" || $paymentRequestId === "" || $status === "") {
-        header('Location: index.php');
-        exit();
+    curl_setopt($ch, CURLOPT_URL, 'https://www.instamojo.com/api/1.1/payment-requests/'.$paymentRequestId.'/'.$paymentId.'/');
+    curl_setopt($ch, CURLOPT_HEADER, FALSE);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+    curl_setopt($ch, CURLOPT_HTTPHEADER,
+                    array("X-Api-Key:74daa5061b049d6cdc8540a79cfd7a1a",
+                        "X-Auth-Token:a1ff98eeb01b5358e479494464b62849"));
+    $response = curl_exec($ch);
+    curl_close($ch); 
+    $pieces = explode(',', $response);
+    foreach($pieces as $pair)
+    {
+        list($key, $value) = explode(': ', $pair);
+        $variables = ['{','}','"'];
+        $key = str_replace($variables,'',$key);
+        $key = preg_replace('/\s+/', '', $key);
+        $value = str_replace($variables,'',$value);
+        $value = preg_replace('/\s+/', '', $value);
+        $curlResponse[$key]= $value;
+        if($key==='created_at') {
+        }
     }
-
-    if ($status === 'Credit') {
-        $currentDay = (int) date('d');
+    $status = $curlResponse['success'];
+    if ($status === 'true') {
+        $studentAdmissionNo = getAdmissionNumber($PDO, substr($curlResponse['buyer_phone'], -10), $curlResponse['buyer_name']);
+        if (is_null($studentAdmissionNo)) {
+            header('Location: 404.html');
+        }
+        $dateofpayment = substr($curlResponse['created_at'],0,10);
+        $timeofpayment = substr($curlResponse['created_at'],11,8);
+        $datetimeofpayment = $dateofpayment.' '.$timeofpayment;
+        $currentDay = (int) substr($dateofpayment,-2);
         $lateFee = 0;
         if ($currentDay > 10) {
             $lateFee = 30;
         }
-        if (!markPaidFee($PDO, $_SESSION['data']['admission_no'], $lateFee, $_SESSION['total_fee'])) {
-            header('Location: ../404.html');
-            exit();
-        }
-
-        $feeData = getFee($PDO, $_SESSION['data']['admission_no']);
+        $totalFee = $curlResponse['amount']-$curlResponse['fees']-(($curlResponse['fees']*18)/100);
+        $totalFee = round($totalFee,0);
+        $feeData = getFee($PDO, $studentAdmissionNo['admission_no']);
         foreach ($feeData as $fee) {
             $totalAmount += $fee['total_fee'];
         }
-        
-        // $studentData = getAdmissionNumber($PDO, substr($data['buyer_phone'], -10), $data['buyer_name']);
-        // if (is_null($studentData)) {
-        //     header('Location: ../404.html');
-        // }
+        if($totalAmount===$totalFee) {
+            foreach ($feeData as $fee) {
+                if (!markPaidFee($PDO, $studentAdmissionNo['admission_no'], $lateFee, $fee['total_fee'], $datetimeofpayment , $fee['month'])) {
+                    header('Location: 404.html');
+                    exit();
+                }
+            }
+        }
+    }
+    else {
+        header('Location: 404.html');
+        exit();
     }
 ?>
 
-<?php require_once(__DIR__.'/../header.php'); ?>
+<?php require_once(__DIR__.'/header.php'); ?>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark">
             <div class="container">
                 <a href="#" class="navbar-brand">Student Panel</a>
@@ -102,10 +115,10 @@
         </nav>
 
         <section id="payment-message" class="container-fluid mt-4">
-            <?php if ($_GET['payment_status'] == 'Credit'): ?>
+            <?php if ($status === 'true'): ?>
                 <h1 class="text-center">Your fee amounting to ₹ <?php echo $totalAmount ?> has been successfully deposited with Payment ID - <?php echo $paymentId ?>.</h1>
             <?php else: ?>
-                <h1 class="text-center">Your fee payment has failed. <br>Kindly notedown the following Payment ID for reference - <?php echo $paymentId ?>.</h1>
+                <h1 class="text-center">Your fee payment has failed. <br>Kindly note down the following Payment ID for reference - <?php echo $paymentId ?>.</h1>
             <?php endif ?>
         </section>
-<?php require_once(__DIR__.'/../footer.php'); ?>
+<?php require_once(__DIR__.'/footer.php'); ?>

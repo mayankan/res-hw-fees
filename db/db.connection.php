@@ -5,7 +5,7 @@
     function getConnection() {
         // main db
         $username = 'u398111847_hw';
-        $password = 'eSoIxZO39v9K';
+        $password = 'm8XDm09a9zdz';
         $host = 'sql7.main-hosting.eu';
         $db_name = 'u398111847_home';
 
@@ -37,7 +37,7 @@
 
     function getMSSQLCon() {
         $username = 'rainbowschooljp';
-        $password = 'Ovho#210';
+        $password = 'Tqg6p$30';
         $host = '182.50.133.109';
         $db_name = 'rainbowjanakpuri';
         $mssqldriver = '{SQL Server}';

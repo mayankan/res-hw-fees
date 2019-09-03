@@ -71,19 +71,19 @@
         }
         $feeAmount = round(($currentMonthFeeData['total_fee'] + $totalDues)/ (1 - 1.18 * 1.9 / 100), 2);
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://test.instamojo.com/api/1.1/payment-requests/');
+        curl_setopt($ch, CURLOPT_URL, 'https://www.instamojo.com/api/1.1/payment-requests/');
         curl_setopt($ch, CURLOPT_HEADER, FALSE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
         curl_setopt($ch, CURLOPT_HTTPHEADER,
-                    array("X-Api-Key:test_7afc61bfde0049035de34445ae9",
-                        "X-Auth-Token:test_f5bbfe4df819f8b14418d08496f"));
+                        array("X-Api-Key:74daa5061b049d6cdc8540a79cfd7a1a",
+                            "X-Auth-Token:a1ff98eeb01b5358e479494464b62849"));
         $payload = Array(
             'purpose' => 'Online Fee Payment',
             'amount' => $feeAmount,
             'phone' => $_SESSION['data']['mobile_number'],
             'buyer_name' => $_SESSION['data']['name'],
-            'redirect_url' => 'http://localhost:8080/student/success.php',
+            'redirect_url' => 'http://rainbowhomework.com/success.php',
             'webhook' => 'http://rainbowhomework.com/webhook.php',
             'email' => 'mail@rainbowschooljp.com',
             'send_email' => false,
@@ -331,6 +331,7 @@
                                 </ul>
                             </div>
                         </div>
+                        <?php endif ?>
                         <div class="row mt-4">
                             <div class="col-12">
                                 <!-- NOTE -->
@@ -338,7 +339,6 @@
                                 <p class="font-weight-bold"><?php echo nl2br($maintenance['bottom_message']); ?></p>
                             </div>
                         </div>
-
                         <div class="row mt-4">
                             <div class="col-md-6">
                                 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
@@ -349,7 +349,6 @@
                                 <a href="<?php echo $base_url ?>student/rtgs.php" class="btn btn-info btn-block">Pay Through RTGS/NEFT</a>
                             </div>
                         </div>
-                        <?php endif ?>
                     <?php endif ?>
                 <?php break; case 1: ?>
                 <div class="row m-4 p-4">

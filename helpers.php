@@ -499,19 +499,38 @@
      *
      * @throws Exception //No Specefic Exception Defined
     */
-    function markPaidFee($PDO, $admissionNumber, $lateFee, $totalFee) {
+    function markPaidFee($PDO, $admissionNumber, $lateFee, $totalFee, $datePaid, $monthPayment) {
         try {
-            $stmt = $PDO->prepare("UPDATE `fee` SET `paid_at` = :current_date, `late_fee` = :late_fee, `total_fee` = :total_fee WHERE `admission_no` = :adm_no");
-            $stmt->execute([
-                ':current_date' => (string) date('Y-m-d h:i:s'),
-                ':late_fee' => $lateFee,
-                ':total_fee' => $totalFee,
-                ':adm_no' => $admissionNumber
-            ]);
-            if ($stmt->rowCount() == 0) {
-                return false;
+            $monthPayment = substr($monthPayment,5,2);
+            if($monthPayment === date('m')) {
+                $totalFee = $totalFee+$lateFee;
+                $stmt = $PDO->prepare("UPDATE `fee` SET `paid_at` = :current_date, `late_fee` = :late_fee, `total_fee` = :total_fee WHERE `admission_no` = :adm_no AND `month` LIKE :month AND `deleted_at` IS NULL;");
+                $a = $stmt->execute([
+                    ':current_date' => $datePaid,
+                    ':late_fee' => $lateFee,
+                    ':total_fee' => $totalFee,
+                    ':adm_no' => $admissionNumber,
+                    ':month' => $monthPayment
+                ]);
+                if ($stmt->rowCount() == 0) {
+                    return false;
+                }
+                return true;
             }
-            return true;
+            else {
+                $stmt = $PDO->prepare("UPDATE `fee` SET `paid_at` = :current_date, `late_fee` = :late_fee, `total_fee` = :total_fee WHERE `admission_no` = :adm_no AND `month` LIKE :month AND `deleted_at` IS NULL;");
+                $a = $stmt->execute([
+                    ':current_date' => $datePaid,
+                    ':late_fee' => $lateFee,
+                    ':total_fee' => $totalFee,
+                    ':adm_no' => $admissionNumber,
+                    ':month' => $monthPayment
+                ]);
+                if ($stmt->rowCount() == 0) {
+                    return false;
+                }
+                return true;
+            }
         } catch (Exception $e) {
             print($e);
             return false;
@@ -605,4 +624,27 @@
         $dateArray = explode('-', $date);
         return date('F', mktime(0, 0, 0, $dateArray[1], 0, 0)) . ' ' . $dateArray[0];
     }
+    // function markPaidFee($PDO, $feeId) {
+    //     try {
+    //         //$stmt = $PDO->prepare("SELECT * from `fee` WHERE `admission_no` = :adm_no AND `month` LIKE :month AND `deleted_at` IS NULL;");
+    //         $stmt = $PDO->prepare("UPDATE `fee` SET `paid_at` = :current_date, `late_fee` = :late_fee, `total_fee` = :total_fee WHERE `id` = :feeId;");
+    //         $a = $stmt->execute([
+    //             //':current_date' => (string) date('Y-m-d h:i:s'),
+    //             // ':current_date' => $datePaid,
+    //             // ':late_fee' => $lateFee,
+    //             // ':total_fee' => $totalFee,
+    //             ':feeId' => $feeId,
+    //             // ':month' => $monthPayment
+    //         ]);
+    //         var_dump($stmt->rowCount(),$a,$monthPayment, $admissionNumber);
+    //         exit();
+    //         if ($stmt->rowCount() == 0) {
+    //             return false;
+    //         }
+    //         return true;
+    //     } catch (Exception $e) {
+    //         print($e);
+    //         return false;
+    //     }
+    // }
 ?>
