@@ -80,7 +80,7 @@
                         <li><a href="http://www.rainbowschooljp.com/admission"><span>Admission</span></a></li>
                         <li><a href="http://www.rainbowschooljp.com/post-your-resume"><span>Careers</span></a></li>
                         <li><a href="http://www.rainbowschooljp.com/download-links"><span>Downloads</span></a></li>
-                        <li><a href="http://www.rainbowschooljp.com/school-management-login-page"><span>Student Login</span></a></li>
+                        <li><a href="http://www.rainbowhomework.com"><span>Student Login</span></a></li>
                         <li><a href="http://www.rainbowschooljp.com/event-gallery"><span>Events</span></a></li>
                         <li class="has-sub"><a href="#"><span>About Us</span></a>
                         <ul>
