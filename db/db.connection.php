@@ -6,7 +6,7 @@
         // main db
         $username = 'u398111847_hw';
         $password = 'm8XDm09a9zdz';
-        $host = 'sql7.main-hosting.eu';
+        $host = 'localhost';
         $db_name = 'u398111847_home';
 
         // testing db
