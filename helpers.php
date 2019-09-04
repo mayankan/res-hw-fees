@@ -512,8 +512,6 @@
                     ':adm_no' => $admissionNumber,
                     ':month' => $monthPayment
                 ]);
-                var_dump($monthPayment);
-                exit();
                 if ($a == 0) {
                     return false;
                 }
