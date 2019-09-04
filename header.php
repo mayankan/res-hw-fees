@@ -74,7 +74,7 @@
                     <ul>
                         <li class="active has-sub"><a href="#"><span>Home</span></a>
                         <ul>
-                                <li><a href="http://www.rainbowonlinefees.com"><span>Pay Fees</span></a></li>
+                                <li><a href="http://www.rainbowhomework.com"><span>Pay Fees</span></a></li>
                                 <li><a href="http://www.rainbowschooljp.com"><span>Back to Rainbow's Homepage</span></a></li>
                         </ul></li>
                         <li><a href="http://www.rainbowschooljp.com/admission"><span>Admission</span></a></li>
