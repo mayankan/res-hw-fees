@@ -501,8 +501,8 @@
     */
     function markPaidFee($PDO, $admissionNumber, $lateFee, $totalFee, $datePaid, $monthPayment) {
         try {
-            $monthPayment = substr($monthPayment,5,2);
-            if($monthPayment === date('m')) {
+            $monthOfPayment = substr($monthPayment,5,2);
+            if($monthOfPayment === date('m')) {
                 $totalFee = $totalFee+$lateFee;
                 $stmt = $PDO->prepare("UPDATE `fee` SET `paid_at` = :current_date, `late_fee` = :late_fee, `total_fee` = :total_fee WHERE `admission_no` = :adm_no AND `month` LIKE :month AND `deleted_at` IS NULL;");
                 $a = $stmt->execute([
