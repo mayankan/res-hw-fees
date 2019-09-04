@@ -17,15 +17,15 @@
     
     $ch = curl_init();
 
-    curl_setopt($ch, CURLOPT_URL, 'https://www.instamojo.com/api/1.1/payment-requests/'.$paymentRequestId.'/'.$paymentId.'/');
+    curl_setopt($ch, CURLOPT_URL, 'https://test.instamojo.com/api/1.1/payment-requests/'.$paymentRequestId.'/'.$paymentId.'/');
     curl_setopt($ch, CURLOPT_HEADER, FALSE);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
     curl_setopt($ch, CURLOPT_HTTPHEADER,
-                    array("X-Api-Key:74daa5061b049d6cdc8540a79cfd7a1a",
-                        "X-Auth-Token:a1ff98eeb01b5358e479494464b62849"));
-                    // array("X-Api-Key:test_7afc61bfde0049035de34445ae9",
-                    //     "X-Auth-Token:test_f5bbfe4df819f8b14418d08496f"));
+                    // array("X-Api-Key:74daa5061b049d6cdc8540a79cfd7a1a",
+                    //     "X-Auth-Token:a1ff98eeb01b5358e479494464b62849"));
+                    array("X-Api-Key:test_7afc61bfde0049035de34445ae9",
+                        "X-Auth-Token:test_f5bbfe4df819f8b14418d08496f"));
                         
     $response = curl_exec($ch);
     curl_close($ch); 
