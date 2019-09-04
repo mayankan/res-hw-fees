@@ -65,7 +65,8 @@
         }
         if($totalAmount===$totalFee) {
             foreach ($feeData as $fee) {
-                if (!markPaidFee($PDO, $studentAdmissionNo['admission_no'], $lateFee, $fee['total_fee'], $datetimeofpayment , $fee['month'])) {
+                $FeePaid = markPaidFee($PDO, $studentAdmissionNo['admission_no'], $lateFee, $fee['total_fee'], $datetimeofpayment , $fee['month']);
+                if ($FeePaid===false) {
                     header('Location: 404.html');
                     exit();
                 }
