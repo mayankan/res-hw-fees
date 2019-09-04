@@ -78,6 +78,8 @@
         curl_setopt($ch, CURLOPT_HTTPHEADER,
                         array("X-Api-Key:74daa5061b049d6cdc8540a79cfd7a1a",
                             "X-Auth-Token:a1ff98eeb01b5358e479494464b62849"));
+                        // array("X-Api-Key:test_7afc61bfde0049035de34445ae9",
+                        //     "X-Auth-Token:test_f5bbfe4df819f8b14418d08496f"));
         $payload = Array(
             'purpose' => 'Online Fee Payment',
             'amount' => $feeAmount,

@@ -24,6 +24,9 @@
     curl_setopt($ch, CURLOPT_HTTPHEADER,
                     array("X-Api-Key:74daa5061b049d6cdc8540a79cfd7a1a",
                         "X-Auth-Token:a1ff98eeb01b5358e479494464b62849"));
+                    // array("X-Api-Key:test_7afc61bfde0049035de34445ae9",
+                    //     "X-Auth-Token:test_f5bbfe4df819f8b14418d08496f"));
+                        
     $response = curl_exec($ch);
     curl_close($ch); 
     $pieces = explode(',', $response);
@@ -44,6 +47,7 @@
         $studentAdmissionNo = getAdmissionNumber($PDO, substr($curlResponse['buyer_phone'], -10), $curlResponse['buyer_name']);
         if (is_null($studentAdmissionNo)) {
             header('Location: 404.html');
+            exit();
         }
         $dateofpayment = substr($curlResponse['created_at'],0,10);
         $timeofpayment = substr($curlResponse['created_at'],11,8);
@@ -62,6 +66,8 @@
         if($totalAmount===$totalFee) {
             foreach ($feeData as $fee) {
                 if (!markPaidFee($PDO, $studentAdmissionNo['admission_no'], $lateFee, $fee['total_fee'], $datetimeofpayment , $fee['month'])) {
+                    var_dump($fee);
+                    exit();
                     header('Location: 404.html');
                     exit();
                 }
