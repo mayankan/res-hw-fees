@@ -512,6 +512,9 @@
                     ':adm_no' => $admissionNumber,
                     ':month' => $monthPayment
                 ]);
+                var_dump($datePaid);
+                var_dump($lateFee);
+                exit();
                 if ($a == 0) {
                     return false;
                 }

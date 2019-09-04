@@ -10,10 +10,10 @@
         $db_name = 'u398111847_home';
 
         // testing db
-        // $username = 'u398111847_test';
-        // $password = 'test@123';
-        // $host = 'sql7.main-hosting.eu';
-        // $db_name = 'u398111847_test';
+        $username = 'u398111847_test';
+        $password = 'test@123';
+        $host = 'sql7.main-hosting.eu';
+        $db_name = 'u398111847_test';
 
         $dsn = "mysql:host=$host;dbname=$db_name";
         $options = [
