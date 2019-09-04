@@ -66,8 +66,6 @@
         if($totalAmount===$totalFee) {
             foreach ($feeData as $fee) {
                 if (!markPaidFee($PDO, $studentAdmissionNo['admission_no'], $lateFee, $fee['total_fee'], $datetimeofpayment , $fee['month'])) {
-                    var_dump($fee);
-                    exit();
                     header('Location: 404.html');
                     exit();
                 }
