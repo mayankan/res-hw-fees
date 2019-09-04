@@ -71,22 +71,22 @@
         }
         $feeAmount = round(($currentMonthFeeData['total_fee'] + $totalDues)/ (1 - 1.18 * 1.9 / 100), 2);
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://test.instamojo.com/api/1.1/payment-requests/');
+        curl_setopt($ch, CURLOPT_URL, 'https://www.instamojo.com/api/1.1/payment-requests/');
         curl_setopt($ch, CURLOPT_HEADER, FALSE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
         curl_setopt($ch, CURLOPT_HTTPHEADER,
-                        // array("X-Api-Key:74daa5061b049d6cdc8540a79cfd7a1a",
-                        //     "X-Auth-Token:a1ff98eeb01b5358e479494464b62849"));
-                        array("X-Api-Key:test_7afc61bfde0049035de34445ae9",
-                            "X-Auth-Token:test_f5bbfe4df819f8b14418d08496f"));
+                        array("X-Api-Key:74daa5061b049d6cdc8540a79cfd7a1a",
+                            "X-Auth-Token:a1ff98eeb01b5358e479494464b62849"));
+                        // array("X-Api-Key:test_7afc61bfde0049035de34445ae9",
+                        //     "X-Auth-Token:test_f5bbfe4df819f8b14418d08496f"));
         $payload = Array(
             'purpose' => 'Online Fee Payment',
             'amount' => $feeAmount,
             'phone' => $_SESSION['data']['mobile_number'],
             'buyer_name' => $_SESSION['data']['name'],
-            'redirect_url' => 'http://test.rainbowhomework.com/success.php',
-            'webhook' => 'http://test.rainbowhomework.com/webhook.php',
+            'redirect_url' => 'http://rainbowhomework.com/success.php',
+            'webhook' => 'http://rainbowhomework.com/webhook.php',
             'email' => 'mail@rainbowschooljp.com',
             'send_email' => false,
             'send_sms' => true,
