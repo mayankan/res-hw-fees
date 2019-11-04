@@ -622,6 +622,6 @@
 
     function getYearAndMonth($date) {
         $dateArray = explode('-', $date);
-        return date('F', mktime(0, 0, 0, $dateArray[1], 0, 0)) . ' ' . $dateArray[0];
+        return date('F', mktime(0, 0, 0, $dateArray[1], 1, 0)) . ' ' . $dateArray[0];
     }
 ?>
