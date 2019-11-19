@@ -26,7 +26,6 @@
                         "X-Auth-Token:a1ff98eeb01b5358e479494464b62849"));
                     // array("X-Api-Key:test_7afc61bfde0049035de34445ae9",
                     //     "X-Auth-Token:test_f5bbfe4df819f8b14418d08496f"));
-                        
     $response = curl_exec($ch);
     curl_close($ch); 
     $pieces = explode(',', $response);
@@ -57,19 +56,15 @@
         if ($currentDay > 10) {
             $lateFee = 30;
         }
-        $totalFee = $curlResponse['amount']-$curlResponse['fees']-(($curlResponse['fees']*18)/100);
-        $totalFee = round($totalFee,0);
         $feeData = getFee($PDO, $studentAdmissionNo['admission_no']);
         foreach ($feeData as $fee) {
             $totalAmount += $fee['total_fee'];
         }
-        if($totalAmount===$totalFee) {
-            foreach ($feeData as $fee) {
-                $FeePaid = markPaidFee($PDO, $studentAdmissionNo['admission_no'], $lateFee, $fee['total_fee'], $datetimeofpayment , $fee['month']);
-                if ($FeePaid===false) {
-                    header('Location: 404.html');
-                    exit();
-                }
+        foreach ($feeData as $fee) {
+            $FeePaid = markPaidFee($PDO, $studentAdmissionNo['admission_no'], $lateFee, $fee['total_fee'], $datetimeofpayment , $fee['month']);
+            if ($FeePaid===false) {
+                header('Location: 404.html');
+                exit();
             }
         }
     }
